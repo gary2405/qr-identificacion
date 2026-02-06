@@ -8,30 +8,75 @@
 </head>
 <body>
 
-<div class="contenedor">
+<div class="qr-contenedor">
   <h2 id="titulo"></h2>
 
-  <!-- Vista datos -->
-  <div id="vistaDatos" class="oculto">
+  <!-- ================= VISTA DATOS ================= -->
+  <div id="vistaDatos" class="qr-oculto">
     <p><strong>Nombre:</strong> <span id="nombre"></span></p>
-    <p><strong>Tipo:</strong> <span id="tipo"></span></p>
+    <p><strong>Perfil:</strong> <span id="tipo"></span></p>
     <p><strong>Contacto:</strong> <span id="contacto"></span></p>
     <p><strong>Mensaje:</strong> <span id="mensaje"></span></p>
-
   </div>
 
-  <!-- Formulario -->
-  <form id="formulario" class="oculto">
-    <input type="text" id="fNombre" placeholder="Nombre" required>
-    <input type="text" id="fTipo" placeholder="Persona / Mascota / Objeto" required>
-    <input type="text" id="fContacto" placeholder="Teléfono" required>
-    <textarea id="fMensaje" placeholder="Mensaje importante"></textarea>
-    <button type="submit">Guardar información</button>
+  <!-- ================= FORMULARIO ================= -->
+  <form id="formulario" class="qr-oculto">
+
+    <!-- FOTO -->
+    <div class="qr-foto">
+      <label for="fFoto">
+        <div class="qr-foto-circulo">+</div>
+      </label>
+      <input type="file" id="fFoto" accept="image/*">
+    </div>
+
+    <!-- PERFIL -->
+    <select id="fTipo" required>
+      <option value="">Tipo de perfil</option>
+      <option value="persona">Persona</option>
+      <option value="nino">Niño / Niña</option>
+      <option value="adultoMayor">Adulto mayor</option>
+      <option value="mascota">Mascota</option>
+      <option value="objeto">Objeto</option>
+    </select>
+
+    <input id="fNombre" type="text" placeholder="Nombre / Identificación" required>
+    <input id="fContacto" type="text" placeholder="Contacto principal" required>
+    <input id="fContacto2" type="text" placeholder="Contacto de emergencia (opcional)">
+    <input id="fDireccion" type="text" placeholder="Dirección (opcional)">
+    <textarea id="fMensaje" placeholder="Mensaje importante / instrucciones"></textarea>
+
+    <!-- ================= PERSONA ================= -->
+    <div id="seccionPersona" class="qr-oculto">
+      <h3>Información médica</h3>
+      <input id="fSangre" type="text" placeholder="Tipo de sangre">
+      <textarea id="fPadecimientos" placeholder="Enfermedades / padecimientos"></textarea>
+      <textarea id="fAlergias" placeholder="Alergias (opcional)"></textarea>
+    </div>
+
+    <!-- ================= MASCOTA ================= -->
+    <div id="seccionMascota" class="qr-oculto">
+      <h3>Datos de la mascota</h3>
+      <input id="fEspecie" type="text" placeholder="Especie">
+      <input id="fRaza" type="text" placeholder="Raza">
+      <input id="fColor" type="text" placeholder="Color">
+      <input id="fVive" type="text" placeholder="¿Dónde vive?">
+    </div>
+
+    <!-- ================= OBJETO ================= -->
+    <div id="seccionObjeto" class="qr-oculto">
+      <h3>Objeto personal</h3>
+      <textarea id="fDescripcion" placeholder="Descripción del objeto"></textarea>
+      <textarea id="fInstrucciones" placeholder="¿Qué hacer si se encuentra?"></textarea>
+    </div>
+
+    <button type="submit" class="qr-btn">
+      Guardar información
+    </button>
   </form>
 </div>
 
 <script type="module" src="script.js"></script>
 </body>
 </html>
-
 

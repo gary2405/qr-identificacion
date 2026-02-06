@@ -1,1 +1,64 @@
 #qrcode{margin-left: 610px;}
+
+.qr-contenedor,
+.qr-card {
+  max-width: 420px;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.qr-contenedor h2,
+.qr-card h2 {
+  text-align: center;
+}
+
+.qr-contenedor input,
+.qr-contenedor textarea,
+.qr-contenedor select {
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.qr-btn {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.qr-btn-danger {
+  background: #dc3545;
+}
+
+.qr-oculto {
+  display: none;
+}
+
+.qr-foto {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.qr-foto-circulo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  cursor: pointer;
+}

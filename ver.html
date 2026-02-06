@@ -8,18 +8,31 @@
 </head>
 <body>
 
-<div class="card">
+<div class="qr-card card">
   <h2>Información registrada</h2>
 
   <p><strong>Nombre:</strong> <span id="nombre"></span></p>
-  <p><strong>Tipo:</strong> <span id="tipo"></span></p>
-  <p><strong>Contacto:</strong> <span id="contacto"></span></p>
+  <p><strong>Perfil:</strong> <span id="tipo"></span></p>
+
+  <p>
+    <strong>Contacto principal:</strong><br>
+    <a id="linkLlamar" href="#">Llamar</a> |
+    <a id="linkWhatsapp" href="#">WhatsApp</a>
+  </p>
+
+  <p id="bloqueEmergencia" class="qr-oculto">
+    <strong>Contacto de emergencia:</strong><br>
+    <a id="linkLlamar2" href="#">Llamar</a> |
+    <a id="linkWhatsapp2" href="#">WhatsApp</a>
+  </p>
+
   <p><strong>Mensaje:</strong> <span id="mensaje"></span></p>
 
-  <button id="btnEliminar">Eliminar registro</button>
+  <button id="btnEliminar" class="qr-btn qr-btn-danger">Eliminar registro</button>
 </div>
 
 <script type="module" src="script.js"></script>
 </body>
 </html>
+
 
