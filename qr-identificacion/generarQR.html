@@ -3,31 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <title>Generar QR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #qrcode {
+      margin: 20px auto;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
-<h2>QR generado</h2>
+<h2>Generar código QR</h2>
+
+<button onclick="generar()">Generar nuevo QR</button>
+
 <div id="qrcode"></div>
+
+<a id="descargar" download="qr.png" style="display:none;">
+  <button>Descargar QR</button>
+</a>
 
 <script>
   function generarID() {
     return "QR-" + Date.now() + "-" + Math.floor(Math.random() * 1000);
   }
 
-  const id = generarID();
-  const url = `https://gary2405.github.io/qr-identificacion/index.html?id=${id}`;
+  function generar() {
+    const contenedor = document.getElementById("qrcode");
+    contenedor.innerHTML = "";
 
+    const id = generarID();
+    const url = `https://gary2405.github.io/qr-identificacion/index.html?id=${id}`;
 
-  new QRCode(document.getElementById("qrcode"), {
-    text: url,
-    width: 200,
-    height: 200
-  });
+    const qr = new QRCode(contenedor, {
+      text: url,
+      width: 250,
+      height: 250
+    });
 
-  console.log("ID generado:", id);
+    setTimeout(() => {
+      const img = contenedor.querySelector("img");
+      const link = document.getElementById("descargar");
+
+      link.href = img.src;
+      link.download = id + ".png";
+      link.style.display = "inline";
+    }, 300);
+
+    console.log("QR generado:", id);
+  }
 </script>
 
 </body>
 </html>
+
 
