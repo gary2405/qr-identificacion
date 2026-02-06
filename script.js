@@ -61,6 +61,9 @@ formulario.addEventListener("submit", e => {
     tipo: fTipo.value,
     contacto: fContacto.value,
     mensaje: fMensaje.value
-  }).then(() => location.reload());
+  }).then(() => {
+  window.location.href = `ver.html?id=${id}`;
+});
+;
 });
 
