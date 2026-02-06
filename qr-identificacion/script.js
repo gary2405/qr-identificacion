@@ -1,68 +1,66 @@
 import { db } from "./firebase.js";
-import { ref, get, set, update } from 
+import { ref, get, set } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const params = new URLSearchParams(window.location.search);
 const qrId = params.get("id");
-console.log("ID del QR:", qrId);
-const contenido = document.getElementById("contenido");
+
 const titulo = document.getElementById("titulo");
+const formulario = document.getElementById("formulario");
+const vistaDatos = document.getElementById("vistaDatos");
 
-const qrRef = ref(db, "qrs/" + qrId);
+const fNombre = document.getElementById("fNombre");
+const fTipo = document.getElementById("fTipo");
+const fContacto = document.getElementById("fContacto");
+const fMensaje = document.getElementById("fMensaje");
 
-get(qrRef).then((snapshot) => {
-  if (!snapshot.exists()) {
-    mostrarFormulario();
-  } else {
-    const data = snapshot.val();
-    if (data.activo) {
-      mostrarDatos(data);
+const dNombre = document.getElementById("nombre");
+const dTipo = document.getElementById("tipo");
+const dContacto = document.getElementById("contacto");
+const dMensaje = document.getElementById("mensaje");
+
+if (!qrId) {
+  titulo.innerText = "QR inválido";
+} else {
+  const qrRef = ref(db, "qrs/" + qrId);
+
+  get(qrRef).then(snapshot => {
+    if (!snapshot.exists()) {
+      mostrarFormulario();
     } else {
-      mostrarDesactivado();
+      const data = snapshot.val();
+      mostrarDatos(data);
     }
-  }
-});
+  });
+}
 
 function mostrarFormulario() {
   titulo.innerText = "Registrar información";
-
-  contenido.innerHTML = `
-    <input id="nombre" placeholder="Nombre">
-    <input id="telefono" placeholder="Teléfono">
-    <textarea id="mensaje" placeholder="Mensaje"></textarea>
-    <button onclick="guardar()">Guardar</button>
-  `;
+  formulario.classList.remove("oculto");
+  vistaDatos.classList.add("oculto");
 }
-
-window.guardar = function () {
-  set(qrRef, {
-    nombre: nombre.value,
-    telefono: telefono.value,
-    mensaje: mensaje.value,
-    activo: true
-  }).then(() => location.reload());
-};
 
 function mostrarDatos(data) {
-  titulo.innerText = "Información";
+  titulo.innerText = "Información registrada";
+  formulario.classList.add("oculto");
+  vistaDatos.classList.remove("oculto");
 
-  contenido.innerHTML = `
-    <p><b>Nombre:</b> ${data.nombre}</p>
-    <p><b>Teléfono:</b> ${data.telefono}</p>
-    <p><b>Mensaje:</b> ${data.mensaje}</p>
-
-    <button onclick="desactivar()">Desactivar QR</button>
-  `;
+  dNombre.innerText = data.nombre;
+  dTipo.innerText = data.tipo;
+  dContacto.innerText = data.contacto;
+  dMensaje.innerText = data.mensaje;
 }
 
-window.desactivar = function () {
-  update(qrRef, { activo: false })
-    .then(() => location.reload());
-};
+formulario.addEventListener("submit", e => {
+  e.preventDefault();
 
-function mostrarDesactivado() {
-  titulo.innerText = "QR desactivado";
-  contenido.innerHTML = `
-    <p>Este código ya no está activo.</p>
-  `;
-}
+  const qrRef = ref(db, "qrs/" + qrId);
+
+  set(qrRef, {
+    nombre: fNombre.value,
+    tipo: fTipo.value,
+    contacto: fContacto.value,
+    mensaje: fMensaje.value
+  }).then(() => location.reload());
+});
+
