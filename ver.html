@@ -19,33 +19,7 @@
   <a href="generarQR.html">Generar otro QR</a>
 </div>
 
-<script type="module">
-  import { db } from "./firebase.js";
-  import { ref, get } from
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-
-  if (!id) {
-    document.body.innerHTML = "<h2>No se encontró información</h2>";
-  } else {
-    const qrRef = ref(db, "qrs/" + id);
-
-    get(qrRef).then(snapshot => {
-      if (!snapshot.exists()) {
-        document.body.innerHTML = "<h2>Registro no encontrado</h2>";
-        return;
-      }
-
-      const data = snapshot.val();
-      document.getElementById("nombre").textContent = data.nombre;
-      document.getElementById("tipo").textContent = data.tipo;
-      document.getElementById("contacto").textContent = data.contacto;
-      document.getElementById("mensaje").textContent = data.mensaje;
-    });
-  }
-</script>
-
+<script type="module" src="script.js"></script>
 </body>
 </html>
+
