@@ -28,8 +28,7 @@ if (!qrId) {
     if (!snapshot.exists()) {
       mostrarFormulario();
     } else {
-      const data = snapshot.val();
-      mostrarDatos(data);
+      mostrarDatos(snapshot.val());
     }
   });
 }
@@ -45,10 +44,10 @@ function mostrarDatos(data) {
   formulario.classList.add("oculto");
   vistaDatos.classList.remove("oculto");
 
-  dNombre.innerText = data.nombre;
-  dTipo.innerText = data.tipo;
-  dContacto.innerText = data.contacto;
-  dMensaje.innerText = data.mensaje;
+  dNombre.textContent = data.nombre;
+  dTipo.textContent = data.tipo;
+  dContacto.textContent = data.contacto;
+  dMensaje.textContent = data.mensaje;
 }
 
 formulario.addEventListener("submit", e => {
@@ -62,8 +61,6 @@ formulario.addEventListener("submit", e => {
     contacto: fContacto.value,
     mensaje: fMensaje.value
   }).then(() => {
-  window.location.href = `ver.html?id=${id}`;
+    window.location.href = `ver.html?id=${qrId}`;
+  });
 });
-;
-});
-

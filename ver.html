@@ -3,44 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <title>Información registrada</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <div class="card">
-    <h2>Información registrada</h2>
+<div class="card">
+  <h2>Información registrada</h2>
 
-    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
-    <p><strong>Cédula:</strong> <span id="cedula"></span></p>
-    <p><strong>Carrera:</strong> <span id="carrera"></span></p>
+  <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+  <p><strong>Tipo:</strong> <span id="tipo"></span></p>
+  <p><strong>Contacto:</strong> <span id="contacto"></span></p>
+  <p><strong>Mensaje:</strong> <span id="mensaje"></span></p>
 
-    <a href="index.html">Registrar otro</a>
-  </div>
+  <a href="generarQR.html">Generar otro QR</a>
+</div>
 
-  <script src="firebase.js"></script>
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+<script type="module">
+  import { db } from "./firebase.js";
+  import { ref, get } from
+  "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    if (!id) {
-      document.body.innerHTML = "<h2>No se encontró información</h2>";
-    }
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
 
-    const ref = firebase.database().ref("registros/" + id);
+  if (!id) {
+    document.body.innerHTML = "<h2>No se encontró información</h2>";
+  } else {
+    const qrRef = ref(db, "qrs/" + id);
 
-    ref.once("value").then(snapshot => {
-      const data = snapshot.val();
-
-      if (!data) {
+    get(qrRef).then(snapshot => {
+      if (!snapshot.exists()) {
         document.body.innerHTML = "<h2>Registro no encontrado</h2>";
         return;
       }
 
+      const data = snapshot.val();
       document.getElementById("nombre").textContent = data.nombre;
-      document.getElementById("cedula").textContent = data.cedula;
-      document.getElementById("carrera").textContent = data.carrera;
+      document.getElementById("tipo").textContent = data.tipo;
+      document.getElementById("contacto").textContent = data.contacto;
+      document.getElementById("mensaje").textContent = data.mensaje;
     });
-  </script>
+  }
+</script>
 
 </body>
 </html>
