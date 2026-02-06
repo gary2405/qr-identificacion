@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Información registrada</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="card">
+    <h2>Información registrada</h2>
+
+    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+    <p><strong>Cédula:</strong> <span id="cedula"></span></p>
+    <p><strong>Carrera:</strong> <span id="carrera"></span></p>
+
+    <a href="index.html">Registrar otro</a>
+  </div>
+
+  <script src="firebase.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (!id) {
+      document.body.innerHTML = "<h2>No se encontró información</h2>";
+    }
+
+    const ref = firebase.database().ref("registros/" + id);
+
+    ref.once("value").then(snapshot => {
+      const data = snapshot.val();
+
+      if (!data) {
+        document.body.innerHTML = "<h2>Registro no encontrado</h2>";
+        return;
+      }
+
+      document.getElementById("nombre").textContent = data.nombre;
+      document.getElementById("cedula").textContent = data.cedula;
+      document.getElementById("carrera").textContent = data.carrera;
+    });
+  </script>
+
+</body>
+</html>
