@@ -62,3 +62,16 @@
   font-size: 30px;
   cursor: pointer;
 }
+
+
+.qr-qrcode {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.qr-descargar {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
