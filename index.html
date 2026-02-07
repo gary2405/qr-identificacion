@@ -6,28 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="qr-body">
 
 <div class="qr-contenedor">
-  <h2 id="titulo"></h2>
+  <h2 id="titulo">Registrar información</h2>
 
-  <!-- ================= VISTA DATOS ================= -->
-  <div id="vistaDatos" class="qr-oculto">
-    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
-    <p><strong>Perfil:</strong> <span id="tipo"></span></p>
-    <p><strong>Contacto:</strong> <span id="contacto"></span></p>
-    <p><strong>Mensaje:</strong> <span id="mensaje"></span></p>
-  </div>
+  <form id="formulario">
 
-  <!-- ================= FORMULARIO ================= -->
-  <form id="formulario" class="qr-oculto">
-
+    <!-- FOTO -->
     <div class="qr-foto">
-  <img id="previewFoto" class="qr-foto-preview" />
-  <label for="fFoto" class="qr-foto-circulo">+</label>
-  <input type="file" id="fFoto" accept="image/*">
-</div>
-
+      <img id="previewFoto" class="qr-foto-preview">
+      <label for="fFoto" class="qr-foto-circulo">+</label>
+      <input type="file" id="fFoto" accept="image/*">
+    </div>
 
     <!-- PERFIL -->
     <select id="fTipo" required>
@@ -39,43 +30,41 @@
       <option value="objeto">Objeto</option>
     </select>
 
-    <input id="fNombre" type="text" placeholder="Nombre / Identificación" required>
+    <input id="fNombre" type="text" placeholder="Nombre" required>
     <input id="fContacto" type="text" placeholder="Contacto principal" required>
     <input id="fContacto2" type="text" placeholder="Contacto de emergencia (opcional)">
     <input id="fDireccion" type="text" placeholder="Dirección (opcional)">
-    <textarea id="fMensaje" placeholder="Mensaje importante / instrucciones"></textarea>
+    <textarea id="fMensaje" placeholder="Mensaje importante"></textarea>
 
-    <!-- ================= PERSONA ================= -->
+    <!-- PERSONA -->
     <div id="seccionPersona" class="qr-oculto">
       <h3>Información médica</h3>
       <input id="fSangre" type="text" placeholder="Tipo de sangre">
-      <textarea id="fPadecimientos" placeholder="Enfermedades / padecimientos"></textarea>
-      <textarea id="fAlergias" placeholder="Alergias (opcional)"></textarea>
+      <textarea id="fPadecimientos" placeholder="Padecimientos"></textarea>
+      <textarea id="fAlergias" placeholder="Alergias"></textarea>
     </div>
 
-    <!-- ================= MASCOTA ================= -->
+    <!-- MASCOTA -->
     <div id="seccionMascota" class="qr-oculto">
       <h3>Datos de la mascota</h3>
       <input id="fEspecie" type="text" placeholder="Especie">
       <input id="fRaza" type="text" placeholder="Raza">
       <input id="fColor" type="text" placeholder="Color">
-      <input id="fVive" type="text" placeholder="¿Dónde vive?">
     </div>
 
-    <!-- ================= OBJETO ================= -->
+    <!-- OBJETO -->
     <div id="seccionObjeto" class="qr-oculto">
-      <h3>Objeto personal</h3>
-      <textarea id="fDescripcion" placeholder="Descripción del objeto"></textarea>
-      <textarea id="fInstrucciones" placeholder="¿Qué hacer si se encuentra?"></textarea>
+      <h3>Objeto</h3>
+      <textarea id="fDescripcion" placeholder="Descripción"></textarea>
+      <textarea id="fInstrucciones" placeholder="Qué hacer si se encuentra"></textarea>
     </div>
 
-    <button type="submit" class="qr-btn">
-      Guardar información
-    </button>
+    <button class="qr-btn" type="submit">Guardar información</button>
   </form>
 </div>
 
-<script type="module" src="script.js"></script>
+<script type="module" src="index.js"></script>
 </body>
 </html>
+
 
