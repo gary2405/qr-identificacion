@@ -6,11 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="qr-body">
 
-<div class="qr-card card">
+<div class="qr-card">
   <h2>Información registrada</h2>
- <img id="foto" class="qr-foto-preview" />
+
+  <img id="foto" class="qr-foto-preview">
+
   <p><strong>Nombre:</strong> <span id="nombre"></span></p>
   <p><strong>Perfil:</strong> <span id="tipo"></span></p>
 
@@ -21,7 +23,7 @@
   </p>
 
   <p id="bloqueEmergencia" class="qr-oculto">
-    <strong>Contacto de emergencia:</strong><br>
+    <strong>Emergencia:</strong><br>
     <a id="linkLlamar2" href="#">Llamar</a> |
     <a id="linkWhatsapp2" href="#">WhatsApp</a>
   </p>
@@ -31,8 +33,9 @@
   <button id="btnEliminar" class="qr-btn qr-btn-danger">Eliminar registro</button>
 </div>
 
-<script type="module" src="script.js"></script>
+<script type="module" src="ver.js"></script>
 </body>
 </html>
+
 
 

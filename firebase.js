@@ -3,7 +3,7 @@ import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
+  apiKey: "AIzaSyAbMcYZ0BcsUSTTXvxbe5WNaKfVUsbM_Rk",
   authDomain: "qr-identificacion.firebaseapp.com",
   databaseURL: "https://qr-identificacion-default-rtdb.firebaseio.com",
   projectId: "qr-identificacion",
@@ -14,7 +14,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
-const storage = getStorage(app);
+export const db = getDatabase(app);
+export const storage = getStorage(app);
 
-export { db, storage };
