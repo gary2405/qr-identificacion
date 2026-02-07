@@ -35,6 +35,11 @@ const dTipo = document.getElementById("tipo");
 const dContacto = document.getElementById("contacto");
 const dMensaje = document.getElementById("mensaje");
 
+const fFoto = document.getElementById("fFoto");
+const previewFoto = document.getElementById("previewFoto");
+const imgFoto = document.getElementById("foto");
+
+
 /* ================= VALIDAR QR ================= 
 if (!qrId) {
   document.body.innerHTML = "<h2>QR inválido</h2>";
@@ -173,5 +178,65 @@ if (btnEliminar) {
 }
 
 
+import { db, storage } from "./firebase.js";
+import { ref, get, set, remove } from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+if (fFoto) {
+  fFoto.addEventListener("change", () => {
+    const file = fFoto.files[0];
+    if (file) {
+      previewFoto.src = URL.createObjectURL(file);
+    }
+  });
+}
+
+formulario.addEventListener("submit", async e => {
+  e.preventDefault();
+
+  let fotoURL = "";
+
+  if (fFoto.files.length > 0) {
+    const file = fFoto.files[0];
+    const ruta = storageRef(storage, `fotos/${qrId}`);
+    await uploadBytes(ruta, file);
+    fotoURL = await getDownloadURL(ruta);
+  }
+
+  await set(qrRef, {
+    nombre: fNombre.value,
+    tipoPerfil: fTipo.value,
+    contacto: fContacto.value,
+    contacto2: fContacto2.value,
+    direccion: fDireccion.value,
+    mensaje: fMensaje.value,
+    foto: fotoURL,
+    fecha: new Date().toISOString()
+  });
+
+  window.location.href = `ver.html?id=${qrId}`;
+});
 
 
+if (card && qrId) {
+  const qrRef = ref(db, "qrs/" + qrId);
+
+  get(qrRef).then(snapshot => {
+    const data = snapshot.val();
+
+    dNombre.textContent = data.nombre;
+    dTipo.textContent = data.tipoPerfil;
+    dContacto.textContent = data.contacto;
+    dMensaje.textContent = data.mensaje;
+
+    if (data.foto) {
+      imgFoto.src = data.foto;
+    }
+  });
+}
