@@ -1,9 +1,25 @@
-import { db } from "./firebase.js";
-import { ref, get, set, remove } from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { db, storage } from "./firebase.js";
 
+import {
+  ref,
+  get,
+  set,
+  remove
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+/* ================= QR ================= */
 const params = new URLSearchParams(window.location.search);
 const qrId = params.get("id");
+
+if (!qrId) {
+  document.body.innerHTML = "<h2>QR inválido</h2>";
+}
 
 /* ================= ELEMENTOS ================= */
 const titulo = document.getElementById("titulo");
@@ -30,41 +46,47 @@ const fVive = document.getElementById("fVive");
 const fDescripcion = document.getElementById("fDescripcion");
 const fInstrucciones = document.getElementById("fInstrucciones");
 
+const fFoto = document.getElementById("fFoto");
+const previewFoto = document.getElementById("previewFoto");
+
 const dNombre = document.getElementById("nombre");
 const dTipo = document.getElementById("tipo");
 const dContacto = document.getElementById("contacto");
 const dMensaje = document.getElementById("mensaje");
-
-const fFoto = document.getElementById("fFoto");
-const previewFoto = document.getElementById("previewFoto");
 const imgFoto = document.getElementById("foto");
 
-
-/* ================= VALIDAR QR ================= 
-if (!qrId) {
-  document.body.innerHTML = "<h2>QR inválido</h2>";
-}
-
-/* ================= SWITCH DE PERFIL ================= */
+/* ================= SWITCH DE SECCIONES ================= */
 if (fTipo) {
   fTipo.addEventListener("change", () => {
     document.getElementById("seccionPersona").classList.add("qr-oculto");
     document.getElementById("seccionMascota").classList.add("qr-oculto");
     document.getElementById("seccionObjeto").classList.add("qr-oculto");
 
-    if (fTipo.value === "persona" || fTipo.value === "nino" || fTipo.value === "adultoMayor") {
+    if (["persona", "nino", "adultoMayor"].includes(fTipo.value)) {
       document.getElementById("seccionPersona").classList.remove("qr-oculto");
     }
+
     if (fTipo.value === "mascota") {
       document.getElementById("seccionMascota").classList.remove("qr-oculto");
     }
+
     if (fTipo.value === "objeto") {
       document.getElementById("seccionObjeto").classList.remove("qr-oculto");
     }
   });
 }
 
-/* ================= INDEX ================= */
+/* ================= PREVIEW FOTO ================= */
+if (fFoto) {
+  fFoto.addEventListener("change", () => {
+    const file = fFoto.files[0];
+    if (file) {
+      previewFoto.src = URL.createObjectURL(file);
+    }
+  });
+}
+
+/* ================= INDEX (FORMULARIO) ================= */
 if (formulario) {
   const qrRef = ref(db, "qrs/" + qrId);
 
@@ -76,8 +98,17 @@ if (formulario) {
     }
   });
 
-  formulario.addEventListener("submit", e => {
+  formulario.addEventListener("submit", async e => {
     e.preventDefault();
+
+    let fotoURL = "";
+
+    if (fFoto && fFoto.files.length > 0) {
+      const file = fFoto.files[0];
+      const ruta = storageRef(storage, `fotos/${qrId}`);
+      await uploadBytes(ruta, file);
+      fotoURL = await getDownloadURL(ruta);
+    }
 
     let data = {
       tipoPerfil: fTipo.value,
@@ -86,6 +117,7 @@ if (formulario) {
       contacto2: fContacto2.value,
       direccion: fDireccion.value,
       mensaje: fMensaje.value,
+      foto: fotoURL,
       fecha: new Date().toISOString()
     };
 
@@ -111,9 +143,8 @@ if (formulario) {
       };
     }
 
-    set(qrRef, data).then(() => {
-      window.location.href = `ver.html?id=${qrId}`;
-    });
+    await set(qrRef, data);
+    window.location.href = `ver.html?id=${qrId}`;
   });
 }
 
@@ -133,7 +164,12 @@ if (card && qrId) {
 
     dNombre.textContent = data.nombre;
     dTipo.textContent = data.tipoPerfil;
+    dContacto.textContent = data.contacto;
     dMensaje.textContent = data.mensaje;
+
+    if (data.foto) {
+      imgFoto.src = data.foto;
+    }
 
     document.getElementById("linkLlamar").href = `tel:${data.contacto}`;
     document.getElementById("linkWhatsapp").href = `https://wa.me/${data.contacto}`;
@@ -173,70 +209,6 @@ if (btnEliminar) {
         alert("Registro eliminado");
         location.reload();
       });
-    }
-  });
-}
-
-
-import { db, storage } from "./firebase.js";
-import { ref, get, set, remove } from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
-if (fFoto) {
-  fFoto.addEventListener("change", () => {
-    const file = fFoto.files[0];
-    if (file) {
-      previewFoto.src = URL.createObjectURL(file);
-    }
-  });
-}
-
-formulario.addEventListener("submit", async e => {
-  e.preventDefault();
-
-  let fotoURL = "";
-
-  if (fFoto.files.length > 0) {
-    const file = fFoto.files[0];
-    const ruta = storageRef(storage, `fotos/${qrId}`);
-    await uploadBytes(ruta, file);
-    fotoURL = await getDownloadURL(ruta);
-  }
-
-  await set(qrRef, {
-    nombre: fNombre.value,
-    tipoPerfil: fTipo.value,
-    contacto: fContacto.value,
-    contacto2: fContacto2.value,
-    direccion: fDireccion.value,
-    mensaje: fMensaje.value,
-    foto: fotoURL,
-    fecha: new Date().toISOString()
-  });
-
-  window.location.href = `ver.html?id=${qrId}`;
-});
-
-
-if (card && qrId) {
-  const qrRef = ref(db, "qrs/" + qrId);
-
-  get(qrRef).then(snapshot => {
-    const data = snapshot.val();
-
-    dNombre.textContent = data.nombre;
-    dTipo.textContent = data.tipoPerfil;
-    dContacto.textContent = data.contacto;
-    dMensaje.textContent = data.mensaje;
-
-    if (data.foto) {
-      imgFoto.src = data.foto;
     }
   });
 }
