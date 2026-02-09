@@ -1,6 +1,8 @@
 import { db } from "./firebase.js";
 import { ref, set } from
 "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { get } from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const params = new URLSearchParams(location.search);
 const qrId = params.get("id") || Date.now();
@@ -51,4 +53,27 @@ formulario.addEventListener("submit", async e => {
   });
 
   location.href = `ver.html?id=${qrId}`;
+});
+
+
+
+const modal = document.getElementById("modalNoConfig");
+const btnConfigurar = document.getElementById("btnConfigurar");
+
+const qrRef = ref(db, "qrs/" + qrId);
+
+get(qrRef).then(snapshot => {
+  if (snapshot.exists()) {
+    // Ya configurado → ir a ver.html
+    window.location.href = `ver.html?id=${qrId}`;
+  } else {
+    // NO configurado → mostrar modal
+    modal.classList.remove("qr-oculto");
+  }
+});
+
+// Botón del modal
+btnConfigurar.addEventListener("click", () => {
+  modal.classList.add("qr-oculto");
+  formulario.classList.remove("qr-oculto");
 });
