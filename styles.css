@@ -91,7 +91,7 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 .qr-modal-contenido {
@@ -107,5 +107,6 @@ textarea {
 .qr-modal-contenido h3 {
   margin-bottom: 10px;
 }
+
 
 
