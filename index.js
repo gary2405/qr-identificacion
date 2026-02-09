@@ -62,6 +62,14 @@ const btnConfigurar = document.getElementById("btnConfigurar");
 
 const qrRef = ref(db, "qrs/" + qrId);
 
+function mostrarModal() {
+  modal.classList.remove("oculto");
+  formulario.classList.add("qr-oculto");
+}
+
+function ocultarModal() {
+  modal.classList.add("oculto");
+}
 get(qrRef).then(snapshot => {
   if (snapshot.exists()) {
     // Ya configurado → ir a ver.html
@@ -72,8 +80,18 @@ get(qrRef).then(snapshot => {
   }
 });
 
-// Botón del modal
-btnConfigurar.addEventListener("click", () => {
-  modal.classList.add("qr-oculto");
-  formulario.classList.remove("qr-oculto");
+get(qrRef).then(snapshot => {
+  if (snapshot.exists()) {
+    mostrarDatos(snapshot.val());
+  } else {
+    mostrarModal(); // 👈 NO mostrar formulario directo
+  }
 });
+
+
+// Botón del modal
+if (btnConfigurar) {
+  btnConfigurar.addEventListener("click", () => {
+    ocultarModal();               // 👈 CIERRA EL MODAL
+    formulario.classList.remove("qr-oculto"); // 👈 MUESTRA FORMULARIO
+  })}
