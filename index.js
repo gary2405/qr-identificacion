@@ -62,23 +62,23 @@ formulario.addEventListener("submit", async e => {
 
 
 
+// Validar QR
 get(qrRef).then(snapshot => {
   if (snapshot.exists()) {
-    // Ya configurado → ir a ver.html
     window.location.href = `ver.html?id=${qrId}`;
   } else {
-    // NO configurado → mostrar modal
     modal.classList.remove("qr-oculto");
+    formulario.classList.add("qr-oculto");
   }
 });
 
-// Botón del modal
-btnConfigurar.addEventListener("click", () => {
-  modal.classList.add("qr-oculto");
-  formulario.classList.remove("qr-oculto");
+// UN SOLO EVENTO
+btnConfigurar.addEventListener("click", function () {
+  modal.classList.add("qr-oculto");     // ocultar modal
+  formulario.classList.remove("qr-oculto"); // mostrar formulario
 });
 
-function mostrarModal() {
+/*function mostrarModal() {
   modal.classList.remove("oculto");
   formulario.classList.add("qr-oculto");
 }
@@ -97,4 +97,4 @@ if (btnConfigurar) {
  btnConfigurar.addEventListener("click", () => {
   modal.remove();
   formulario.classList.remove("qr-oculto");
-});
+}); */
