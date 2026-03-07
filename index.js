@@ -98,3 +98,6 @@ if (btnConfigurar) {
   modal.remove();
   formulario.classList.remove("qr-oculto");
 }); */
+
+
+
