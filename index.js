@@ -39,7 +39,7 @@ if (!qrId) {
 
 /* estado inicial */
 modal.classList.add("qr-oculto");
-contenidoPrincipal.classList.add("qr-oculto");
+/*contenidoPrincipal.classList.add("qr-oculto");*/
 formulario.classList.add("qr-oculto");
 titulo.classList.add("qr-oculto");
 
