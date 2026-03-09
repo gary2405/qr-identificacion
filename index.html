@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
 </head>
-
-
 <body class="qr-body">
 
   <div id="pantallaCarga" class="qr-loader-pantalla">
@@ -17,30 +15,26 @@
     </div>
   </div>
 
-  <!-- MODAL QR NO CONFIGURADO -->
   <div id="modalNoConfig" class="qr-modal qr-oculto">
     <div class="qr-modal-contenido">
       <h3>Código no configurado</h3>
       <p>Este código aún no ha sido configurado.</p>
-      <button id="btnConfigurar" class="qr-btn">
-        Configurar ahora
-      </button>
+      <button id="btnConfigurar" class="qr-btn">Configurar ahora</button>
     </div>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
   <div id="contenidoPrincipal" class="qr-contenedor qr-oculto">
-    <h2 id="titulo" class="qr-oculto"></h2>
+    <h2 id="titulo" class="qr-oculto">Registrar información</h2>
 
     <form id="formulario" class="qr-oculto">
-
       <div class="qr-foto">
-        <img id="previewFoto" class="qr-foto-preview">
+        <img id="previewFoto" class="qr-foto-preview" alt="Foto previa">
         <label for="fFoto" class="qr-foto-circulo">+</label>
         <input type="file" id="fFoto" accept="image/*">
       </div>
 
       <select id="fTipo" required>
+        <option value="">Tipo de perfil</option>
         <option value="">Tipo de perfil</option>
         <option value="persona">Persona</option>
         <option value="nino">Niño / Niña</option>
@@ -54,6 +48,12 @@
       <input id="fContacto2" type="text" placeholder="Contacto de emergencia (opcional)">
       <input id="fDireccion" type="text" placeholder="Dirección (opcional)">
       <textarea id="fMensaje" placeholder="Mensaje importante"></textarea>
+
+      <div class="qr-bloque-login">
+        <h3>Acceso del dueño</h3>
+        <input id="fPin" type="password" placeholder="Crea un PIN de 4 a 8 dígitos" required>
+        <input id="fPinConfirmar" type="password" placeholder="Confirmar PIN" required>
+      </div>
 
       <div id="seccionPersona" class="qr-oculto">
         <h3>Información médica</h3>
