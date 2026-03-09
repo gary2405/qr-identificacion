@@ -1,9 +1,9 @@
 import { db } from "./firebase.js";
-import { ref, get, set } from
-"https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const params = new URLSearchParams(window.location.search);
 const qrId = params.get("id");
+const editMode = params.get("edit") === "1";
 
 if (!qrId) {
   document.body.innerHTML = "<h2>QR inválido</h2>";
@@ -23,6 +23,8 @@ const fContacto = document.getElementById("fContacto");
 const fContacto2 = document.getElementById("fContacto2");
 const fDireccion = document.getElementById("fDireccion");
 const fMensaje = document.getElementById("fMensaje");
+const fPin = document.getElementById("fPin");
+const fPinConfirmar = document.getElementById("fPinConfirmar");
 
 const fSangre = document.getElementById("fSangre");
 const fPadecimientos = document.getElementById("fPadecimientos");
@@ -38,16 +40,18 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fFoto = document.getElementById("fFoto");
 const previewFoto = document.getElementById("previewFoto");
 
+const qrRef = ref(db, "qrs/" + qrId);
+
 function ocultarCarga() {
   pantallaCarga.classList.add("qr-oculto");
 }
 
-function mostrarFormularioDesdeModal() {
+function mostrarFormulario(tituloTexto = "Registrar información") {
   modal.classList.add("qr-oculto");
   contenidoPrincipal.classList.remove("qr-oculto");
   formulario.classList.remove("qr-oculto");
   titulo.classList.remove("qr-oculto");
-  titulo.textContent = "Registrar información";
+  titulo.textContent = tituloTexto;
 }
 
 function comprimirImagen(file) {
@@ -80,49 +84,99 @@ function comprimirImagen(file) {
   });
 }
 
-/* Secciones según perfil */
-if (fTipo) {
-  fTipo.addEventListener("change", () => {
-    document.getElementById("seccionPersona").classList.add("qr-oculto");
-    document.getElementById("seccionMascota").classList.add("qr-oculto");
-    document.getElementById("seccionObjeto").classList.add("qr-oculto");
+function aplicarSecciones() {
+  document.getElementById("seccionPersona").classList.add("qr-oculto");
+  document.getElementById("seccionMascota").classList.add("qr-oculto");
+  document.getElementById("seccionObjeto").classList.add("qr-oculto");
 
-    if (["persona", "nino", "adultoMayor"].includes(fTipo.value)) {
-      document.getElementById("seccionPersona").classList.remove("qr-oculto");
-    }
+  if (["persona", "nino", "adultoMayor"].includes(fTipo.value)) {
+    document.getElementById("seccionPersona").classList.remove("qr-oculto");
+  }
 
-    if (fTipo.value === "mascota") {
-      document.getElementById("seccionMascota").classList.remove("qr-oculto");
-    }
+  if (fTipo.value === "mascota") {
+    document.getElementById("seccionMascota").classList.remove("qr-oculto");
+  }
 
-    if (fTipo.value === "objeto") {
-      document.getElementById("seccionObjeto").classList.remove("qr-oculto");
-    }
-  });
+  if (fTipo.value === "objeto") {
+    document.getElementById("seccionObjeto").classList.remove("qr-oculto");
+  }
 }
 
-/* Preview de foto */
+function llenarFormulario(data) {
+  fTipo.value = data.tipoPerfil || "";
+  fNombre.value = data.nombre || "";
+  fContacto.value = data.contacto || "";
+  fContacto2.value = data.contacto2 || "";
+  fDireccion.value = data.direccion || "";
+  fMensaje.value = data.mensaje || "";
+
+  if (data.foto) {
+    previewFoto.src = data.foto;
+  }
+
+  if (data.sangre) fSangre.value = data.sangre;
+  if (data.padecimientos) fPadecimientos.value = data.padecimientos;
+  if (data.alergias) fAlergias.value = data.alergias;
+
+  if (data.mascota) {
+    fEspecie.value = data.mascota.especie || "";
+    fRaza.value = data.mascota.raza || "";
+    fColor.value = data.mascota.color || "";
+  }
+
+  if (data.objeto) {
+    fDescripcion.value = data.objeto.descripcion || "";
+    fInstrucciones.value = data.objeto.instrucciones || "";
+  }
+
+  aplicarSecciones();
+}
+
+if (fTipo) {
+  fTipo.addEventListener("change", aplicarSecciones);
+}
+
 if (fFoto) {
   fFoto.addEventListener("change", async () => {
     const file = fFoto.files[0];
     if (!file) return;
-
     const base64Comprimido = await comprimirImagen(file);
     previewFoto.src = base64Comprimido;
   });
 }
 
-const qrRef = ref(db, "qrs/" + qrId);
-
-/* Revisar si ya existe */
 get(qrRef)
   .then(snapshot => {
-    if (snapshot.exists()) {
+    const existe = snapshot.exists();
+    const data = existe ? snapshot.val() : null;
+
+    ocultarCarga();
+
+    if (editMode) {
+      const esDueno = localStorage.getItem("owner_" + qrId) === "true";
+      if (!existe) {
+        mostrarFormulario("Registrar información");
+        return;
+      }
+
+      if (!esDueno) {
+        window.location.href = `ver.html?id=${qrId}`;
+        return;
+      }
+
+      mostrarFormulario("Editar información");
+      llenarFormulario(data);
+
+      fPin.required = false;
+      fPinConfirmar.required = false;
+      return;
+    }
+
+    if (existe) {
       window.location.href = `ver.html?id=${qrId}`;
       return;
     }
 
-    ocultarCarga();
     modal.classList.remove("qr-oculto");
     contenidoPrincipal.classList.add("qr-oculto");
     formulario.classList.add("qr-oculto");
@@ -131,59 +185,88 @@ get(qrRef)
   .catch(error => {
     console.error("Error al consultar Firebase:", error);
     ocultarCarga();
-    contenidoPrincipal.classList.remove("qr-oculto");
-    formulario.classList.remove("qr-oculto");
-    titulo.classList.remove("qr-oculto");
-    titulo.textContent = "Registrar información";
+    mostrarFormulario("Registrar información");
   });
 
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
-    mostrarFormularioDesdeModal();
+    mostrarFormulario("Registrar información");
   });
 }
 
 formulario.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  let fotoBase64 = "";
+  try {
+    let fotoBase64 = previewFoto.src || "";
 
-  if (fFoto && fFoto.files[0]) {
-    fotoBase64 = await comprimirImagen(fFoto.files[0]);
-  }
+    if (fFoto && fFoto.files[0]) {
+      fotoBase64 = await comprimirImagen(fFoto.files[0]);
+    }
 
-  const data = {
-    tipoPerfil: fTipo.value,
-    nombre: fNombre.value,
-    contacto: fContacto.value,
-    contacto2: fContacto2.value,
-    direccion: fDireccion.value,
-    mensaje: fMensaje.value,
-    foto: fotoBase64,
-    fecha: new Date().toISOString()
-  };
+    const existe = (await get(qrRef)).exists();
 
-  if (["persona", "nino", "adultoMayor"].includes(fTipo.value)) {
-    data.sangre = fSangre.value;
-    data.padecimientos = fPadecimientos.value;
-    data.alergias = fAlergias.value;
-  }
+    if (!editMode) {
+      const pin = fPin.value.trim();
+      const pin2 = fPinConfirmar.value.trim();
 
-  if (fTipo.value === "mascota") {
-    data.mascota = {
-      especie: fEspecie.value,
-      raza: fRaza.value,
-      color: fColor.value
+      if (!/^\d{4,8}$/.test(pin)) {
+        alert("El PIN debe tener de 4 a 8 dígitos.");
+        return;
+      }
+
+      if (pin !== pin2) {
+        alert("Los PIN no coinciden.");
+        return;
+      }
+    }
+
+    const data = {
+      tipoPerfil: fTipo.value,
+      nombre: fNombre.value,
+      contacto: fContacto.value,
+      contacto2: fContacto2.value,
+      direccion: fDireccion.value,
+      mensaje: fMensaje.value,
+      foto: fotoBase64,
+      fecha: new Date().toISOString()
     };
-  }
 
-  if (fTipo.value === "objeto") {
-    data.objeto = {
-      descripcion: fDescripcion.value,
-      instrucciones: fInstrucciones.value
-    };
-  }
+    if (!existe || !editMode) {
+      data.ownerPin = fPin.value.trim();
+    }
 
-  await set(qrRef, data);
-  window.location.href = `ver.html?id=${qrId}`;
+    if (["persona", "nino", "adultoMayor"].includes(fTipo.value)) {
+      data.sangre = fSangre.value;
+      data.padecimientos = fPadecimientos.value;
+      data.alergias = fAlergias.value;
+    }
+
+    if (fTipo.value === "mascota") {
+      data.mascota = {
+        especie: fEspecie.value,
+        raza: fRaza.value,
+        color: fColor.value
+      };
+    }
+
+    if (fTipo.value === "objeto") {
+      data.objeto = {
+        descripcion: fDescripcion.value,
+        instrucciones: fInstrucciones.value
+      };
+    }
+
+    if (editMode) {
+      await update(qrRef, data);
+    } else {
+      await set(qrRef, data);
+      localStorage.setItem("owner_" + qrId, "true");
+    }
+
+    window.location.href = `ver.html?id=${qrId}`;
+  } catch (error) {
+    console.error("Error guardando:", error);
+    alert("No se pudo guardar la información.");
+  }
 });
