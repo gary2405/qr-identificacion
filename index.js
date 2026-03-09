@@ -46,6 +46,7 @@ function mostrarFormularioDesdeModal() {
   modal.classList.add("qr-oculto");
   contenidoPrincipal.classList.remove("qr-oculto");
   formulario.classList.remove("qr-oculto");
+  titulo.classList.remove("qr-oculto");
   titulo.textContent = "Registrar información";
 }
 
@@ -67,7 +68,6 @@ function comprimirImagen(file) {
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // calidad 0.7 para que pese mucho menos
         resolve(canvas.toDataURL("image/jpeg", 0.7));
       };
 
@@ -118,7 +118,7 @@ const qrRef = ref(db, "qrs/" + qrId);
 get(qrRef)
   .then(snapshot => {
     if (snapshot.exists()) {
-      window.location.href = ver.html?id=$:{qrId};
+      window.location.href = `ver.html?id=${qrId}`;
       return;
     }
 
@@ -126,13 +126,14 @@ get(qrRef)
     modal.classList.remove("qr-oculto");
     contenidoPrincipal.classList.add("qr-oculto");
     formulario.classList.add("qr-oculto");
-    titulo.textContent = "Código QR";
+    titulo.classList.add("qr-oculto");
   })
   .catch(error => {
     console.error("Error al consultar Firebase:", error);
     ocultarCarga();
     contenidoPrincipal.classList.remove("qr-oculto");
     formulario.classList.remove("qr-oculto");
+    titulo.classList.remove("qr-oculto");
     titulo.textContent = "Registrar información";
   });
 
@@ -184,7 +185,5 @@ formulario.addEventListener("submit", async (e) => {
   }
 
   await set(qrRef, data);
-  window.location.href = ver.html?id=$:{qrId};
+  window.location.href = `ver.html?id=${qrId}`;
 });
-
-
