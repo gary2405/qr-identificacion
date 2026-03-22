@@ -28,7 +28,7 @@
   <form id="formulario" class="qr-oculto">
 
     <!-- COVER -->
-    <div class="qr-cover-box">
+    <div>
       <img id="previewCover" class="qr-cover-preview">
       <input type="file" id="fCover" accept="image/*">
     </div>
@@ -53,7 +53,23 @@
     <input id="fContacto" placeholder="Contacto" required>
     <input id="fContacto2" placeholder="Contacto emergencia">
     <input id="fDireccion" placeholder="Dirección">
-    <input id="fUbicacion" placeholder="Ubicación (Ej: Chacarita, Puntarenas, Costa Rica)">
+
+    <!-- UBICACIÓN -->
+    <h3>Ubicación</h3>
+    <select id="fProvincia">
+      <option value="">Provincia</option>
+      <option>Puntarenas</option>
+      <option>San José</option>
+    </select>
+
+    <select id="fCanton">
+      <option value="">Cantón</option>
+    </select>
+
+    <select id="fDistrito">
+      <option value="">Distrito</option>
+    </select>
+
     <textarea id="fMensaje" placeholder="Mensaje"></textarea>
 
     <!-- LOGIN -->
@@ -64,7 +80,6 @@
 
     <!-- PERSONA -->
     <div id="seccionPersona" class="qr-oculto">
-      <h3>Detalles físicos</h3>
       <input id="fEdad" placeholder="Edad">
       <input id="fSexo" placeholder="Sexo">
       <input id="fEstatura" placeholder="Estatura">
@@ -72,7 +87,6 @@
       <input id="fCabello" placeholder="Cabello">
       <input id="fOjos" placeholder="Ojos">
 
-      <h3>Salud</h3>
       <input id="fSangre" placeholder="Sangre">
       <textarea id="fPadecimientos"></textarea>
       <textarea id="fAlergias"></textarea>
@@ -89,7 +103,7 @@
         <option value="perdido">Perdido</option>
       </select>
 
-      <input id="fRecompensa" placeholder="Recompensa opcional">
+      <input id="fRecompensa" placeholder="Recompensa">
     </div>
 
     <button class="qr-btn">Guardar</button>
@@ -99,4 +113,3 @@
 <script type="module" src="index.js"></script>
 </body>
 </html>
-
