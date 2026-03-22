@@ -40,6 +40,43 @@ const btnEliminar = document.getElementById("btnEliminar");
 const btnVerComo = document.getElementById("btnVerComo");
 const btnCerrarSesionDueno = document.getElementById("btnCerrarSesionDueno");
 
+const cover = document.querySelector(".perfil-cover");
+if (data.cover) {
+  cover.style.backgroundImage = `url(${data.cover})`;
+}
+
+direccion.textContent = data.ubicacion || "Sin ubicación";
+
+if (data.persona) {
+  const p = data.persona;
+
+  const bloque = document.createElement("div");
+  bloque.className = "perfil-bloque";
+
+  bloque.innerHTML = `
+    <h3>Detalles</h3>
+    ${p.edad ? `<p>Edad: ${p.edad}</p>` : ""}
+    ${p.estatura ? `<p>Estatura: ${p.estatura}</p>` : ""}
+    ${p.peso ? `<p>Peso: ${p.peso}</p>` : ""}
+    ${p.cabello ? `<p>Cabello: ${p.cabello}</p>` : ""}
+    ${p.ojos ? `<p>Ojos: ${p.ojos}</p>` : ""}
+  `;
+
+  document.querySelector(".perfil-card").appendChild(bloque);
+}
+
+if (data.mascota) {
+  if (data.mascota.estado === "perdido") {
+    document.body.style.background = "#ffe5e5";
+  }
+
+  if (data.mascota.recompensa) {
+    const r = document.createElement("p");
+    r.innerHTML = `<b>Recompensa:</b> ${data.mascota.recompensa}`;
+    document.querySelector(".perfil-card").appendChild(r);
+  }
+}
+
 let dataActual = null;
 let esDueno = localStorage.getItem("owner_" + qrId) === "true";
 let modoVisitante = false;
@@ -69,9 +106,12 @@ function llenarPerfil(data) {
   mensaje.textContent = data.mensaje || "Sin mensaje";
 
   if (data.foto) {
-    foto.src = data.foto;
-    foto.classList.remove("qr-oculto");
-  }
+  foto.src = data.foto;
+  foto.classList.remove("qr-oculto");
+} else {
+  foto.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  foto.classList.remove("qr-oculto");
+}
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
   linkWhatsapp.href = `https://wa.me/${data.contacto || ""}`;

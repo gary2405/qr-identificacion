@@ -40,6 +40,20 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fFoto = document.getElementById("fFoto");
 const previewFoto = document.getElementById("previewFoto");
 
+const fCover = document.getElementById("fCover");
+const previewCover = document.getElementById("previewCover");
+const fUbicacion = document.getElementById("fUbicacion");
+
+const fEdad = document.getElementById("fEdad");
+const fSexo = document.getElementById("fSexo");
+const fEstatura = document.getElementById("fEstatura");
+const fPeso = document.getElementById("fPeso");
+const fCabello = document.getElementById("fCabello");
+const fOjos = document.getElementById("fOjos");
+
+const fEstadoMascota = document.getElementById("fEstadoMascota");
+const fRecompensa = document.getElementById("fRecompensa");
+
 const qrRef = ref(db, "qrs/" + qrId);
 
 function ocultarCarga() {
@@ -113,6 +127,28 @@ function llenarFormulario(data) {
   if (data.foto) {
     previewFoto.src = data.foto;
   }
+
+  data.ubicacion = fUbicacion.value;
+  data.cover = previewCover.src || "";
+
+  data.persona = {
+  edad: fEdad.value,
+  sexo: fSexo.value,
+  estatura: fEstatura.value,
+  peso: fPeso.value,
+  cabello: fCabello.value,
+  ojos: fOjos.value
+};
+
+if (fTipo.value === "mascota") {
+  data.mascota = {
+    especie: fEspecie.value,
+    raza: fRaza.value,
+    color: fColor.value,
+    estado: fEstadoMascota.value,
+    recompensa: fRecompensa.value
+  };
+}
 
   if (data.sangre) fSangre.value = data.sangre;
   if (data.padecimientos) fPadecimientos.value = data.padecimientos;
@@ -270,3 +306,13 @@ formulario.addEventListener("submit", async (e) => {
     alert("No se pudo guardar la información.");
   }
 });
+
+if (fCover) {
+  fCover.addEventListener("change", async () => {
+    const file = fCover.files[0];
+    if (!file) return;
+    const base64 = await comprimirImagen(file);
+    previewCover.src = base64;
+  });
+}
+
