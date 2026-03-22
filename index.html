@@ -8,79 +8,95 @@
 </head>
 <body class="qr-body">
 
-  <div id="pantallaCarga" class="qr-loader-pantalla">
-    <div class="qr-loader-caja">
-      <div class="qr-loader-spinner"></div>
-      <p>Cargando información...</p>
-    </div>
+<div id="pantallaCarga" class="qr-loader-pantalla">
+  <div class="qr-loader-caja">
+    <div class="qr-loader-spinner"></div>
+    <p>Cargando información...</p>
   </div>
+</div>
 
-  <div id="modalNoConfig" class="qr-modal qr-oculto">
-    <div class="qr-modal-contenido">
-      <h3>Código no configurado</h3>
-      <p>Este código aún no ha sido configurado.</p>
-      <button id="btnConfigurar" class="qr-btn">Configurar ahora</button>
-    </div>
+<div id="modalNoConfig" class="qr-modal qr-oculto">
+  <div class="qr-modal-contenido">
+    <h3>Código no configurado</h3>
+    <button id="btnConfigurar" class="qr-btn">Configurar ahora</button>
   </div>
+</div>
 
-  <div id="contenidoPrincipal" class="qr-contenedor qr-oculto">
-    <h2 id="titulo" class="qr-oculto">Registrar información</h2>
+<div id="contenidoPrincipal" class="qr-contenedor qr-oculto">
+  <h2 id="titulo" class="qr-oculto">Registrar información</h2>
 
-    <form id="formulario" class="qr-oculto">
-      <div class="qr-foto">
-        <img id="previewFoto" class="qr-foto-preview" alt="Foto previa">
-        <label for="fFoto" class="qr-foto-circulo">+</label>
-        <input type="file" id="fFoto" accept="image/*">
-      </div>
+  <form id="formulario" class="qr-oculto">
 
-      <select id="fTipo" required>
-        <option value="">Tipo de perfil</option>
-        <option value="">Tipo de perfil</option>
-        <option value="persona">Persona</option>
-        <option value="nino">Niño / Niña</option>
-        <option value="adultoMayor">Adulto mayor</option>
-        <option value="mascota">Mascota</option>
-        <option value="objeto">Objeto</option>
+    <!-- COVER -->
+    <div class="qr-cover-box">
+      <img id="previewCover" class="qr-cover-preview">
+      <input type="file" id="fCover" accept="image/*">
+    </div>
+
+    <!-- FOTO -->
+    <div class="qr-foto">
+      <img id="previewFoto" class="qr-foto-preview">
+      <label for="fFoto" class="qr-foto-circulo">+</label>
+      <input type="file" id="fFoto" accept="image/*">
+    </div>
+
+    <select id="fTipo" required>
+      <option value="">Tipo de perfil</option>
+      <option value="persona">Persona</option>
+      <option value="nino">Niño</option>
+      <option value="adultoMayor">Adulto mayor</option>
+      <option value="mascota">Mascota</option>
+      <option value="objeto">Objeto</option>
+    </select>
+
+    <input id="fNombre" placeholder="Nombre" required>
+    <input id="fContacto" placeholder="Contacto" required>
+    <input id="fContacto2" placeholder="Contacto emergencia">
+    <input id="fDireccion" placeholder="Dirección">
+    <input id="fUbicacion" placeholder="Ubicación (Ej: Chacarita, Puntarenas, Costa Rica)">
+    <textarea id="fMensaje" placeholder="Mensaje"></textarea>
+
+    <!-- LOGIN -->
+    <div class="qr-bloque-login">
+      <input id="fPin" type="password" placeholder="PIN 4-8 dígitos" required>
+      <input id="fPinConfirmar" type="password" placeholder="Confirmar PIN" required>
+    </div>
+
+    <!-- PERSONA -->
+    <div id="seccionPersona" class="qr-oculto">
+      <h3>Detalles físicos</h3>
+      <input id="fEdad" placeholder="Edad">
+      <input id="fSexo" placeholder="Sexo">
+      <input id="fEstatura" placeholder="Estatura">
+      <input id="fPeso" placeholder="Peso">
+      <input id="fCabello" placeholder="Cabello">
+      <input id="fOjos" placeholder="Ojos">
+
+      <h3>Salud</h3>
+      <input id="fSangre" placeholder="Sangre">
+      <textarea id="fPadecimientos"></textarea>
+      <textarea id="fAlergias"></textarea>
+    </div>
+
+    <!-- MASCOTA -->
+    <div id="seccionMascota" class="qr-oculto">
+      <input id="fEspecie" placeholder="Especie">
+      <input id="fRaza" placeholder="Raza">
+      <input id="fColor" placeholder="Color">
+
+      <select id="fEstadoMascota">
+        <option value="casa">En casa</option>
+        <option value="perdido">Perdido</option>
       </select>
 
-      <input id="fNombre" type="text" placeholder="Nombre" required>
-      <input id="fContacto" type="text" placeholder="Contacto principal" required>
-      <input id="fContacto2" type="text" placeholder="Contacto de emergencia (opcional)">
-      <input id="fDireccion" type="text" placeholder="Dirección (opcional)">
-      <textarea id="fMensaje" placeholder="Mensaje importante"></textarea>
+      <input id="fRecompensa" placeholder="Recompensa opcional">
+    </div>
 
-      <div class="qr-bloque-login">
-        <h3>Acceso del dueño</h3>
-        <input id="fPin" type="password" placeholder="Crea un PIN de 4 a 8 dígitos" required>
-        <input id="fPinConfirmar" type="password" placeholder="Confirmar PIN" required>
-      </div>
+    <button class="qr-btn">Guardar</button>
+  </form>
+</div>
 
-      <div id="seccionPersona" class="qr-oculto">
-        <h3>Información médica</h3>
-        <input id="fSangre" type="text" placeholder="Tipo de sangre">
-        <textarea id="fPadecimientos" placeholder="Padecimientos"></textarea>
-        <textarea id="fAlergias" placeholder="Alergias"></textarea>
-      </div>
-
-      <div id="seccionMascota" class="qr-oculto">
-        <h3>Datos de la mascota</h3>
-        <input id="fEspecie" type="text" placeholder="Especie">
-        <input id="fRaza" type="text" placeholder="Raza">
-        <input id="fColor" type="text" placeholder="Color">
-      </div>
-
-      <div id="seccionObjeto" class="qr-oculto">
-        <h3>Objeto</h3>
-        <textarea id="fDescripcion" placeholder="Descripción"></textarea>
-        <textarea id="fInstrucciones" placeholder="Qué hacer si se encuentra"></textarea>
-      </div>
-
-      <button class="qr-btn" type="submit">Guardar información</button>
-    </form>
-  </div>
-
-  <script type="module" src="index.js"></script>
+<script type="module" src="index.js"></script>
 </body>
 </html>
-
 
