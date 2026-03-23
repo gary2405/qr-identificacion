@@ -45,20 +45,34 @@ function stopLoading(){
   pantallaCarga.style.display="none";
 }
 
-/* CARGA */
-get(qrRef).then(snap=>{
-  stopLoading();
+let yaRespondio = false;
 
-  if(!snap.exists()){
-    modal.classList.remove("qr-oculto");
-  }else{
-    window.location.href = `ver.html?id=${qrId}`;
+setTimeout(() => {
+  if (!yaRespondio) {
+    console.warn("Firebase tardó demasiado, forzando UI");
+    stopLoading();
+    contenido.classList.remove("qr-oculto");
   }
+}, 4000); // 4 segundos máximo
 
-}).catch(()=>{
-  stopLoading();
-  contenido.classList.remove("qr-oculto");
-});
+get(qrRef)
+  .then(snap => {
+    yaRespondio = true;
+    stopLoading();
+
+    if (!snap.exists()) {
+      modal.classList.remove("qr-oculto");
+    } else {
+      window.location.href = `ver.html?id=${qrId}`;
+    }
+  })
+  .catch(error => {
+    yaRespondio = true;
+    console.error("Error Firebase:", error);
+
+    stopLoading();
+    contenido.classList.remove("qr-oculto");
+  });
 
 /* CONFIGURAR */
 btnConfigurar.onclick=()=>{
