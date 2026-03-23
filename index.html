@@ -18,96 +18,95 @@
 <div id="modalNoConfig" class="qr-modal qr-oculto">
   <div class="qr-modal-contenido">
     <h3>Código no configurado</h3>
-    <button id="btnConfigurar" class="qr-btn">Configurar ahora</button>
+    <button id="btnConfigurar" class="qr-btn">Configurar</button>
   </div>
 </div>
 
 <div id="contenidoPrincipal" class="qr-contenedor qr-oculto">
-  <h2 id="titulo" class="qr-oculto">Registrar información</h2>
 
-  <form id="formulario" class="qr-oculto">
+<form id="formulario" class="qr-oculto">
 
-    <!-- COVER -->
-    <div>
-      <img id="previewCover" class="qr-cover-preview">
-      <input type="file" id="fCover" accept="image/*">
-    </div>
+<!-- FOTO -->
+<div class="qr-foto">
+  <img id="previewFoto" class="qr-foto-preview">
+  <label for="fFoto" class="qr-foto-circulo">+</label>
+  <input type="file" id="fFoto">
+</div>
 
-    <!-- FOTO -->
-    <div class="qr-foto">
-      <img id="previewFoto" class="qr-foto-preview">
-      <label for="fFoto" class="qr-foto-circulo">+</label>
-      <input type="file" id="fFoto" accept="image/*">
-    </div>
+<select id="fTipo" required>
+  <option value="">Tipo</option>
+  <option value="persona">Persona</option>
+  <option value="nino">Niño</option>
+  <option value="adultoMayor">Adulto mayor</option>
+  <option value="mascota">Mascota</option>
+  <option value="objeto">Objeto</option>
+</select>
 
-    <select id="fTipo" required>
-      <option value="">Tipo de perfil</option>
-      <option value="persona">Persona</option>
-      <option value="nino">Niño</option>
-      <option value="adultoMayor">Adulto mayor</option>
-      <option value="mascota">Mascota</option>
-      <option value="objeto">Objeto</option>
-    </select>
+<input id="fNombre" placeholder="Nombre" required>
+<input id="fContacto" placeholder="Contacto" required>
+<input id="fContacto2" placeholder="Emergencia">
+<input id="fDireccion" placeholder="Dirección">
 
-    <input id="fNombre" placeholder="Nombre" required>
-    <input id="fContacto" placeholder="Contacto" required>
-    <input id="fContacto2" placeholder="Contacto emergencia">
-    <input id="fDireccion" placeholder="Dirección">
+<!-- UBICACION -->
+<select id="fProvincia">
+  <option>Provincia</option>
+  <option>Puntarenas</option>
+  <option>San José</option>
+</select>
 
-    <!-- UBICACIÓN -->
-    <h3>Ubicación</h3>
-    <select id="fProvincia">
-      <option value="">Provincia</option>
-      <option>Puntarenas</option>
-      <option>San José</option>
-    </select>
+<select id="fCanton">
+  <option>Cantón</option>
+</select>
 
-    <select id="fCanton">
-      <option value="">Cantón</option>
-    </select>
+<select id="fDistrito">
+  <option>Distrito</option>
+</select>
 
-    <select id="fDistrito">
-      <option value="">Distrito</option>
-    </select>
+<textarea id="fMensaje" placeholder="Mensaje"></textarea>
 
-    <textarea id="fMensaje" placeholder="Mensaje"></textarea>
+<!-- PIN -->
+<input id="fPin" type="password" placeholder="PIN" required>
+<input id="fPinConfirmar" type="password" placeholder="Confirmar PIN" required>
 
-    <!-- LOGIN -->
-    <div class="qr-bloque-login">
-      <input id="fPin" type="password" placeholder="PIN 4-8 dígitos" required>
-      <input id="fPinConfirmar" type="password" placeholder="Confirmar PIN" required>
-    </div>
+<!-- PERSONA -->
+<div id="seccionPersona" class="qr-oculto">
+  <input id="fSangre" placeholder="Tipo sangre">
+  <textarea id="fPadecimientos"></textarea>
+  <textarea id="fAlergias"></textarea>
 
-    <!-- PERSONA -->
-    <div id="seccionPersona" class="qr-oculto">
-      <input id="fEdad" placeholder="Edad">
-      <input id="fSexo" placeholder="Sexo">
-      <input id="fEstatura" placeholder="Estatura">
-      <input id="fPeso" placeholder="Peso">
-      <input id="fCabello" placeholder="Cabello">
-      <input id="fOjos" placeholder="Ojos">
+  <!-- NUEVO -->
+  <input id="fEdad" placeholder="Edad">
+  <input id="fEstatura" placeholder="Estatura">
+  <input id="fPeso" placeholder="Peso">
+  <input id="fCabello" placeholder="Cabello">
+  <input id="fOjos" placeholder="Ojos">
+</div>
 
-      <input id="fSangre" placeholder="Sangre">
-      <textarea id="fPadecimientos"></textarea>
-      <textarea id="fAlergias"></textarea>
-    </div>
+<!-- MASCOTA -->
+<div id="seccionMascota" class="qr-oculto">
+  <input id="fEspecie">
+  <input id="fRaza">
+  <input id="fColor">
 
-    <!-- MASCOTA -->
-    <div id="seccionMascota" class="qr-oculto">
-      <input id="fEspecie" placeholder="Especie">
-      <input id="fRaza" placeholder="Raza">
-      <input id="fColor" placeholder="Color">
+  <!-- NUEVO -->
+  <select id="fEstadoMascota">
+    <option value="">Estado</option>
+    <option value="normal">En casa</option>
+    <option value="perdido">Perdido</option>
+  </select>
 
-      <select id="fEstadoMascota">
-        <option value="casa">En casa</option>
-        <option value="perdido">Perdido</option>
-      </select>
+  <input id="fRecompensa" placeholder="Recompensa opcional">
+</div>
 
-      <input id="fRecompensa" placeholder="Recompensa">
-    </div>
+<!-- OBJETO -->
+<div id="seccionObjeto" class="qr-oculto">
+  <textarea id="fDescripcion"></textarea>
+  <textarea id="fInstrucciones"></textarea>
+</div>
 
-    <button class="qr-btn">Guardar</button>
-  </form>
+<button class="qr-btn">Guardar</button>
+
+</form>
 </div>
 
 <script type="module" src="index.js"></script>
