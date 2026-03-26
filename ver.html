@@ -1,86 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Información registrada</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<title>Perfil</title>
+<link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="qr-body">
+<div class="perfil-card">
+  <img id="foto" class="perfil-avatar">
+  <h2 id="nombre"></h2>
+  <p id="tipo"></p>
+  <p id="direccion"></p>
+  <p id="mensaje"></p>
 
-<div class="perfil-wrap">
-  <div class="perfil-cover"></div>
-
-  <div class="perfil-card">
-    <img id="foto" class="perfil-avatar qr-oculto" alt="Foto del perfil">
-
-    <h2 id="nombre"></h2>
-    <p class="perfil-sub"><span id="tipo"></span></p>
-    <p class="perfil-sub"><span id="direccion"></span></p>
-
-    <div class="perfil-acciones">
-      <a id="linkLlamar" href="#" class="qr-btn perfil-btn-link">Llamar</a>
-      <a id="linkWhatsapp" href="#" class="qr-btn perfil-btn-link">WhatsApp</a>
-    </div>
-
-    <div id="bloqueEmergencia" class="qr-oculto perfil-bloque">
-      <h3>Contacto de emergencia</h3>
-      <a id="linkLlamar2" href="#" class="perfil-link-sec">Llamar</a>
-      <a id="linkWhatsapp2" href="#" class="perfil-link-sec">WhatsApp</a>
-    </div>
-
-    <div class="perfil-bloque">
-      <h3>Mensaje</h3>
-      <p id="mensaje"></p>
-    </div>
-
-    <div id="verPersona" class="qr-oculto perfil-bloque">
-      <h3>Información médica</h3>
-      <p><strong>Tipo de sangre:</strong> <span id="verSangre"></span></p>
-      <p><strong>Padecimientos:</strong> <span id="verPadecimientos"></span></p>
-      <p><strong>Alergias:</strong> <span id="verAlergias"></span></p>
-    </div>
-
-    <div id="verMascota" class="qr-oculto perfil-bloque">
-      <h3>Datos de la mascota</h3>
-      <p><strong>Especie:</strong> <span id="verEspecie"></span></p>
-      <p><strong>Raza:</strong> <span id="verRaza"></span></p>
-      <p><strong>Color:</strong> <span id="verColor"></span></p>
-    </div>
-
-    <div id="verObjeto" class="qr-oculto perfil-bloque">
-      <h3>Datos del objeto</h3>
-      <p><strong>Descripción:</strong> <span id="verDescripcion"></span></p>
-      <p><strong>Instrucciones:</strong> <span id="verInstrucciones"></span></p>
-    </div>
-
-    <div id="panelAcceso" class="perfil-bloque">
-      <h3>Acceso</h3>
-      <div id="accesoVisitante">
-        <button id="btnSoyDueno" class="qr-btn">Soy el dueño</button>
-      </div>
-
-      <div id="loginDuenoBox" class="qr-oculto">
-        <input id="pinDueno" type="password" placeholder="Ingresa tu PIN">
-        <button id="btnEntrarDueno" class="qr-btn">Entrar</button>
-        <button id="btnCancelarLogin" class="qr-btn perfil-btn-sec">Cancelar</button>
-      </div>
-    </div>
-
-    <div id="panelDueno" class="qr-oculto perfil-bloque">
-      <h3>Tu perfil</h3>
-      <div class="perfil-acciones">
-        <button id="btnEditar" class="qr-btn">Editar</button>
-        <button id="btnEliminar" class="qr-btn qr-btn-danger">Eliminar</button>
-        <button id="btnVerComo" class="qr-btn perfil-btn-sec">Ver como visitante</button>
-        <button id="btnCerrarSesionDueno" class="qr-btn perfil-btn-sec">Cerrar acceso</button>
-      </div>
-    </div>
+  <div id="verPersona" class="qr-oculto">
+    <span id="verSangre"></span>
+    <span id="verPadecimientos"></span>
+    <span id="verAlergias"></span>
   </div>
-</div>
+
+  <div id="verMascota" class="qr-oculto">
+    <span id="verEspecie"></span>
+    <span id="verRaza"></span>
+    <span id="verColor"></span>
+  </div>
+
+  <div id="verObjeto" class="qr-oculto">
+    <span id="verDescripcion"></span>
+    <span id="verInstrucciones"></span>
+  </div>
 
 <script type="module" src="ver.js"></script>
 </body>
 </html>
-
-
