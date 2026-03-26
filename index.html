@@ -28,7 +28,7 @@
 
     <form id="formulario" class="qr-oculto">
       <div class="qr-foto">
-        <img id="previewFoto" class="qr-foto-preview">
+        <img id="previewFoto" class="qr-foto-preview" alt="Foto previa">
         <label for="fFoto" class="qr-foto-circulo">+</label>
         <input type="file" id="fFoto" accept="image/*">
       </div>
@@ -50,28 +50,31 @@
 
       <div class="qr-bloque-login">
         <h3>Acceso del dueño</h3>
-        <input id="fPin" type="password">
-        <input id="fPinConfirmar" type="password">
+        <input id="fPin" type="password" placeholder="Crea un PIN de 4 a 8 dígitos" required>
+        <input id="fPinConfirmar" type="password" placeholder="Confirmar PIN" required>
       </div>
 
       <div id="seccionPersona" class="qr-oculto">
+        <h3>Información médica</h3>
         <input id="fSangre" type="text" placeholder="Tipo de sangre">
-        <textarea id="fPadecimientos"></textarea>
-        <textarea id="fAlergias"></textarea>
+        <textarea id="fPadecimientos" placeholder="Padecimientos"></textarea>
+        <textarea id="fAlergias" placeholder="Alergias"></textarea>
       </div>
 
       <div id="seccionMascota" class="qr-oculto">
-        <input id="fEspecie">
-        <input id="fRaza">
-        <input id="fColor">
+        <h3>Datos de la mascota</h3>
+        <input id="fEspecie" type="text" placeholder="Especie">
+        <input id="fRaza" type="text" placeholder="Raza">
+        <input id="fColor" type="text" placeholder="Color">
       </div>
 
       <div id="seccionObjeto" class="qr-oculto">
-        <textarea id="fDescripcion"></textarea>
-        <textarea id="fInstrucciones"></textarea>
+        <h3>Objeto</h3>
+        <textarea id="fDescripcion" placeholder="Descripción"></textarea>
+        <textarea id="fInstrucciones" placeholder="Qué hacer si se encuentra"></textarea>
       </div>
 
-      <button class="qr-btn">Guardar</button>
+      <button class="qr-btn" type="submit">Guardar información</button>
     </form>
   </div>
 
