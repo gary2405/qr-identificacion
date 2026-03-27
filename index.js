@@ -177,6 +177,7 @@ get(qrRef)
       return;
     }
 
+    // Si no existe, mostrar modal
     modal.classList.remove("qr-oculto");
     contenidoPrincipal.classList.add("qr-oculto");
     formulario.classList.add("qr-oculto");
@@ -190,6 +191,8 @@ get(qrRef)
 
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
+    // Asegurar que el modal se oculte completamente
+    modal.style.display = "none";
     mostrarFormulario("Registrar información");
   });
 }
