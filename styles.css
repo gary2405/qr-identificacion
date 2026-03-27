@@ -28,6 +28,7 @@ input, textarea, select {
   margin: 8px 0;
   border-radius: 6px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 textarea {
@@ -42,14 +43,38 @@ textarea {
   width: 100%;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.qr-btn:hover {
+  background: #0056b3;
+}
+
+.qr-btn-secundario {
+  background: #6c757d;
+  color: white;
+  padding: 10px;
+  border: none;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.qr-btn-secundario:hover {
+  background: #545b62;
 }
 
 .qr-btn-danger {
   background: #dc3545;
 }
 
+.qr-btn-danger:hover {
+  background: #c82333;
+}
+
 .qr-oculto {
-  display: none;
+  display: none !important;
 }
 
 .qr-foto {
@@ -79,12 +104,34 @@ textarea {
   margin-top: 8px;
 }
 
-#fFoto {
-  display: none;
+.qr-foto-portada {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
-.qr-oculto {
-  display: none !important;
+.qr-portada-img {
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #eee;
+  display: block;
+}
+
+.qr-portada-circulo {
+  display: inline-block;
+  background: #333;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  line-height: 40px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+#fFoto, #fPortada {
+  display: none;
 }
 
 .qr-modal {
@@ -106,7 +153,6 @@ textarea {
   text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
-
 
 .qr-loader-pantalla {
   position: fixed;
@@ -144,13 +190,26 @@ textarea {
   }
 }
 
-
 .qr-bloque-login {
   margin-top: 14px;
   padding: 14px;
   border: 1px solid #eee;
   border-radius: 12px;
   background: #fafafa;
+}
+
+.qr-bloque-gps {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.qr-gps-texto {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #666;
 }
 
 .perfil-wrap {
@@ -163,6 +222,8 @@ textarea {
   height: 140px;
   background: linear-gradient(135deg, #1877f2, #5aa3ff);
   border-radius: 16px 16px 0 0;
+  background-size: cover;
+  background-position: center;
 }
 
 .perfil-card {
@@ -172,6 +233,7 @@ textarea {
   padding: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,.12);
   text-align: center;
+  position: relative;
 }
 
 .perfil-avatar {
@@ -183,6 +245,16 @@ textarea {
   margin: -85px auto 10px;
   background: #eee;
   display: block;
+}
+
+.perfil-estado-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  margin: 5px 0;
 }
 
 .perfil-sub {
@@ -210,10 +282,15 @@ textarea {
   text-decoration: none;
   text-align: center;
   flex: 1;
+  padding: 10px;
 }
 
 .perfil-btn-sec {
   background: #6c757d;
+}
+
+.perfil-btn-sec:hover {
+  background: #5a6268;
 }
 
 .perfil-link-sec {
@@ -221,4 +298,8 @@ textarea {
   margin-right: 12px;
   color: #1877f2;
   text-decoration: none;
+}
+
+.perfil-link-sec:hover {
+  text-decoration: underline;
 }

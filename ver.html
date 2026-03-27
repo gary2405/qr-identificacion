@@ -9,10 +9,12 @@
 <body class="qr-body">
 
 <div class="perfil-wrap">
-  <div class="perfil-cover"></div>
+  <div id="perfilCover" class="perfil-cover"></div>
 
   <div class="perfil-card">
     <img id="foto" class="perfil-avatar qr-oculto" alt="Foto del perfil">
+
+    <div class="perfil-estado-badge" id="estadoBadge"></div>
 
     <h2 id="nombre"></h2>
     <p class="perfil-sub"><span id="tipo"></span></p>
@@ -21,12 +23,19 @@
     <div class="perfil-acciones">
       <a id="linkLlamar" href="#" class="qr-btn perfil-btn-link">Llamar</a>
       <a id="linkWhatsapp" href="#" class="qr-btn perfil-btn-link">WhatsApp</a>
+      <button id="btnCompartir" class="qr-btn perfil-btn-link">Compartir</button>
     </div>
 
     <div id="bloqueEmergencia" class="qr-oculto perfil-bloque">
       <h3>Contacto de emergencia</h3>
       <a id="linkLlamar2" href="#" class="perfil-link-sec">Llamar</a>
       <a id="linkWhatsapp2" href="#" class="perfil-link-sec">WhatsApp</a>
+    </div>
+
+    <div id="bloqueGPS" class="qr-oculto perfil-bloque">
+      <h3>Ubicación GPS</h3>
+      <p id="textoUbicacion"></p>
+      <a id="linkMapa" href="#" target="_blank" class="qr-btn perfil-btn-link">Ver en mapa</a>
     </div>
 
     <div class="perfil-bloque">
@@ -76,6 +85,16 @@
         <button id="btnCerrarSesionDueno" class="qr-btn perfil-btn-sec">Cerrar acceso</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div id="modalCompartir" class="qr-modal qr-oculto">
+  <div class="qr-modal-contenido">
+    <h3>Compartir perfil</h3>
+    <p>Comparte este perfil con otros</p>
+    <input id="inputURLCompartir" type="text" readonly style="margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 6px; width: calc(100% - 22px);">
+    <button id="btnCopiarURL" class="qr-btn">Copiar enlace</button>
+    <button id="btnCerrarModal" class="qr-btn perfil-btn-sec">Cerrar</button>
   </div>
 </div>
 

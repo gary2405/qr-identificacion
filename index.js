@@ -18,6 +18,7 @@ const titulo = document.getElementById("titulo");
 const formulario = document.getElementById("formulario");
 
 const fTipo = document.getElementById("fTipo");
+const fEstado = document.getElementById("fEstado");
 const fNombre = document.getElementById("fNombre");
 const fContacto = document.getElementById("fContacto");
 const fContacto2 = document.getElementById("fContacto2");
@@ -39,6 +40,13 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 
 const fFoto = document.getElementById("fFoto");
 const previewFoto = document.getElementById("previewFoto");
+const fPortada = document.getElementById("fPortada");
+const previewPortada = document.getElementById("previewPortada");
+
+const btnObtenerGPS = document.getElementById("btnObtenerGPS");
+const textoGPS = document.getElementById("textoGPS");
+const fLatitud = document.getElementById("fLatitud");
+const fLongitud = document.getElementById("fLongitud");
 
 const qrRef = ref(db, "qrs/" + qrId);
 
@@ -48,6 +56,7 @@ function ocultarCarga() {
 
 function mostrarFormulario(tituloTexto = "Registrar información") {
   modal.classList.add("qr-oculto");
+  modal.style.display = "none";
   contenidoPrincipal.classList.remove("qr-oculto");
   formulario.classList.remove("qr-oculto");
   titulo.classList.remove("qr-oculto");
@@ -104,6 +113,7 @@ function aplicarSecciones() {
 
 function llenarFormulario(data) {
   fTipo.value = data.tipoPerfil || "";
+  fEstado.value = data.estado || "activo";
   fNombre.value = data.nombre || "";
   fContacto.value = data.contacto || "";
   fContacto2.value = data.contacto2 || "";
@@ -112,6 +122,16 @@ function llenarFormulario(data) {
 
   if (data.foto) {
     previewFoto.src = data.foto;
+  }
+
+  if (data.portada) {
+    previewPortada.src = data.portada;
+  }
+
+  if (data.latitud && data.longitud) {
+    fLatitud.value = data.latitud;
+    fLongitud.value = data.longitud;
+    textoGPS.textContent = `Lat: ${data.latitud}, Lng: ${data.longitud}`;
   }
 
   if (data.sangre) fSangre.value = data.sangre;
@@ -142,6 +162,42 @@ if (fFoto) {
     if (!file) return;
     const base64Comprimido = await comprimirImagen(file);
     previewFoto.src = base64Comprimido;
+  });
+}
+
+if (fPortada) {
+  fPortada.addEventListener("change", async () => {
+    const file = fPortada.files[0];
+    if (!file) return;
+    const base64Comprimido = await comprimirImagen(file);
+    previewPortada.src = base64Comprimido;
+  });
+}
+
+if (btnObtenerGPS) {
+  btnObtenerGPS.addEventListener("click", (e) => {
+    e.preventDefault();
+    if ("geolocation" in navigator) {
+      btnObtenerGPS.disabled = true;
+      btnObtenerGPS.textContent = "Obteniendo ubicación...";
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          fLatitud.value = position.coords.latitude;
+          fLongitud.value = position.coords.longitude;
+          textoGPS.textContent = `Lat: ${position.coords.latitude.toFixed(6)}, Lng: ${position.coords.longitude.toFixed(6)}`;
+          btnObtenerGPS.disabled = false;
+          btnObtenerGPS.textContent = "Obtener ubicación actual";
+        },
+        (error) => {
+          alert("No se pudo obtener la ubicación: " + error.message);
+          btnObtenerGPS.disabled = false;
+          btnObtenerGPS.textContent = "Obtener ubicación actual";
+        }
+      );
+    } else {
+      alert("Tu navegador no soporta geolocalización.");
+    }
   });
 }
 
@@ -177,7 +233,6 @@ get(qrRef)
       return;
     }
 
-    // Si no existe, mostrar modal
     modal.classList.remove("qr-oculto");
     contenidoPrincipal.classList.add("qr-oculto");
     formulario.classList.add("qr-oculto");
@@ -191,7 +246,6 @@ get(qrRef)
 
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
-    // Asegurar que el modal se oculte completamente
     modal.style.display = "none";
     mostrarFormulario("Registrar información");
   });
@@ -202,9 +256,14 @@ formulario.addEventListener("submit", async (e) => {
 
   try {
     let fotoBase64 = previewFoto.src || "";
+    let portadaBase64 = previewPortada.src || "";
 
     if (fFoto && fFoto.files[0]) {
       fotoBase64 = await comprimirImagen(fFoto.files[0]);
+    }
+
+    if (fPortada && fPortada.files[0]) {
+      portadaBase64 = await comprimirImagen(fPortada.files[0]);
     }
 
     const existe = (await get(qrRef)).exists();
@@ -226,12 +285,16 @@ formulario.addEventListener("submit", async (e) => {
 
     const data = {
       tipoPerfil: fTipo.value,
+      estado: fEstado.value,
       nombre: fNombre.value,
       contacto: fContacto.value,
       contacto2: fContacto2.value,
       direccion: fDireccion.value,
       mensaje: fMensaje.value,
       foto: fotoBase64,
+      portada: portadaBase64,
+      latitud: fLatitud.value,
+      longitud: fLongitud.value,
       fecha: new Date().toISOString()
     };
 

@@ -27,6 +27,12 @@
     <h2 id="titulo" class="qr-oculto">Registrar información</h2>
 
     <form id="formulario" class="qr-oculto">
+      <div class="qr-foto-portada">
+        <img id="previewPortada" class="qr-portada-img" alt="Foto de portada">
+        <label for="fPortada" class="qr-portada-circulo">📷</label>
+        <input type="file" id="fPortada" accept="image/*">
+      </div>
+
       <div class="qr-foto">
         <img id="previewFoto" class="qr-foto-preview" alt="Foto previa">
         <label for="fFoto" class="qr-foto-circulo">+</label>
@@ -42,11 +48,26 @@
         <option value="objeto">Objeto</option>
       </select>
 
+      <select id="fEstado" required>
+        <option value="">Estado</option>
+        <option value="activo">Activo / En casa</option>
+        <option value="perdido">Perdido</option>
+        <option value="encontrado">Encontrado</option>
+      </select>
+
       <input id="fNombre" type="text" placeholder="Nombre" required>
       <input id="fContacto" type="text" placeholder="Contacto principal" required>
       <input id="fContacto2" type="text" placeholder="Contacto de emergencia (opcional)">
       <input id="fDireccion" type="text" placeholder="Dirección (opcional)">
       <textarea id="fMensaje" placeholder="Mensaje importante"></textarea>
+
+      <div class="qr-bloque-gps">
+        <h3>Ubicación GPS</h3>
+        <button type="button" id="btnObtenerGPS" class="qr-btn-secundario">Obtener ubicación actual</button>
+        <p id="textoGPS" class="qr-gps-texto">Sin ubicación registrada</p>
+        <input id="fLatitud" type="hidden">
+        <input id="fLongitud" type="hidden">
+      </div>
 
       <div class="qr-bloque-login">
         <h3>Acceso del dueño</h3>

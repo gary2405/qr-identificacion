@@ -14,13 +14,20 @@ const tipo = document.getElementById("tipo");
 const direccion = document.getElementById("direccion");
 const mensaje = document.getElementById("mensaje");
 const foto = document.getElementById("foto");
+const perfilCover = document.getElementById("perfilCover");
+const estadoBadge = document.getElementById("estadoBadge");
 
 const linkLlamar = document.getElementById("linkLlamar");
 const linkWhatsapp = document.getElementById("linkWhatsapp");
+const btnCompartir = document.getElementById("btnCompartir");
 
 const bloqueEmergencia = document.getElementById("bloqueEmergencia");
 const linkLlamar2 = document.getElementById("linkLlamar2");
 const linkWhatsapp2 = document.getElementById("linkWhatsapp2");
+
+const bloqueGPS = document.getElementById("bloqueGPS");
+const textoUbicacion = document.getElementById("textoUbicacion");
+const linkMapa = document.getElementById("linkMapa");
 
 const verPersona = document.getElementById("verPersona");
 const verMascota = document.getElementById("verMascota");
@@ -40,9 +47,26 @@ const btnEliminar = document.getElementById("btnEliminar");
 const btnVerComo = document.getElementById("btnVerComo");
 const btnCerrarSesionDueno = document.getElementById("btnCerrarSesionDueno");
 
+const modalCompartir = document.getElementById("modalCompartir");
+const inputURLCompartir = document.getElementById("inputURLCompartir");
+const btnCopiarURL = document.getElementById("btnCopiarURL");
+const btnCerrarModal = document.getElementById("btnCerrarModal");
+
 let dataActual = null;
 let esDueno = localStorage.getItem("owner_" + qrId) === "true";
 let modoVisitante = false;
+
+const estadoColores = {
+  activo: "#28a745",
+  perdido: "#dc3545",
+  encontrado: "#ffc107"
+};
+
+const estadoTextos = {
+  activo: "Activo",
+  perdido: "Perdido",
+  encontrado: "Encontrado"
+};
 
 function actualizarVistaDueno() {
   const mostrarPanelDueno = esDueno && !modoVisitante;
@@ -68,6 +92,19 @@ function llenarPerfil(data) {
   direccion.textContent = data.direccion || "Sin dirección";
   mensaje.textContent = data.mensaje || "Sin mensaje";
 
+  // Foto de portada
+  if (data.portada) {
+    perfilCover.style.backgroundImage = `url(${data.portada})`;
+    perfilCover.style.backgroundSize = "cover";
+    perfilCover.style.backgroundPosition = "center";
+  }
+
+  // Estado badge
+  const estado = data.estado || "activo";
+  estadoBadge.className = "perfil-estado-badge";
+  estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
+  estadoBadge.textContent = estadoTextos[estado] || "Activo";
+
   if (data.foto) {
     foto.src = data.foto;
     foto.classList.remove("qr-oculto");
@@ -83,6 +120,13 @@ function llenarPerfil(data) {
     bloqueEmergencia.classList.remove("qr-oculto");
     linkLlamar2.href = `tel:${data.contacto2}`;
     linkWhatsapp2.href = `https://wa.me/${data.contacto2}`;
+  }
+
+  // GPS
+  if (data.latitud && data.longitud) {
+    bloqueGPS.classList.remove("qr-oculto");
+    textoUbicacion.textContent = `Lat: ${data.latitud}, Lng: ${data.longitud}`;
+    linkMapa.href = `https://maps.google.com/?q=${data.latitud},${data.longitud}`;
   }
 
   if (["persona", "nino", "adultoMayor"].includes(data.tipoPerfil)) {
@@ -188,5 +232,26 @@ if (btnCerrarSesionDueno) {
     modoVisitante = false;
     localStorage.removeItem("owner_" + qrId);
     actualizarVistaDueno();
+  });
+}
+
+if (btnCompartir) {
+  btnCompartir.addEventListener("click", () => {
+    inputURLCompartir.value = window.location.href;
+    modalCompartir.classList.remove("qr-oculto");
+  });
+}
+
+if (btnCopiarURL) {
+  btnCopiarURL.addEventListener("click", () => {
+    inputURLCompartir.select();
+    document.execCommand("copy");
+    alert("Enlace copiado al portapapeles");
+  });
+}
+
+if (btnCerrarModal) {
+  btnCerrarModal.addEventListener("click", () => {
+    modalCompartir.classList.add("qr-oculto");
   });
 }
