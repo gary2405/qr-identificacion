@@ -222,15 +222,3 @@ textarea {
   color: #1877f2;
   text-decoration: none;
 }
-
-.qr-cover-preview {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.perfil-cover {
-  background-size: cover;
-  background-position: center;
-}
