@@ -23,80 +23,205 @@
     </div>
   </div>
 
-  <div id="contenidoPrincipal" class="qr-contenedor qr-oculto">
-    <h2 id="titulo" class="qr-oculto">Registrar información</h2>
+  <div id="wizardContainer" class="qr-wizard qr-oculto">
+    <div class="qr-wizard-header">
+      <div class="qr-wizard-progress">
+        <div id="progressBar" class="qr-progress-bar"></div>
+      </div>
+      <p id="stepIndicator" class="qr-step-indicator">Paso 1 de 1</p>
+    </div>
 
-    <form id="formulario" class="qr-oculto">
-      <div class="qr-foto-portada">
-        <img id="previewPortada" class="qr-portada-img" alt="Foto de portada">
-        <label for="fPortada" class="qr-portada-circulo">📷</label>
-        <input type="file" id="fPortada" accept="image/*">
+    <div class="qr-wizard-content">
+      <!-- PASO 1: Tipo de Perfil -->
+      <div id="step1" class="qr-wizard-step qr-step-activo">
+        <h2>¿Qué tipo de perfil deseas crear?</h2>
+        <div class="qr-step-opciones">
+          <button class="qr-opcion-btn" data-tipo="persona">👤 Persona</button>
+          <button class="qr-opcion-btn" data-tipo="nino">👧 Niño / Niña</button>
+          <button class="qr-opcion-btn" data-tipo="adultoMayor">👴 Adulto Mayor</button>
+          <button class="qr-opcion-btn" data-tipo="mascota">🐾 Mascota</button>
+          <button class="qr-opcion-btn" data-tipo="objeto">📦 Objeto</button>
+        </div>
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
+        </div>
       </div>
 
-      <div class="qr-foto">
-        <img id="previewFoto" class="qr-foto-preview" alt="Foto previa">
-        <label for="fFoto" class="qr-foto-circulo">+</label>
-        <input type="file" id="fFoto" accept="image/*">
+      <!-- PASO 2: Información Básica -->
+      <div id="step2" class="qr-wizard-step">
+        <h2>Información Básica</h2>
+        <div class="qr-form-group">
+          <label>Nombre completo *</label>
+          <input id="fNombre" type="text" placeholder="Ej: Juan Pérez" required>
+        </div>
+        <div class="qr-form-group">
+          <label>Edad *</label>
+          <input id="fEdad" type="number" placeholder="Edad" required>
+        </div>
+        <div class="qr-form-group">
+          <label>Contacto principal *</label>
+          <input id="fContacto" type="text" placeholder="Teléfono o email" required>
+        </div>
+        <div class="qr-form-group">
+          <label>Contacto de emergencia (opcional)</label>
+          <input id="fContacto2" type="text" placeholder="Teléfono o email">
+        </div>
+        <div class="qr-form-group">
+          <label>Dirección (opcional)</label>
+          <input id="fDireccion" type="text" placeholder="Dirección">
+        </div>
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
+          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
+        </div>
       </div>
 
-      <select id="fTipo" required>
-        <option value="">Tipo de perfil</option>
-        <option value="persona">Persona</option>
-        <option value="nino">Niño / Niña</option>
-        <option value="adultoMayor">Adulto mayor</option>
-        <option value="mascota">Mascota</option>
-        <option value="objeto">Objeto</option>
-      </select>
+      <!-- PASO 3: Fotos -->
+      <div id="step3" class="qr-wizard-step">
+        <h2>Fotos</h2>
+        
+        <div class="qr-form-group">
+          <label>Foto de portada (opcional)</label>
+          <div class="qr-foto-upload">
+            <img id="previewPortada" class="qr-preview-img" alt="Foto de portada">
+            <label for="fPortada" class="qr-upload-btn">+ Seleccionar foto de portada</label>
+            <input type="file" id="fPortada" accept="image/*" style="display:none;">
+          </div>
+        </div>
 
-      <select id="fEstado" required>
-        <option value="">Estado</option>
-        <option value="activo">Activo / En casa</option>
-        <option value="perdido">Perdido</option>
-        <option value="encontrado">Encontrado</option>
-      </select>
+        <div class="qr-form-group">
+          <label>Foto de perfil (opcional)</label>
+          <div class="qr-foto-upload">
+            <img id="previewFoto" class="qr-preview-img" alt="Foto de perfil">
+            <label for="fFoto" class="qr-upload-btn">+ Seleccionar foto de perfil</label>
+            <input type="file" id="fFoto" accept="image/*" style="display:none;">
+          </div>
+        </div>
 
-      <input id="fNombre" type="text" placeholder="Nombre" required>
-      <input id="fContacto" type="text" placeholder="Contacto principal" required>
-      <input id="fContacto2" type="text" placeholder="Contacto de emergencia (opcional)">
-      <input id="fDireccion" type="text" placeholder="Dirección (opcional)">
-      <textarea id="fMensaje" placeholder="Mensaje importante"></textarea>
-
-      <div class="qr-bloque-gps">
-        <h3>Ubicación GPS</h3>
-        <button type="button" id="btnObtenerGPS" class="qr-btn-secundario">Obtener ubicación actual</button>
-        <p id="textoGPS" class="qr-gps-texto">Sin ubicación registrada</p>
-        <input id="fLatitud" type="hidden">
-        <input id="fLongitud" type="hidden">
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
+          <button class="qr-btn-wizard qr-btn-omitir" onclick="omitirPaso()">Omitir por ahora</button>
+          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
+        </div>
       </div>
 
-      <div class="qr-bloque-login">
-        <h3>Acceso del dueño</h3>
-        <input id="fPin" type="password" placeholder="Crea un PIN de 4 a 8 dígitos" required>
-        <input id="fPinConfirmar" type="password" placeholder="Confirmar PIN" required>
+      <!-- PASO 4: Estado (Solo para mascotas y objetos) -->
+      <div id="step4" class="qr-wizard-step qr-oculto">
+        <h2>Estado del perfil</h2>
+        <div class="qr-step-opciones">
+          <button class="qr-opcion-btn" data-estado="activo">✓ Activo / En casa</button>
+          <button class="qr-opcion-btn" data-estado="perdido">⚠️ Perdido</button>
+          <button class="qr-opcion-btn" data-estado="encontrado">🔍 Encontrado</button>
+        </div>
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
+          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
+        </div>
       </div>
 
-      <div id="seccionPersona" class="qr-oculto">
-        <h3>Información médica</h3>
-        <input id="fSangre" type="text" placeholder="Tipo de sangre">
-        <textarea id="fPadecimientos" placeholder="Padecimientos"></textarea>
-        <textarea id="fAlergias" placeholder="Alergias"></textarea>
+      <!-- PASO 5: Información Adicional -->
+      <div id="step5" class="qr-wizard-step">
+        <h2>Información Adicional</h2>
+        
+        <div class="qr-form-group">
+          <label>Mensaje importante (opcional)</label>
+          <textarea id="fMensaje" placeholder="Escribe un mensaje que otros puedan ver"></textarea>
+        </div>
+
+        <div id="seccionPersona" class="qr-seccion-oculta">
+          <h3>Información Médica</h3>
+          <div class="qr-form-group">
+            <label>Tipo de sangre (opcional)</label>
+            <input id="fSangre" type="text" placeholder="O+, O-, A+, etc.">
+          </div>
+          <div class="qr-form-group">
+            <label>Padecimientos (opcional)</label>
+            <textarea id="fPadecimientos" placeholder="Describe cualquier condición médica importante"></textarea>
+          </div>
+          <div class="qr-form-group">
+            <label>Alergias (opcional)</label>
+            <textarea id="fAlergias" placeholder="Lista de alergias conocidas"></textarea>
+          </div>
+        </div>
+
+        <div id="seccionMascota" class="qr-seccion-oculta">
+          <h3>Datos de la Mascota</h3>
+          <div class="qr-form-group">
+            <label>Especie (opcional)</label>
+            <input id="fEspecie" type="text" placeholder="Ej: Perro, Gato, Ave">
+          </div>
+          <div class="qr-form-group">
+            <label>Raza (opcional)</label>
+            <input id="fRaza" type="text" placeholder="Ej: Labrador, Siamés">
+          </div>
+          <div class="qr-form-group">
+            <label>Color (opcional)</label>
+            <input id="fColor" type="text" placeholder="Ej: Negro, Blanco y marrón">
+          </div>
+        </div>
+
+        <div id="seccionObjeto" class="qr-seccion-oculta">
+          <h3>Datos del Objeto</h3>
+          <div class="qr-form-group">
+            <label>Descripción (opcional)</label>
+            <textarea id="fDescripcion" placeholder="Describe el objeto"></textarea>
+          </div>
+          <div class="qr-form-group">
+            <label>Instrucciones (opcional)</label>
+            <textarea id="fInstrucciones" placeholder="Qué hacer si se encuentra"></textarea>
+          </div>
+        </div>
+
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
+          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
+        </div>
       </div>
 
-      <div id="seccionMascota" class="qr-oculto">
-        <h3>Datos de la mascota</h3>
-        <input id="fEspecie" type="text" placeholder="Especie">
-        <input id="fRaza" type="text" placeholder="Raza">
-        <input id="fColor" type="text" placeholder="Color">
+      <!-- PASO 6: GPS -->
+      <div id="step6" class="qr-wizard-step">
+        <h2>Ubicación GPS (Opcional)</h2>
+        <div class="qr-form-group">
+          <button id="btnObtenerGPS" type="button" class="qr-btn-secundario">📍 Obtener ubicación actual</button>
+          <p id="textoGPS" class="qr-gps-texto">Sin ubicación registrada</p>
+          <input id="fLatitud" type="hidden">
+          <input id="fLongitud" type="hidden">
+        </div>
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
+          <button class="qr-btn-wizard qr-btn-omitir" onclick="omitirPaso()">Omitir por ahora</button>
+          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
+        </div>
       </div>
 
-      <div id="seccionObjeto" class="qr-oculto">
-        <h3>Objeto</h3>
-        <textarea id="fDescripcion" placeholder="Descripción"></textarea>
-        <textarea id="fInstrucciones" placeholder="Qué hacer si se encuentra"></textarea>
+      <!-- PASO 7: PIN de Seguridad -->
+      <div id="step7" class="qr-wizard-step">
+        <h2>PIN de Seguridad</h2>
+        <p class="qr-step-descripcion">Crea un PIN para proteger tu perfil. Necesitarás ingresar este código para editar la información.</p>
+        <div class="qr-form-group">
+          <label>PIN (4 a 8 dígitos) *</label>
+          <input id="fPin" type="password" placeholder="Ingresa un PIN numérico" required>
+        </div>
+        <div class="qr-form-group">
+          <label>Confirmar PIN *</label>
+          <input id="fPinConfirmar" type="password" placeholder="Confirma tu PIN" required>
+        </div>
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
+          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
+        </div>
       </div>
 
-      <button class="qr-btn" type="submit">Guardar información</button>
-    </form>
+      <!-- PASO 8: Resumen -->
+      <div id="step8" class="qr-wizard-step">
+        <h2>Resumen de tu Perfil</h2>
+        <div id="resumenContenido" class="qr-resumen-contenido"></div>
+        <div class="qr-wizard-navegacion">
+          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
+          <button class="qr-btn-wizard qr-btn-guardar" id="btnGuardar" onclick="guardarPerfil()">Guardar Perfil</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script type="module" src="index.js"></script>
