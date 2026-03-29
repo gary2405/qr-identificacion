@@ -34,137 +34,126 @@
   </div>
 </div>
 
-<div class="perfil-nuevo-wrap">
-  <!-- HEADER CON FOTO DE PERFIL GRANDE -->
-  <div class="perfil-nuevo-header">
-    <div class="perfil-nuevo-fondo">
-      <img id="foto" class="perfil-nuevo-foto" alt="Foto del perfil" style="cursor: pointer;" title="Haz click para agrandar">
-      <div id="estadoBadge" class="perfil-nuevo-badge qr-oculto"></div>
-      <div class="perfil-nuevo-overlay"></div>
+<div class="perfil-card-container">
+  <!-- TARJETA CON FOTO PRINCIPAL -->
+  <div class="perfil-card-main">
+    <div class="perfil-card-foto-container">
+      <img id="foto" class="perfil-card-foto" alt="Foto del perfil" style="cursor: pointer;" title="Haz click para agrandar">
+      <div id="estadoBadge" class="perfil-card-badge qr-oculto"></div>
     </div>
 
-    <div class="perfil-nuevo-info">
-      <h1 id="nombre" class="perfil-nuevo-nombre"></h1>
-      <p class="perfil-nuevo-tipo"><span id="tipo"></span></p>
-      <p class="perfil-nuevo-direccion"><span id="direccion"></span></p>
+    <div class="perfil-card-info">
+      <h1 id="nombre" class="perfil-card-nombre"></h1>
+      <p class="perfil-card-tipo"><span id="tipo"></span></p>
+      <p class="perfil-card-direccion"><span id="direccion"></span></p>
+    </div>
+
+    <!-- BOTONES DE ACCIÓN RÁPIDA -->
+    <div class="perfil-card-acciones">
+      <a id="linkLlamar" href="#" class="perfil-card-btn-accion perfil-btn-llamar">☎️</a>
+      <a id="linkWhatsapp" href="#" class="perfil-card-btn-accion perfil-btn-whatsapp">💬</a>
+      <button id="btnCompartir" class="perfil-card-btn-accion perfil-btn-compartir">📤</button>
     </div>
   </div>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <div class="perfil-nuevo-content">
+  <!-- CONTENIDO SECUNDARIO (SCROLL) -->
+  <div class="perfil-card-scroll">
     
-    <!-- BOTONES DE ACCIÓN RÁPIDA -->
-    <div class="perfil-nuevo-acciones">
-      <a id="linkLlamar" href="#" class="perfil-nuevo-btn-accion perfil-btn-llamar">
-        <span>☎️</span>
-      </a>
-      <a id="linkWhatsapp" href="#" class="perfil-nuevo-btn-accion perfil-btn-whatsapp">
-        <span>💬</span>
-      </a>
-      <button id="btnCompartir" class="perfil-nuevo-btn-accion perfil-btn-compartir">
-        <span>📤</span>
-      </button>
-    </div>
-
     <!-- MENSAJE -->
-    <div class="perfil-nuevo-bloque perfil-nuevo-mensaje">
+    <div class="perfil-card-bloque">
       <h3>💬 Mensaje</h3>
       <p id="mensaje"></p>
     </div>
 
     <!-- CONTACTO DE EMERGENCIA -->
-    <div id="bloqueEmergencia" class="qr-oculto perfil-nuevo-bloque">
+    <div id="bloqueEmergencia" class="qr-oculto perfil-card-bloque">
       <h3>📞 Contacto de emergencia</h3>
-      <div class="perfil-nuevo-contactos">
-        <a id="linkLlamar2" href="#" class="perfil-nuevo-link">☎️ Llamar</a>
-        <a id="linkWhatsapp2" href="#" class="perfil-nuevo-link">💬 WhatsApp</a>
+      <div class="perfil-card-contactos">
+        <a id="linkLlamar2" href="#" class="perfil-card-link">☎️ Llamar</a>
+        <a id="linkWhatsapp2" href="#" class="perfil-card-link">💬 WhatsApp</a>
       </div>
     </div>
 
     <!-- UBICACIÓN GPS -->
-    <div id="bloqueGPS" class="qr-oculto perfil-nuevo-bloque">
+    <div id="bloqueGPS" class="qr-oculto perfil-card-bloque">
       <h3>📍 Ubicación GPS</h3>
-      <p id="textoUbicacion" class="perfil-nuevo-ubicacion"></p>
-      <a id="linkMapa" href="#" target="_blank" class="perfil-nuevo-btn-mapa">
+      <p id="textoUbicacion" class="perfil-card-ubicacion"></p>
+      <a id="linkMapa" href="#" target="_blank" class="perfil-card-btn-mapa">
         🗺️ Ver en Google Maps
       </a>
     </div>
 
     <!-- INFORMACIÓN MÉDICA -->
-    <div id="verPersona" class="qr-oculto perfil-nuevo-bloque">
+    <div id="verPersona" class="qr-oculto perfil-card-bloque">
       <h3>🏥 Información médica</h3>
-      <div class="perfil-nuevo-item-row">
-        <div class="perfil-nuevo-item">
-          <span class="perfil-nuevo-label">Sangre:</span>
-          <span class="perfil-nuevo-valor" id="verSangre">—</span>
-        </div>
-        <div class="perfil-nuevo-item">
-          <span class="perfil-nuevo-label">Padecimientos:</span>
-          <span class="perfil-nuevo-valor" id="verPadecimientos">—</span>
-        </div>
-        <div class="perfil-nuevo-item">
-          <span class="perfil-nuevo-label">Alergias:</span>
-          <span class="perfil-nuevo-valor" id="verAlergias">—</span>
-        </div>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Sangre:</span>
+        <span class="perfil-card-valor" id="verSangre">—</span>
+      </div>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Padecimientos:</span>
+        <span class="perfil-card-valor" id="verPadecimientos">—</span>
+      </div>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Alergias:</span>
+        <span class="perfil-card-valor" id="verAlergias">—</span>
       </div>
     </div>
 
     <!-- DATOS DE MASCOTA -->
-    <div id="verMascota" class="qr-oculto perfil-nuevo-bloque">
+    <div id="verMascota" class="qr-oculto perfil-card-bloque">
       <h3>🐾 Mascota</h3>
-      <div class="perfil-nuevo-item-row">
-        <div class="perfil-nuevo-item">
-          <span class="perfil-nuevo-label">Especie:</span>
-          <span class="perfil-nuevo-valor" id="verEspecie">—</span>
-        </div>
-        <div class="perfil-nuevo-item">
-          <span class="perfil-nuevo-label">Raza:</span>
-          <span class="perfil-nuevo-valor" id="verRaza">—</span>
-        </div>
-        <div class="perfil-nuevo-item">
-          <span class="perfil-nuevo-label">Color:</span>
-          <span class="perfil-nuevo-valor" id="verColor">—</span>
-        </div>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Especie:</span>
+        <span class="perfil-card-valor" id="verEspecie">—</span>
+      </div>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Raza:</span>
+        <span class="perfil-card-valor" id="verRaza">—</span>
+      </div>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Color:</span>
+        <span class="perfil-card-valor" id="verColor">—</span>
       </div>
     </div>
 
     <!-- DATOS DEL OBJETO -->
-    <div id="verObjeto" class="qr-oculto perfil-nuevo-bloque">
+    <div id="verObjeto" class="qr-oculto perfil-card-bloque">
       <h3>📦 Objeto</h3>
-      <div class="perfil-nuevo-item">
-        <span class="perfil-nuevo-label">Descripción:</span>
-        <span class="perfil-nuevo-valor" id="verDescripcion">—</span>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Descripción:</span>
+        <span class="perfil-card-valor" id="verDescripcion">—</span>
       </div>
-      <div class="perfil-nuevo-item">
-        <span class="perfil-nuevo-label">Instrucciones:</span>
-        <span class="perfil-nuevo-valor" id="verInstrucciones">—</span>
+      <div class="perfil-card-item">
+        <span class="perfil-card-label">Instrucciones:</span>
+        <span class="perfil-card-valor" id="verInstrucciones">—</span>
       </div>
     </div>
 
     <!-- PANEL DE ACCESO -->
-    <div id="panelAcceso" class="perfil-nuevo-bloque perfil-nuevo-panel-acceso">
+    <div id="panelAcceso" class="perfil-card-bloque perfil-card-panel-acceso">
       <h3>🔐 Acceso</h3>
       <div id="accesoVisitante">
-        <button id="btnSoyDueno" class="perfil-nuevo-btn-principal">Soy el dueño</button>
+        <button id="btnSoyDueno" class="perfil-card-btn-principal">Soy el dueño</button>
       </div>
 
-      <div id="loginDuenoBox" class="qr-oculto perfil-nuevo-login">
+      <div id="loginDuenoBox" class="qr-oculto perfil-card-login">
         <input id="pinDueno" type="password" placeholder="PIN" maxlength="8">
-        <div class="perfil-nuevo-login-botones">
-          <button id="btnEntrarDueno" class="perfil-nuevo-btn-pequeño perfil-nuevo-btn-azul">Entrar</button>
-          <button id="btnCancelarLogin" class="perfil-nuevo-btn-pequeño perfil-nuevo-btn-gris">Cancelar</button>
+        <div class="perfil-card-login-botones">
+          <button id="btnEntrarDueno" class="perfil-card-btn-pequeño perfil-card-btn-azul">Entrar</button>
+          <button id="btnCancelarLogin" class="perfil-card-btn-pequeño perfil-card-btn-gris">Cancelar</button>
         </div>
       </div>
     </div>
 
     <!-- PANEL DEL DUEÑO -->
-    <div id="panelDueno" class="qr-oculto perfil-nuevo-bloque perfil-nuevo-panel-dueno">
+    <div id="panelDueno" class="qr-oculto perfil-card-bloque perfil-card-panel-dueno">
       <h3>✏️ Tu perfil</h3>
-      <div class="perfil-nuevo-acciones-dueno">
-        <button id="btnEditar" class="perfil-nuevo-btn-dueno perfil-nuevo-btn-editar">✏️ Editar</button>
-        <button id="btnVerComo" class="perfil-nuevo-btn-dueno perfil-nuevo-btn-ver">👁️ Ver</button>
-        <button id="btnEliminar" class="perfil-nuevo-btn-dueno perfil-nuevo-btn-eliminar">🗑️ Eliminar</button>
-        <button id="btnCerrarSesionDueno" class="perfil-nuevo-btn-dueno perfil-nuevo-btn-cerrar">🚪 Cerrar</button>
+      <div class="perfil-card-acciones-dueno">
+        <button id="btnEditar" class="perfil-card-btn-dueno perfil-card-btn-editar">✏️ Editar</button>
+        <button id="btnVerComo" class="perfil-card-btn-dueno perfil-card-btn-ver">👁️ Ver</button>
+        <button id="btnEliminar" class="perfil-card-btn-dueno perfil-card-btn-eliminar">🗑️ Eliminar</button>
+        <button id="btnCerrarSesionDueno" class="perfil-card-btn-dueno perfil-card-btn-cerrar">🚪 Cerrar</button>
       </div>
     </div>
   </div>
