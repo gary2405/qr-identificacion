@@ -753,3 +753,54 @@
     min-width: 100px;
   }
 }
+
+/* BOTONES PRINCIPALES - EN LÍNEA */
+.perfil-acciones-principal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 16px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 10px;
+}
+
+.perfil-accion-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-width: 100px;
+  padding: 10px 8px;
+  background: #f0f2f5;
+  color: #1877f2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.perfil-accion-btn span:first-child {
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.perfil-accion-btn span:last-child {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.perfil-accion-btn:active {
+  background: #1877f2;
+  color: white;
+  transform: scale(0.95);
+}
+
+.perfil-accion-btn:hover {
+  background: #e7f3ff;
+}
