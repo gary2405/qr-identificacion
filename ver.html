@@ -36,10 +36,10 @@
       <p class="perfil-direccion"><span id="direccion"></span></p>
     </div>
 
-    <div class="perfil-acciones">
-      <a id="linkLlamar" href="#" class="qr-btn perfil-btn-accion">☎️ Llamar</a>
-      <a id="linkWhatsapp" href="#" class="qr-btn perfil-btn-accion">💬 WhatsApp</a>
-      <button id="btnCompartir" class="qr-btn perfil-btn-accion">📤 Compartir</button>
+    <div class="perfil-acciones-principal">
+      <a id="linkLlamar" href="#" class="perfil-accion-btn">☎️<br><span>Llamar</span></a>
+      <a id="linkWhatsapp" href="#" class="perfil-accion-btn">💬<br><span>WhatsApp</span></a>
+      <button id="btnCompartir" class="perfil-accion-btn">📤<br><span>Compartir</span></button>
     </div>
 
     <div id="bloqueEmergencia" class="qr-oculto perfil-bloque">
@@ -53,11 +53,14 @@
     <div id="bloqueGPS" class="qr-oculto perfil-bloque">
       <h3>📍 Ubicación GPS</h3>
       <p id="textoUbicacion"></p>
-      <a id="linkMapa" href="#" target="_blank" class="qr-btn perfil-btn-bloque">Ver en Google Maps</a>
+      <a id="linkMapa" href="#" target="_blank" class="perfil-btn-mapa">
+        <span class="mapa-icono">🗺️</span>
+        <span class="mapa-texto">Ver en Google Maps</span>
+      </a>
     </div>
 
     <div class="perfil-bloque">
-      <h3>💬 Mensaje</h3>
+      <h3>�� Mensaje</h3>
       <p id="mensaje"></p>
     </div>
 
@@ -108,7 +111,7 @@
     <div id="panelAcceso" class="perfil-bloque perfil-bloque-acceso">
       <h3>🔐 Acceso</h3>
       <div id="accesoVisitante">
-        <button id="btnSoyDueno" class="qr-btn perfil-btn-bloque">Soy el dueño</button>
+        <button id="btnSoyDueno" class="qr-btn perfil-btn-accion-bloque">Soy el dueño</button>
       </div>
 
       <div id="loginDuenoBox" class="qr-oculto perfil-login">
@@ -121,12 +124,24 @@
     </div>
 
     <div id="panelDueno" class="qr-oculto perfil-bloque perfil-bloque-dueno">
-      <h3>✏️ Tu perfil</h3>
+      <h3>✏️ Administrar tu perfil</h3>
       <div class="perfil-acciones-dueno">
-        <button id="btnEditar" class="qr-btn perfil-btn-bloque">Editar</button>
-        <button id="btnEliminar" class="qr-btn qr-btn-danger perfil-btn-bloque">Eliminar</button>
-        <button id="btnVerComo" class="qr-btn perfil-btn-sec perfil-btn-bloque">Ver como visitante</button>
-        <button id="btnCerrarSesionDueno" class="qr-btn perfil-btn-sec perfil-btn-bloque">Cerrar acceso</button>
+        <button id="btnEditar" class="perfil-accion-dueno perfil-accion-editar">
+          <span class="accion-icono">✏️</span>
+          <span class="accion-texto">Editar</span>
+        </button>
+        <button id="btnVerComo" class="perfil-accion-dueno perfil-accion-ver">
+          <span class="accion-icono">👁️</span>
+          <span class="accion-texto">Ver como visitante</span>
+        </button>
+        <button id="btnEliminar" class="perfil-accion-dueno perfil-accion-eliminar">
+          <span class="accion-icono">🗑️</span>
+          <span class="accion-texto">Eliminar perfil</span>
+        </button>
+        <button id="btnCerrarSesionDueno" class="perfil-accion-dueno perfil-accion-cerrar">
+          <span class="accion-icono">🚪</span>
+          <span class="accion-texto">Cerrar acceso</span>
+        </button>
       </div>
     </div>
   </div>
