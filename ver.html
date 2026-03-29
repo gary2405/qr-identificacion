@@ -35,16 +35,18 @@
 </div>
 
 <div class="perfil-wrap">
-  <div id="perfilCover" class="perfil-cover" style="cursor: pointer;" title="Haz click para agrandar">
-    <div class="perfil-cover-overlay">🔍</div>
-  </div>
-
-  <div class="perfil-card">
-    <div class="perfil-header">
+  <div class="perfil-header-container">
+    <div id="perfilCover" class="perfil-cover" style="cursor: pointer;" title="Haz click para agrandar">
+      <div class="perfil-cover-overlay">🔍</div>
+    </div>
+    
+    <div class="perfil-avatar-container">
       <img id="foto" class="perfil-avatar" alt="Foto del perfil" style="cursor: pointer;" title="Haz click para agrandar">
       <div id="estadoBadge" class="perfil-estado-badge qr-oculto"></div>
     </div>
+  </div>
 
+  <div class="perfil-card">
     <div class="perfil-info">
       <h1 id="nombre"></h1>
       <p class="perfil-tipo"><span id="tipo"></span></p>
@@ -53,15 +55,15 @@
 
     <div class="perfil-acciones-principal">
       <a id="linkLlamar" href="#" class="perfil-accion-btn">
-        <span style="font-size: 20px;">☎️</span>
+        <span>☎️</span>
         <span>Llamar</span>
       </a>
       <a id="linkWhatsapp" href="#" class="perfil-accion-btn">
-        <span style="font-size: 20px;">💬</span>
+        <span>💬</span>
         <span>WhatsApp</span>
       </a>
       <button id="btnCompartir" class="perfil-accion-btn">
-        <span style="font-size: 20px;">📤</span>
+        <span>📤</span>
         <span>Compartir</span>
       </button>
     </div>
@@ -90,33 +92,37 @@
 
     <div id="verPersona" class="qr-oculto perfil-bloque">
       <h3>🏥 Información médica</h3>
-      <div class="perfil-item">
-        <span class="perfil-label">Tipo de sangre:</span>
-        <span class="perfil-valor" id="verSangre">No indicado</span>
-      </div>
-      <div class="perfil-item">
-        <span class="perfil-label">Padecimientos:</span>
-        <span class="perfil-valor" id="verPadecimientos">No indicado</span>
-      </div>
-      <div class="perfil-item">
-        <span class="perfil-label">Alergias:</span>
-        <span class="perfil-valor" id="verAlergias">No indicado</span>
+      <div class="perfil-info-medica">
+        <div class="perfil-item">
+          <span class="perfil-label">Tipo de sangre:</span>
+          <span class="perfil-valor" id="verSangre">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Padecimientos:</span>
+          <span class="perfil-valor" id="verPadecimientos">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Alergias:</span>
+          <span class="perfil-valor" id="verAlergias">No indicado</span>
+        </div>
       </div>
     </div>
 
     <div id="verMascota" class="qr-oculto perfil-bloque">
       <h3>🐾 Datos de la mascota</h3>
-      <div class="perfil-item">
-        <span class="perfil-label">Especie:</span>
-        <span class="perfil-valor" id="verEspecie">No indicado</span>
-      </div>
-      <div class="perfil-item">
-        <span class="perfil-label">Raza:</span>
-        <span class="perfil-valor" id="verRaza">No indicado</span>
-      </div>
-      <div class="perfil-item">
-        <span class="perfil-label">Color:</span>
-        <span class="perfil-valor" id="verColor">No indicado</span>
+      <div class="perfil-item-grid">
+        <div class="perfil-item">
+          <span class="perfil-label">Especie:</span>
+          <span class="perfil-valor" id="verEspecie">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Raza:</span>
+          <span class="perfil-valor" id="verRaza">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Color:</span>
+          <span class="perfil-valor" id="verColor">No indicado</span>
+        </div>
       </div>
     </div>
 
@@ -160,11 +166,11 @@
         </button>
         <button id="btnEliminar" class="perfil-accion-dueno perfil-accion-eliminar">
           <span class="accion-icono">🗑️</span>
-          <span class="accion-texto">Eliminar perfil</span>
+          <span class="accion-texto">Eliminar</span>
         </button>
         <button id="btnCerrarSesionDueno" class="perfil-accion-dueno perfil-accion-cerrar">
           <span class="accion-icono">🚪</span>
-          <span class="accion-texto">Cerrar acceso</span>
+          <span class="accion-texto">Cerrar</span>
         </button>
       </div>
     </div>
