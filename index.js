@@ -49,6 +49,8 @@ const btnObtenerGPS = document.getElementById("btnObtenerGPS");
 const textoGPS = document.getElementById("textoGPS");
 const fLatitud = document.getElementById("fLatitud");
 const fLongitud = document.getElementById("fLongitud");
+const seccionEstado = document.getElementById("seccionEstado");
+const fEstado = document.getElementById("fEstado");
 
 const qrRef = ref(db, "qrs/" + qrId);
 
@@ -70,9 +72,9 @@ function actualizarIndices() {
   mostrarPaso(pasoActual);
 }
 
-function mostrarPaso(numeropaso) {
+function mostrarPaso(numeroPaso) {
   document.querySelectorAll(".qr-wizard-step").forEach((el, idx) => {
-    el.classList.toggle("qr-step-activo", idx + 1 === numeropaso);
+    el.classList.toggle("qr-step-activo", idx + 1 === numeroPaso);
   });
 }
 
@@ -81,9 +83,6 @@ window.nextStep = function() {
   if (!validarPasoActual()) {
     return;
   }
-
-  // Guardar datos del paso actual
-  guardarDatosPaso();
 
   // Lógica especial: mostrar paso 4 (estado) solo para mascotas y objetos
   if (pasoActual === 3 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
@@ -151,45 +150,6 @@ function validarPasoActual() {
   return true;
 }
 
-function guardarDatosPaso() {
-  datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
-  datosFormulario.nombre = fNombre.value;
-  datosFormulario.edad = fEdad.value;
-  datosFormulario.contacto = fContacto.value;
-  datosFormulario.contacto2 = fContacto2.value;
-  datosFormulario.direccion = fDireccion.value;
-  datosFormulario.mensaje = fMensaje.value;
-  datosFormulario.ownerPin = fPin.value.trim();
-  
-  if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-    datosFormulario.estado = estadoSeleccionado;
-  }
-  
-  if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
-    datosFormulario.sangre = fSangre.value;
-    datosFormulario.padecimientos = fPadecimientos.value;
-    datosFormulario.alergias = fAlergias.value;
-  }
-  
-  if (tipoPerfilSeleccionado === "mascota") {
-    datosFormulario.mascota = {
-      especie: fEspecie.value,
-      raza: fRaza.value,
-      color: fColor.value
-    };
-  }
-  
-  if (tipoPerfilSeleccionado === "objeto") {
-    datosFormulario.objeto = {
-      descripcion: fDescripcion.value,
-      instrucciones: fInstrucciones.value
-    };
-  }
-  
-  datosFormulario.latitud = fLatitud.value;
-  datosFormulario.longitud = fLongitud.value;
-}
-
 function generarResumen() {
   const resumenHTML = `
     <div class="qr-resumen-item">
@@ -240,6 +200,34 @@ async function comprimirImagen(file) {
   });
 }
 
+function aplicarSecciones() {
+  document.getElementById("seccionPersona").classList.add("qr-seccion-oculta");
+  document.getElementById("seccionMascota").classList.add("qr-seccion-oculta");
+  document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
+  seccionEstado.classList.add("qr-oculto");
+
+  // Mostrar estado solo para mascotas y objetos
+  if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    seccionEstado.classList.remove("qr-oculto");
+    fEstado.required = true;
+  } else {
+    fEstado.required = false;
+    fEstado.value = "";
+  }
+
+  if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
+    document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
+  }
+
+  if (tipoPerfilSeleccionado === "mascota") {
+    document.getElementById("seccionMascota").classList.remove("qr-seccion-oculta");
+  }
+
+  if (tipoPerfilSeleccionado === "objeto") {
+    document.getElementById("seccionObjeto").classList.remove("qr-seccion-oculta");
+  }
+}
+
 window.guardarPerfil = async function() {
   try {
     document.getElementById("btnGuardar").disabled = true;
@@ -256,32 +244,72 @@ window.guardarPerfil = async function() {
       portadaBase64 = await comprimirImagen(fPortada.files[0]);
     }
 
+    // Guardar todos los datos del formulario
     const datosGuardar = {
-      ...datosFormulario,
+      tipoPerfil: tipoPerfilSeleccionado,
+      nombre: fNombre.value.trim(),
+      edad: fEdad.value || "",
+      contacto: fContacto.value.trim(),
+      contacto2: fContacto2.value.trim(),
+      direccion: fDireccion.value.trim(),
+      mensaje: fMensaje.value.trim(),
       foto: fotoBase64,
       portada: portadaBase64,
+      latitud: fLatitud.value,
+      longitud: fLongitud.value,
+      ownerPin: fPin.value.trim(),
       fecha: new Date().toISOString()
     };
 
+    // Agregar estado solo para mascotas y objetos
+    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+      datosGuardar.estado = fEstado.value || "activo";
+    }
+
+    // Información médica para personas
+    if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
+      datosGuardar.sangre = fSangre.value.trim();
+      datosGuardar.padecimientos = fPadecimientos.value.trim();
+      datosGuardar.alergias = fAlergias.value.trim();
+    }
+
+    // Datos de mascota
+    if (tipoPerfilSeleccionado === "mascota") {
+      datosGuardar.mascota = {
+        especie: fEspecie.value.trim(),
+        raza: fRaza.value.trim(),
+        color: fColor.value.trim()
+      };
+    }
+
+    // Datos de objeto
+    if (tipoPerfilSeleccionado === "objeto") {
+      datosGuardar.objeto = {
+        descripcion: fDescripcion.value.trim(),
+        instrucciones: fInstrucciones.value.trim()
+      };
+    }
+
     const existe = (await get(qrRef)).exists();
 
-    if (editMode) {
+    if (editMode && existe) {
       await update(qrRef, datosGuardar);
     } else {
       await set(qrRef, datosGuardar);
       localStorage.setItem("owner_" + qrId, "true");
     }
 
+    console.log("Datos guardados:", datosGuardar);
     window.location.href = `ver.html?id=${qrId}`;
   } catch (error) {
     console.error("Error guardando:", error);
-    alert("No se pudo guardar la información.");
+    alert("No se pudo guardar la información: " + error.message);
     document.getElementById("btnGuardar").disabled = false;
     document.getElementById("btnGuardar").textContent = "Guardar Perfil";
   }
 };
 
-// Event Listeners
+// Event Listeners - Seleccionar tipo de perfil
 document.querySelectorAll(".qr-opcion-btn").forEach(btn => {
   btn.addEventListener("click", function() {
     const tipoAttr = this.getAttribute("data-tipo");
@@ -289,26 +317,30 @@ document.querySelectorAll(".qr-opcion-btn").forEach(btn => {
     
     if (tipoAttr) {
       tipoPerfilSeleccionado = tipoAttr;
+      datosFormulario.tipoPerfil = tipoAttr;
+      aplicarSecciones();
       
-      // Ocultar/mostrar secciones
-      document.getElementById("seccionPersona").classList.toggle("qr-seccion-oculta", !["persona", "nino", "adultoMayor"].includes(tipoAttr));
-      document.getElementById("seccionMascota").classList.toggle("qr-seccion-oculta", tipoAttr !== "mascota");
-      document.getElementById("seccionObjeto").classList.toggle("qr-seccion-oculta", tipoAttr !== "objeto");
-      
-      // Mostrar/ocultar paso 4 (estado)
-      document.getElementById("step4").classList.toggle("qr-oculto", !["mascota", "objeto"].includes(tipoAttr));
+      // Marcar como seleccionado
+      document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(b => {
+        b.classList.remove("qr-opcion-seleccionada");
+      });
+      this.classList.add("qr-opcion-seleccionada");
     }
     
     if (estadoAttr) {
       estadoSeleccionado = estadoAttr;
+      datosFormulario.estado = estadoAttr;
+      
+      // Marcar como seleccionado
+      document.querySelectorAll(".qr-opcion-btn[data-estado]").forEach(b => {
+        b.classList.remove("qr-opcion-seleccionada");
+      });
+      this.classList.add("qr-opcion-seleccionada");
     }
-    
-    // Actualizar visualización de botón seleccionado
-    document.querySelectorAll(".qr-opcion-btn").forEach(b => b.classList.remove("qr-opcion-seleccionada"));
-    this.classList.add("qr-opcion-seleccionada");
   });
 });
 
+// Event Listeners - Fotos
 if (fFoto) {
   fFoto.addEventListener("change", async () => {
     const file = fFoto.files[0];
@@ -327,6 +359,7 @@ if (fPortada) {
   });
 }
 
+// Event Listeners - GPS
 if (btnObtenerGPS) {
   btnObtenerGPS.addEventListener("click", (e) => {
     e.preventDefault();
