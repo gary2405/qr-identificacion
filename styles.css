@@ -436,27 +436,27 @@
   position: relative;
   display: flex;
   justify-content: center;
-  margin-top: -80px;
-  margin-bottom: 20px;
+  margin-top: -100px;
+  margin-bottom: 0;
   z-index: 2;
 }
 
 .perfil-avatar {
-  width: 160px;
-  height: 160px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
   border: 6px solid white;
   background: #e2e8f0;
   display: block;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .perfil-avatar:hover {
   transform: scale(1.05);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
 .perfil-estado-badge {
@@ -483,12 +483,13 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1;
-  border-radius: 0 0 16px 16px;
+  border-radius: 16px 16px 16px 16px;
+  margin-top: 30px;
 }
 
 .perfil-info {
   text-align: center;
-  padding: 0 20px 12px;
+  padding: 24px 20px 12px;
 }
 
 .perfil-info h1 {
@@ -1200,12 +1201,16 @@
   }
 
   .perfil-avatar {
-    width: 140px;
-    height: 140px;
+    width: 160px;
+    height: 160px;
   }
 
   .perfil-avatar-container {
-    margin-top: -70px;
+    margin-top: -80px;
+  }
+
+  .perfil-card {
+    margin-top: 20px;
   }
 
   .perfil-info h1 {
@@ -1262,11 +1267,15 @@
   }
 
   .perfil-avatar {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
   }
 
   .perfil-avatar-container {
-    margin-top: -60px;
+    margin-top: -70px;
+  }
+
+  .perfil-card {
+    margin-top: 15px;
   }
 }
