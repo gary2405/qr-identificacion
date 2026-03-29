@@ -477,14 +477,14 @@
 }
 
 .perfil-card {
-  background: white;
+  background: rgb(255, 255, 255);
   margin: 0;
   padding: 0;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 1;
   border-radius: 16px 16px 16px 16px;
-  margin-top: 30px;
+  margin-top: 70px;
 }
 
 .perfil-info {
