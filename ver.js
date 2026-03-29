@@ -1,3 +1,15 @@
+import { db } from "./firebase.js";
+import { ref, get, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const params = new URLSearchParams(window.location.search);
+const qrId = params.get("id");
+
+if (!qrId) {
+  document.body.innerHTML = "<h2>QR inválido</h2>";
+  throw new Error("QR inválido");
+}
+
+// ========== ZOOM DE FOTOS ==========
 let nivelZoomActual = 100;
 const modalZoom = document.getElementById("modalZoom");
 const fotoZoom = document.getElementById("fotoZoom");
@@ -5,19 +17,8 @@ const nivelZoomTexto = document.getElementById("nivelZoom");
 const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
-
-// Abrir zoom en foto de perfil
-foto.addEventListener("click", () => {
-  abrirZoom(foto.src);
-});
-
-// Abrir zoom en foto de portada
-perfilCover.addEventListener("click", () => {
-  if (perfilCover.style.backgroundImage) {
-    const url = perfilCover.style.backgroundImage.slice(5, -2);
-    abrirZoom(url);
-  }
-});
+const foto = document.getElementById("foto");
+const perfilCover = document.getElementById("perfilCover");
 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
@@ -28,31 +29,10 @@ function abrirZoom(imagenUrl) {
   document.body.style.overflow = "hidden";
 }
 
-btnCerrarZoom.addEventListener("click", cerrarZoom);
-modalZoom.addEventListener("click", (e) => {
-  if (e.target === modalZoom) {
-    cerrarZoom();
-  }
-});
-
 function cerrarZoom() {
   modalZoom.classList.add("qr-oculto");
   document.body.style.overflow = "auto";
 }
-
-btnZoomMas.addEventListener("click", () => {
-  if (nivelZoomActual < 300) {
-    nivelZoomActual += 20;
-    actualizarZoom();
-  }
-});
-
-btnZoomMenos.addEventListener("click", () => {
-  if (nivelZoomActual > 100) {
-    nivelZoomActual -= 20;
-    actualizarZoom();
-  }
-});
 
 function actualizarZoom() {
   const escala = nivelZoomActual / 100;
@@ -60,35 +40,77 @@ function actualizarZoom() {
   nivelZoomTexto.textContent = nivelZoomActual + "%";
 }
 
-// Zoom con rueda del ratón
-fotoZoom.addEventListener("wheel", (e) => {
-  e.preventDefault();
-  if (e.deltaY < 0) {
-    btnZoomMas.click();
-  } else {
-    btnZoomMenos.click();
-  }
-});
-
-
-import { db } from "./firebase.js";
-import { ref, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-const params = new URLSearchParams(window.location.search);
-const qrId = params.get("id");
-
-if (!qrId) {
-  document.body.innerHTML = "<h2>QR inválido</h2>";
-  throw new Error("QR inválido");
+if (foto) {
+  foto.addEventListener("click", () => {
+    if (foto.src && foto.src !== "") {
+      abrirZoom(foto.src);
+    }
+  });
 }
+
+if (perfilCover) {
+  perfilCover.addEventListener("click", () => {
+    const bgImage = window.getComputedStyle(perfilCover).backgroundImage;
+    if (bgImage && bgImage !== "none") {
+      const url = bgImage.slice(5, -2);
+      abrirZoom(url);
+    }
+  });
+}
+
+if (btnCerrarZoom) {
+  btnCerrarZoom.addEventListener("click", cerrarZoom);
+}
+
+if (modalZoom) {
+  modalZoom.addEventListener("click", (e) => {
+    if (e.target === modalZoom) {
+      cerrarZoom();
+    }
+  });
+}
+
+if (btnZoomMas) {
+  btnZoomMas.addEventListener("click", () => {
+    if (nivelZoomActual < 300) {
+      nivelZoomActual += 20;
+      actualizarZoom();
+    }
+  });
+}
+
+if (btnZoomMenos) {
+  btnZoomMenos.addEventListener("click", () => {
+    if (nivelZoomActual > 100) {
+      nivelZoomActual -= 20;
+      actualizarZoom();
+    }
+  });
+}
+
+if (fotoZoom) {
+  fotoZoom.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    if (e.deltaY < 0) {
+      if (nivelZoomActual < 300) {
+        nivelZoomActual += 20;
+        actualizarZoom();
+      }
+    } else {
+      if (nivelZoomActual > 100) {
+        nivelZoomActual -= 20;
+        actualizarZoom();
+      }
+    }
+  });
+}
+
+// ========== ELEMENTOS DEL PERFIL ==========
 
 const nombre = document.getElementById("nombre");
 const tipo = document.getElementById("tipo");
 const direccion = document.getElementById("direccion");
 const mensaje = document.getElementById("mensaje");
-const foto = document.getElementById("foto");
-const perfilCover = document.getElementById("perfilCover");
-const estadoBadge = document.getElementById("estadoBadge");
 
 const linkLlamar = document.getElementById("linkLlamar");
 const linkWhatsapp = document.getElementById("linkWhatsapp");
@@ -125,6 +147,14 @@ const inputURLCompartir = document.getElementById("inputURLCompartir");
 const btnCopiarURL = document.getElementById("btnCopiarURL");
 const btnCerrarModal = document.getElementById("btnCerrarModal");
 
+const estadoBadge = document.getElementById("estadoBadge");
+const alertainEmergencia = document.getElementById("alertainEmergencia");
+const textoEmergencia = document.getElementById("textoEmergencia");
+const linkLlamarEmergencia = document.getElementById("linkLlamarEmergencia");
+const linkWhatsappEmergencia = document.getElementById("linkWhatsappEmergencia");
+const btnEncontrado = document.getElementById("btnEncontrado");
+const btnContinuar = document.getElementById("btnContinuar");
+
 let dataActual = null;
 let esDueno = localStorage.getItem("owner_" + qrId) === "true";
 let modoVisitante = false;
@@ -137,8 +167,8 @@ const estadoColores = {
 
 const estadoTextos = {
   activo: "Activo",
-  perdido: "Perdido",
-  encontrado: "Encontrado"
+  perdido: "⚠️ Perdido",
+  encontrado: "✓ Encontrado"
 };
 
 function actualizarVistaDueno() {
@@ -172,11 +202,19 @@ function llenarPerfil(data) {
     perfilCover.style.backgroundPosition = "center";
   }
 
-  // Estado badge
-  const estado = data.estado || "activo";
-  estadoBadge.className = "perfil-estado-badge";
-  estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
-  estadoBadge.textContent = estadoTextos[estado] || "Activo";
+  // Estado badge SOLO para mascotas y objetos
+  if (["mascota", "objeto"].includes(data.tipoPerfil) && data.estado) {
+    const estado = data.estado || "activo";
+    estadoBadge.classList.remove("qr-oculto");
+    estadoBadge.className = "perfil-estado-badge";
+    estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
+    estadoBadge.textContent = estadoTextos[estado] || "Activo";
+
+    // Mostrar alerta de emergencia si está perdido
+    if (estado === "perdido" && !esDueno) {
+      mostrarAlertaEmergencia(data);
+    }
+  }
 
   if (data.foto) {
     foto.src = data.foto;
@@ -223,6 +261,17 @@ function llenarPerfil(data) {
   }
 }
 
+function mostrarAlertaEmergencia(data) {
+  const tipoSubtitulo = data.tipoPerfil === "mascota" ? "mascota" : "objeto";
+  textoEmergencia.textContent = `Se reportó ${tipoSubtitulo} perdido. ¡Ayuda a encontrarlo!`;
+  
+  linkLlamarEmergencia.href = `tel:${data.contacto || ""}`;
+  linkWhatsappEmergencia.href = `https://wa.me/${data.contacto || ""}`;
+  
+  alertainEmergencia.classList.remove("qr-oculto");
+}
+
+// Cargar datos del QR
 get(ref(db, "qrs/" + qrId)).then((snapshot) => {
   if (!snapshot.exists()) {
     document.body.innerHTML = "<h2>Registro no encontrado</h2>";
@@ -232,7 +281,12 @@ get(ref(db, "qrs/" + qrId)).then((snapshot) => {
   dataActual = snapshot.val();
   llenarPerfil(dataActual);
   actualizarVistaDueno();
+}).catch(error => {
+  console.error("Error al cargar el perfil:", error);
+  document.body.innerHTML = "<h2>Error al cargar la información</h2>";
 });
+
+// ========== EVENT LISTENERS ==========
 
 if (btnSoyDueno) {
   btnSoyDueno.addEventListener("click", () => {
@@ -269,6 +323,7 @@ if (btnEntrarDueno) {
     modoVisitante = false;
     localStorage.setItem("owner_" + qrId, "true");
     pinDueno.value = "";
+    alertainEmergencia.classList.add("qr-oculto");
     actualizarVistaDueno();
   });
 }
@@ -285,9 +340,14 @@ if (btnEliminar) {
     if (!esDueno) return;
 
     if (confirm("¿Eliminar este registro?")) {
-      await remove(ref(db, "qrs/" + qrId));
-      localStorage.removeItem("owner_" + qrId);
-      window.location.href = `index.html?id=${qrId}`;
+      try {
+        await remove(ref(db, "qrs/" + qrId));
+        localStorage.removeItem("owner_" + qrId);
+        window.location.href = `index.html?id=${qrId}`;
+      } catch (error) {
+        console.error("Error eliminando:", error);
+        alert("No se pudo eliminar el registro.");
+      }
     }
   });
 }
@@ -295,6 +355,14 @@ if (btnEliminar) {
 if (btnVerComo) {
   btnVerComo.addEventListener("click", () => {
     modoVisitante = !modoVisitante;
+    
+    // Mostrar alerta de emergencia si está en modo visitante y está perdido
+    if (modoVisitante && dataActual && dataActual.estado === "perdido") {
+      mostrarAlertaEmergencia(dataActual);
+    } else {
+      alertainEmergencia.classList.add("qr-oculto");
+    }
+    
     actualizarVistaDueno();
   });
 }
@@ -304,6 +372,12 @@ if (btnCerrarSesionDueno) {
     esDueno = false;
     modoVisitante = false;
     localStorage.removeItem("owner_" + qrId);
+    
+    // Mostrar alerta de emergencia si está perdido
+    if (dataActual && dataActual.estado === "perdido") {
+      mostrarAlertaEmergencia(dataActual);
+    }
+    
     actualizarVistaDueno();
   });
 }
@@ -326,5 +400,31 @@ if (btnCopiarURL) {
 if (btnCerrarModal) {
   btnCerrarModal.addEventListener("click", () => {
     modalCompartir.classList.add("qr-oculto");
+  });
+}
+
+if (btnEncontrado) {
+  btnEncontrado.addEventListener("click", async () => {
+    if (confirm("¿Marcar como encontrado?")) {
+      try {
+        await update(ref(db, "qrs/" + qrId), { estado: "encontrado" });
+        dataActual.estado = "encontrado";
+        alertainEmergencia.classList.add("qr-oculto");
+        
+        // Recargar la página para mostrar el nuevo estado
+        setTimeout(() => {
+          location.reload();
+        }, 500);
+      } catch (error) {
+        console.error("Error actualizando estado:", error);
+        alert("No se pudo actualizar el estado.");
+      }
+    }
+  });
+}
+
+if (btnContinuar) {
+  btnContinuar.addEventListener("click", () => {
+    alertainEmergencia.classList.add("qr-oculto");
   });
 }
