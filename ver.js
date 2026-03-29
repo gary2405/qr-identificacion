@@ -1,3 +1,76 @@
+let nivelZoomActual = 100;
+const modalZoom = document.getElementById("modalZoom");
+const fotoZoom = document.getElementById("fotoZoom");
+const nivelZoomTexto = document.getElementById("nivelZoom");
+const btnCerrarZoom = document.getElementById("btnCerrarZoom");
+const btnZoomMas = document.getElementById("btnZoomMas");
+const btnZoomMenos = document.getElementById("btnZoomMenos");
+
+// Abrir zoom en foto de perfil
+foto.addEventListener("click", () => {
+  abrirZoom(foto.src);
+});
+
+// Abrir zoom en foto de portada
+perfilCover.addEventListener("click", () => {
+  if (perfilCover.style.backgroundImage) {
+    const url = perfilCover.style.backgroundImage.slice(5, -2);
+    abrirZoom(url);
+  }
+});
+
+function abrirZoom(imagenUrl) {
+  fotoZoom.src = imagenUrl;
+  nivelZoomActual = 100;
+  nivelZoomTexto.textContent = "100%";
+  fotoZoom.style.transform = "scale(1)";
+  modalZoom.classList.remove("qr-oculto");
+  document.body.style.overflow = "hidden";
+}
+
+btnCerrarZoom.addEventListener("click", cerrarZoom);
+modalZoom.addEventListener("click", (e) => {
+  if (e.target === modalZoom) {
+    cerrarZoom();
+  }
+});
+
+function cerrarZoom() {
+  modalZoom.classList.add("qr-oculto");
+  document.body.style.overflow = "auto";
+}
+
+btnZoomMas.addEventListener("click", () => {
+  if (nivelZoomActual < 300) {
+    nivelZoomActual += 20;
+    actualizarZoom();
+  }
+});
+
+btnZoomMenos.addEventListener("click", () => {
+  if (nivelZoomActual > 100) {
+    nivelZoomActual -= 20;
+    actualizarZoom();
+  }
+});
+
+function actualizarZoom() {
+  const escala = nivelZoomActual / 100;
+  fotoZoom.style.transform = `scale(${escala})`;
+  nivelZoomTexto.textContent = nivelZoomActual + "%";
+}
+
+// Zoom con rueda del ratón
+fotoZoom.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  if (e.deltaY < 0) {
+    btnZoomMas.click();
+  } else {
+    btnZoomMenos.click();
+  }
+});
+
+
 import { db } from "./firebase.js";
 import { ref, get, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 

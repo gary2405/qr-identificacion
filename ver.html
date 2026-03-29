@@ -8,6 +8,19 @@
 </head>
 <body class="qr-body">
 
+<!-- MODAL DE ZOOM PARA FOTOS -->
+<div id="modalZoom" class="qr-modal-zoom qr-oculto">
+  <div class="qr-zoom-contenedor">
+    <button id="btnCerrarZoom" class="qr-zoom-cerrar">✕</button>
+    <img id="fotoZoom" class="qr-zoom-imagen" alt="Foto ampliada">
+    <div class="qr-zoom-controles">
+      <button id="btnZoomMenos" class="qr-zoom-btn">−</button>
+      <span id="nivelZoom" class="qr-zoom-nivel">100%</span>
+      <button id="btnZoomMas" class="qr-zoom-btn">+</button>
+    </div>
+  </div>
+</div>
+
 <div id="alertainEmergencia" class="qr-alerta-emergencia qr-oculto">
   <div class="qr-alerta-contenido">
     <h1>⚠️ ¡PERDIDO!</h1>
@@ -22,11 +35,13 @@
 </div>
 
 <div class="perfil-wrap">
-  <div id="perfilCover" class="perfil-cover"></div>
+  <div id="perfilCover" class="perfil-cover" style="cursor: pointer;" title="Haz click para agrandar">
+    <div class="perfil-cover-overlay">🔍</div>
+  </div>
 
   <div class="perfil-card">
     <div class="perfil-header">
-      <img id="foto" class="perfil-avatar" alt="Foto del perfil">
+      <img id="foto" class="perfil-avatar" alt="Foto del perfil" style="cursor: pointer;" title="Haz click para agrandar">
       <div id="estadoBadge" class="perfil-estado-badge qr-oculto"></div>
     </div>
 
@@ -37,9 +52,18 @@
     </div>
 
     <div class="perfil-acciones-principal">
-      <a id="linkLlamar" href="#" class="perfil-accion-btn">☎️<br><span>Llamar</span></a>
-      <a id="linkWhatsapp" href="#" class="perfil-accion-btn">💬<br><span>WhatsApp</span></a>
-      <button id="btnCompartir" class="perfil-accion-btn">📤<br><span>Compartir</span></button>
+      <a id="linkLlamar" href="#" class="perfil-accion-btn">
+        <span style="font-size: 20px;">☎️</span>
+        <span>Llamar</span>
+      </a>
+      <a id="linkWhatsapp" href="#" class="perfil-accion-btn">
+        <span style="font-size: 20px;">💬</span>
+        <span>WhatsApp</span>
+      </a>
+      <button id="btnCompartir" class="perfil-accion-btn">
+        <span style="font-size: 20px;">📤</span>
+        <span>Compartir</span>
+      </button>
     </div>
 
     <div id="bloqueEmergencia" class="qr-oculto perfil-bloque">
@@ -60,7 +84,7 @@
     </div>
 
     <div class="perfil-bloque">
-      <h3>�� Mensaje</h3>
+      <h3>💬 Mensaje</h3>
       <p id="mensaje"></p>
     </div>
 
