@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="qr-body-nuevo">
+<body class="qr-body">
 
 <!-- MODAL DE ZOOM PARA FOTOS -->
 <div id="modalZoom" class="qr-modal-zoom qr-oculto">
@@ -34,136 +34,153 @@
   </div>
 </div>
 
-<div class="perfil-card-container">
-  <!-- TARJETA CON FOTO PRINCIPAL -->
-  <div class="perfil-card-main">
-    <div class="perfil-card-foto-container">
-      <img id="foto" class="perfil-card-foto" alt="Foto del perfil" style="cursor: pointer;" title="Haz click para agrandar">
-      <div id="estadoBadge" class="perfil-card-badge qr-oculto"></div>
+<div class="perfil-wrap">
+  <div class="perfil-header-container">
+    <div class="perfil-cover" style="cursor: pointer;" title="Haz click para agrandar">
+      <div class="perfil-cover-overlay">🔍</div>
     </div>
-
-    <div class="perfil-card-info">
-      <h1 id="nombre" class="perfil-card-nombre"></h1>
-      <p class="perfil-card-tipo"><span id="tipo"></span></p>
-      <p class="perfil-card-direccion"><span id="direccion"></span></p>
-    </div>
-
-    <!-- BOTONES DE ACCIÓN RÁPIDA -->
-    <div class="perfil-card-acciones">
-      <a id="linkLlamar" href="#" class="perfil-card-btn-accion perfil-btn-llamar">☎️</a>
-      <a id="linkWhatsapp" href="#" class="perfil-card-btn-accion perfil-btn-whatsapp">💬</a>
-      <button id="btnCompartir" class="perfil-card-btn-accion perfil-btn-compartir">📤</button>
+    
+    <div class="perfil-avatar-container">
+      <img id="foto" class="perfil-avatar" alt="Foto del perfil" style="cursor: pointer;" title="Haz click para agrandar">
+      <div id="estadoBadge" class="perfil-estado-badge qr-oculto"></div>
     </div>
   </div>
 
-  <!-- CONTENIDO SECUNDARIO (SCROLL) -->
-  <div class="perfil-card-scroll">
-    
-    <!-- MENSAJE -->
-    <div class="perfil-card-bloque">
+  <div class="perfil-card">
+    <div class="perfil-info">
+      <h1 id="nombre"></h1>
+      <p class="perfil-tipo"><span id="tipo"></span></p>
+      <p class="perfil-direccion"><span id="direccion"></span></p>
+    </div>
+
+    <div class="perfil-acciones-principal">
+      <a id="linkLlamar" href="#" class="perfil-accion-btn">
+        <span>☎️</span>
+        <span>Llamar</span>
+      </a>
+      <a id="linkWhatsapp" href="#" class="perfil-accion-btn">
+        <span>💬</span>
+        <span>WhatsApp</span>
+      </a>
+      <button id="btnCompartir" class="perfil-accion-btn">
+        <span>📤</span>
+        <span>Compartir</span>
+      </button>
+    </div>
+
+    <div id="bloqueEmergencia" class="qr-oculto perfil-bloque">
+      <h3>📞 Contacto de emergencia</h3>
+      <div class="perfil-contactos">
+        <a id="linkLlamar2" href="#" class="perfil-link-sec">☎️ Llamar</a>
+        <a id="linkWhatsapp2" href="#" class="perfil-link-sec">💬 WhatsApp</a>
+      </div>
+    </div>
+
+    <div id="bloqueGPS" class="qr-oculto perfil-bloque">
+      <h3>📍 Ubicación GPS</h3>
+      <p id="textoUbicacion"></p>
+      <a id="linkMapa" href="#" target="_blank" class="perfil-btn-mapa">
+        <span class="mapa-icono">🗺️</span>
+        <span class="mapa-texto">Ver en Google Maps</span>
+      </a>
+    </div>
+
+    <div class="perfil-bloque">
       <h3>💬 Mensaje</h3>
       <p id="mensaje"></p>
     </div>
 
-    <!-- CONTACTO DE EMERGENCIA -->
-    <div id="bloqueEmergencia" class="qr-oculto perfil-card-bloque">
-      <h3>📞 Contacto de emergencia</h3>
-      <div class="perfil-card-contactos">
-        <a id="linkLlamar2" href="#" class="perfil-card-link">☎️ Llamar</a>
-        <a id="linkWhatsapp2" href="#" class="perfil-card-link">💬 WhatsApp</a>
-      </div>
-    </div>
-
-    <!-- UBICACIÓN GPS -->
-    <div id="bloqueGPS" class="qr-oculto perfil-card-bloque">
-      <h3>📍 Ubicación GPS</h3>
-      <p id="textoUbicacion" class="perfil-card-ubicacion"></p>
-      <a id="linkMapa" href="#" target="_blank" class="perfil-card-btn-mapa">
-        🗺️ Ver en Google Maps
-      </a>
-    </div>
-
-    <!-- INFORMACIÓN MÉDICA -->
-    <div id="verPersona" class="qr-oculto perfil-card-bloque">
+    <div id="verPersona" class="qr-oculto perfil-bloque">
       <h3>🏥 Información médica</h3>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Sangre:</span>
-        <span class="perfil-card-valor" id="verSangre">—</span>
-      </div>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Padecimientos:</span>
-        <span class="perfil-card-valor" id="verPadecimientos">—</span>
-      </div>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Alergias:</span>
-        <span class="perfil-card-valor" id="verAlergias">—</span>
-      </div>
-    </div>
-
-    <!-- DATOS DE MASCOTA -->
-    <div id="verMascota" class="qr-oculto perfil-card-bloque">
-      <h3>🐾 Mascota</h3>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Especie:</span>
-        <span class="perfil-card-valor" id="verEspecie">—</span>
-      </div>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Raza:</span>
-        <span class="perfil-card-valor" id="verRaza">—</span>
-      </div>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Color:</span>
-        <span class="perfil-card-valor" id="verColor">—</span>
-      </div>
-    </div>
-
-    <!-- DATOS DEL OBJETO -->
-    <div id="verObjeto" class="qr-oculto perfil-card-bloque">
-      <h3>📦 Objeto</h3>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Descripción:</span>
-        <span class="perfil-card-valor" id="verDescripcion">—</span>
-      </div>
-      <div class="perfil-card-item">
-        <span class="perfil-card-label">Instrucciones:</span>
-        <span class="perfil-card-valor" id="verInstrucciones">—</span>
-      </div>
-    </div>
-
-    <!-- PANEL DE ACCESO -->
-    <div id="panelAcceso" class="perfil-card-bloque perfil-card-panel-acceso">
-      <h3>🔐 Acceso</h3>
-      <div id="accesoVisitante">
-        <button id="btnSoyDueno" class="perfil-card-btn-principal">Soy el dueño</button>
-      </div>
-
-      <div id="loginDuenoBox" class="qr-oculto perfil-card-login">
-        <input id="pinDueno" type="password" placeholder="PIN" maxlength="8">
-        <div class="perfil-card-login-botones">
-          <button id="btnEntrarDueno" class="perfil-card-btn-pequeño perfil-card-btn-azul">Entrar</button>
-          <button id="btnCancelarLogin" class="perfil-card-btn-pequeño perfil-card-btn-gris">Cancelar</button>
+      <div class="perfil-info-medica">
+        <div class="perfil-item">
+          <span class="perfil-label">Tipo de sangre:</span>
+          <span class="perfil-valor" id="verSangre">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Padecimientos:</span>
+          <span class="perfil-valor" id="verPadecimientos">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Alergias:</span>
+          <span class="perfil-valor" id="verAlergias">No indicado</span>
         </div>
       </div>
     </div>
 
-    <!-- PANEL DEL DUEÑO -->
-    <div id="panelDueno" class="qr-oculto perfil-card-bloque perfil-card-panel-dueno">
-      <h3>✏️ Tu perfil</h3>
-      <div class="perfil-card-acciones-dueno">
-        <button id="btnEditar" class="perfil-card-btn-dueno perfil-card-btn-editar">✏️ Editar</button>
-        <button id="btnVerComo" class="perfil-card-btn-dueno perfil-card-btn-ver">👁️ Ver</button>
-        <button id="btnEliminar" class="perfil-card-btn-dueno perfil-card-btn-eliminar">🗑️ Eliminar</button>
-        <button id="btnCerrarSesionDueno" class="perfil-card-btn-dueno perfil-card-btn-cerrar">🚪 Cerrar</button>
+    <div id="verMascota" class="qr-oculto perfil-bloque">
+      <h3>🐾 Datos de la mascota</h3>
+      <div class="perfil-item-grid">
+        <div class="perfil-item">
+          <span class="perfil-label">Especie:</span>
+          <span class="perfil-valor" id="verEspecie">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Raza:</span>
+          <span class="perfil-valor" id="verRaza">No indicado</span>
+        </div>
+        <div class="perfil-item">
+          <span class="perfil-label">Color:</span>
+          <span class="perfil-valor" id="verColor">No indicado</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="verObjeto" class="qr-oculto perfil-bloque">
+      <h3>📦 Datos del objeto</h3>
+      <div class="perfil-item">
+        <span class="perfil-label">Descripción:</span>
+        <span class="perfil-valor" id="verDescripcion">No indicado</span>
+      </div>
+      <div class="perfil-item">
+        <span class="perfil-label">Instrucciones:</span>
+        <span class="perfil-valor" id="verInstrucciones">No indicado</span>
+      </div>
+    </div>
+
+    <div id="panelAcceso" class="perfil-bloque perfil-bloque-acceso">
+      <h3>🔐 Acceso</h3>
+      <div id="accesoVisitante">
+        <button id="btnSoyDueno" class="qr-btn perfil-btn-accion-bloque">Soy el dueño</button>
+      </div>
+
+      <div id="loginDuenoBox" class="qr-oculto perfil-login">
+        <input id="pinDueno" type="password" placeholder="Ingresa tu PIN" maxlength="8">
+        <div class="perfil-login-botones">
+          <button id="btnEntrarDueno" class="qr-btn">Entrar</button>
+          <button id="btnCancelarLogin" class="qr-btn perfil-btn-sec">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panelDueno" class="qr-oculto perfil-bloque perfil-bloque-dueno">
+      <h3>✏️ Administrar tu perfil</h3>
+      <div class="perfil-acciones-dueno">
+        <button id="btnEditar" class="perfil-accion-dueno perfil-accion-editar">
+          <span class="accion-icono">✏️</span>
+          <span class="accion-texto">Editar</span>
+        </button>
+        <button id="btnVerComo" class="perfil-accion-dueno perfil-accion-ver">
+          <span class="accion-icono">👁️</span>
+          <span class="accion-texto">Ver como visitante</span>
+        </button>
+        <button id="btnEliminar" class="perfil-accion-dueno perfil-accion-eliminar">
+          <span class="accion-icono">🗑️</span>
+          <span class="accion-texto">Eliminar perfil</span>
+        </button>
+        <button id="btnCerrarSesionDueno" class="perfil-accion-dueno perfil-accion-cerrar">
+          <span class="accion-icono">🚪</span>
+          <span class="accion-texto">Cerrar acceso</span>
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL DE COMPARTIR -->
 <div id="modalCompartir" class="qr-modal qr-oculto">
   <div class="qr-modal-contenido">
     <h3>📤 Compartir perfil</h3>
-    <p>Comparte este perfil</p>
+    <p>Comparte este perfil con otros</p>
     <input id="inputURLCompartir" type="text" readonly>
     <div class="qr-modal-botones">
       <button id="btnCopiarURL" class="qr-btn">Copiar enlace</button>
