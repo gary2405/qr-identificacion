@@ -11,7 +11,7 @@
   <div id="pantallaCarga" class="qr-loader-pantalla">
     <div class="qr-loader-caja">
       <div class="qr-loader-spinner"></div>
-      <p>Cargando información...</p>
+      <p>Cargando...</p>
     </div>
   </div>
 
@@ -28,7 +28,7 @@
       <div class="qr-wizard-progress">
         <div id="progressBar" class="qr-progress-bar"></div>
       </div>
-      <p id="stepIndicator" class="qr-step-indicator">Paso 1 de 1</p>
+      <p id="stepIndicator" class="qr-step-indicator">Paso 1 de 7</p>
     </div>
 
     <div class="qr-wizard-content">
@@ -37,7 +37,7 @@
         <h2>¿Qué tipo de perfil deseas crear?</h2>
         <div class="qr-step-opciones">
           <button class="qr-opcion-btn" data-tipo="persona">👤 Persona</button>
-          <button class="qr-opcion-btn" data-tipo="nino">👧 Niño / Niña</button>
+          <button class="qr-opcion-btn" data-tipo="nino">👧 Niño/Niña</button>
           <button class="qr-opcion-btn" data-tipo="adultoMayor">👴 Adulto Mayor</button>
           <button class="qr-opcion-btn" data-tipo="mascota">🐾 Mascota</button>
           <button class="qr-opcion-btn" data-tipo="objeto">📦 Objeto</button>
@@ -76,42 +76,30 @@
         </div>
       </div>
 
-      <!-- PASO 3: Fotos -->
-      <div id="step3" class="qr-wizard-step">
-        <h2>Fotos</h2>
-        
-        <div class="qr-form-group">
-          <label>Foto de portada (opcional)</label>
-          <div class="qr-foto-upload">
-            <img id="previewPortada" class="qr-preview-img" alt="Foto de portada">
-            <label for="fPortada" class="qr-upload-btn">+ Seleccionar foto de portada</label>
-            <input type="file" id="fPortada" accept="image/*" style="display:none;">
-          </div>
+      <!-- PASO 3: Estado (Solo mascotas y objetos) -->
+      <div id="step3" class="qr-wizard-step qr-oculto">
+        <h2>Estado</h2>
+        <div class="qr-step-opciones">
+          <button class="qr-opcion-btn" data-estado="activo">✓ Activo</button>
+          <button class="qr-opcion-btn" data-estado="perdido">⚠️ Perdido</button>
+          <button class="qr-opcion-btn" data-estado="encontrado">🔍 Encontrado</button>
         </div>
-
-        <div class="qr-form-group">
-          <label>Foto de perfil (opcional)</label>
-          <div class="qr-foto-upload">
-            <img id="previewFoto" class="qr-preview-img" alt="Foto de perfil">
-            <label for="fFoto" class="qr-upload-btn">+ Seleccionar foto de perfil</label>
-            <input type="file" id="fFoto" accept="image/*" style="display:none;">
-          </div>
-        </div>
-
         <div class="qr-wizard-navegacion">
           <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
-          <button class="qr-btn-wizard qr-btn-omitir" onclick="omitirPaso()">Omitir por ahora</button>
           <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
         </div>
       </div>
 
-      <!-- PASO 4: Estado (Solo para mascotas y objetos) -->
-      <div id="step4" class="qr-wizard-step qr-oculto">
-        <h2>Estado del perfil</h2>
-        <div class="qr-step-opciones">
-          <button class="qr-opcion-btn" data-estado="activo">✓ Activo / En casa</button>
-          <button class="qr-opcion-btn" data-estado="perdido">⚠️ Perdido</button>
-          <button class="qr-opcion-btn" data-estado="encontrado">🔍 Encontrado</button>
+      <!-- PASO 4: Fotos -->
+      <div id="step4" class="qr-wizard-step">
+        <h2>Fotos</h2>
+        <div class="qr-form-group">
+          <label>Foto de perfil (opcional)</label>
+          <div class="qr-foto-upload">
+            <img id="previewFoto" class="qr-preview-img" alt="Foto">
+            <label for="fFoto" class="qr-upload-btn">+ Seleccionar foto de perfil</label>
+            <input type="file" id="fFoto" accept="image/*" style="display:none;">
+          </div>
         </div>
         <div class="qr-wizard-navegacion">
           <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
@@ -136,7 +124,7 @@
           </div>
           <div class="qr-form-group">
             <label>Padecimientos (opcional)</label>
-            <textarea id="fPadecimientos" placeholder="Describe cualquier condición médica importante"></textarea>
+            <textarea id="fPadecimientos" placeholder="Describe cualquier condición médica"></textarea>
           </div>
           <div class="qr-form-group">
             <label>Alergias (opcional)</label>
@@ -183,39 +171,27 @@
         <h2>Ubicación GPS (Opcional)</h2>
         <div class="qr-form-group">
           <button id="btnObtenerGPS" type="button" class="qr-btn-secundario">📍 Obtener ubicación actual</button>
-          <p id="textoGPS" class="qr-gps-texto">Sin ubicación registrada</p>
+          <p id="textoGPS" class="qr-gps-texto">Sin ubicación</p>
           <input id="fLatitud" type="hidden">
           <input id="fLongitud" type="hidden">
         </div>
         <div class="qr-wizard-navegacion">
           <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
-          <button class="qr-btn-wizard qr-btn-omitir" onclick="omitirPaso()">Omitir por ahora</button>
           <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
         </div>
       </div>
 
-      <!-- PASO 7: PIN de Seguridad -->
+      <!-- PASO 7: PIN -->
       <div id="step7" class="qr-wizard-step">
         <h2>PIN de Seguridad</h2>
-        <p class="qr-step-descripcion">Crea un PIN para proteger tu perfil. Necesitarás ingresar este código para editar la información.</p>
         <div class="qr-form-group">
-          <label>PIN (4 a 8 dígitos) *</label>
-          <input id="fPin" type="password" placeholder="Ingresa un PIN numérico" required>
+          <label>PIN (4-8 dígitos) *</label>
+          <input id="fPin" type="password" placeholder="PIN" required>
         </div>
         <div class="qr-form-group">
           <label>Confirmar PIN *</label>
-          <input id="fPinConfirmar" type="password" placeholder="Confirma tu PIN" required>
+          <input id="fPinConfirmar" type="password" placeholder="Confirmar" required>
         </div>
-        <div class="qr-wizard-navegacion">
-          <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
-          <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
-        </div>
-      </div>
-
-      <!-- PASO 8: Resumen -->
-      <div id="step8" class="qr-wizard-step">
-        <h2>Resumen de tu Perfil</h2>
-        <div id="resumenContenido" class="qr-resumen-contenido"></div>
         <div class="qr-wizard-navegacion">
           <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
           <button class="qr-btn-wizard qr-btn-guardar" id="btnGuardar" onclick="guardarPerfil()">Guardar Perfil</button>
