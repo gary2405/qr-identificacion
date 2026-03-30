@@ -12,7 +12,7 @@ if (!qrId) {
 
 // Variables globales
 let pasoActual = 1;
-const pasosTotales = 7;
+const pasosTotales = 8;
 let tipoPerfilSeleccionado = "";
 let estadoSeleccionado = "activo";
 const datosFormulario = {};
@@ -43,10 +43,13 @@ const fDescripcion = document.getElementById("fDescripcion");
 const fInstrucciones = document.getElementById("fInstrucciones");
 const fFoto = document.getElementById("fFoto");
 const previewFoto = document.getElementById("previewFoto");
+const fPortada = document.getElementById("fPortada");
+const previewPortada = document.getElementById("previewPortada");
 const btnObtenerGPS = document.getElementById("btnObtenerGPS");
 const textoGPS = document.getElementById("textoGPS");
 const fLatitud = document.getElementById("fLatitud");
 const fLongitud = document.getElementById("fLongitud");
+const fEstado = document.getElementById("step4").querySelector(".qr-step-opciones") ? null : document.getElementById("fEstado");
 
 const qrRef = ref(db, "qrs/" + qrId);
 
@@ -75,6 +78,7 @@ function mostrarPaso(numeroPaso) {
 }
 
 function guardarDatosDelPasoActual() {
+  // Guardar datos del paso actual en datosFormulario
   datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
   datosFormulario.nombre = fNombre.value.trim();
   datosFormulario.edad = fEdad.value || "";
@@ -115,16 +119,16 @@ window.nextStep = function() {
     return;
   }
 
-  // Lógica de navegación
-  if (pasoActual === 2) {
-    // Después de paso 2 (Información básica), ir a paso 3 (Estado) solo si es mascota u objeto
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 3; // Ir a paso 3 (Estado)
-    } else {
-      pasoActual = 4; // Ir a paso 4 (Fotos) saltando el paso 3
-    }
+  // Lógica especial: mostrar paso 4 (estado) solo para mascotas y objetos
+  if (pasoActual === 3 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    pasoActual = 5; // Saltar al paso 5
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
+  }
+
+  // Si es paso 8 (resumen), generar el resumen
+  if (pasoActual === 8) {
+    generarResumen();
   }
 
   actualizarIndices();
@@ -132,9 +136,9 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    // Lógica especial: si estamos en paso 4 y paso 3 está oculto, volver al 2
-    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 2;
+    // Lógica especial: si estamos en paso 5 y paso 4 está oculto, volver al 3
+    if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+      pasoActual = 3;
     } else {
       pasoActual--;
     }
@@ -181,6 +185,28 @@ function validarPasoActual() {
   return true;
 }
 
+function generarResumen() {
+  guardarDatosDelPasoActual();
+
+  const resumenHTML = `
+    <div class="qr-resumen-item">
+      <strong>Nombre:</strong> ${datosFormulario.nombre || "No especificado"}
+    </div>
+    <div class="qr-resumen-item">
+      <strong>Tipo de perfil:</strong> ${datosFormulario.tipoPerfil || "No especificado"}
+    </div>
+    ${datosFormulario.edad ? `<div class="qr-resumen-item"><strong>Edad:</strong> ${datosFormulario.edad}</div>` : ""}
+    ${datosFormulario.contacto ? `<div class="qr-resumen-item"><strong>Contacto:</strong> ${datosFormulario.contacto}</div>` : ""}
+    ${datosFormulario.contacto2 ? `<div class="qr-resumen-item"><strong>Contacto de emergencia:</strong> ${datosFormulario.contacto2}</div>` : ""}
+    ${datosFormulario.direccion ? `<div class="qr-resumen-item"><strong>Dirección:</strong> ${datosFormulario.direccion}</div>` : ""}
+    ${datosFormulario.estado ? `<div class="qr-resumen-item"><strong>Estado:</strong> ${datosFormulario.estado}</div>` : ""}
+    ${datosFormulario.mensaje ? `<div class="qr-resumen-item"><strong>Mensaje:</strong> ${datosFormulario.mensaje}</div>` : ""}
+    ${datosFormulario.latitud && datosFormulario.longitud ? `<div class="qr-resumen-item"><strong>Ubicación:</strong> Lat: ${parseFloat(datosFormulario.latitud).toFixed(4)}, Lng: ${parseFloat(datosFormulario.longitud).toFixed(4)}</div>` : ""}
+  `;
+  
+  document.getElementById("resumenContenido").innerHTML = resumenHTML;
+}
+
 async function comprimirImagen(file) {
   return new Promise((resolve, reject) => {
     const lector = new FileReader();
@@ -215,11 +241,11 @@ function aplicarSecciones() {
   document.getElementById("seccionPersona").classList.add("qr-seccion-oculta");
   document.getElementById("seccionMascota").classList.add("qr-seccion-oculta");
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
-  document.getElementById("step3").classList.add("qr-oculto");
+  document.getElementById("step4").classList.add("qr-oculto");
 
   // Mostrar estado solo para mascotas y objetos
   if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-    document.getElementById("step3").classList.remove("qr-oculto");
+    document.getElementById("step4").classList.remove("qr-oculto");
   }
 
   if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
@@ -244,9 +270,14 @@ window.guardarPerfil = async function() {
     guardarDatosDelPasoActual();
 
     let fotoBase64 = previewFoto.src || "";
+    let portadaBase64 = previewPortada.src || "";
 
     if (fFoto && fFoto.files[0]) {
       fotoBase64 = await comprimirImagen(fFoto.files[0]);
+    }
+
+    if (fPortada && fPortada.files[0]) {
+      portadaBase64 = await comprimirImagen(fPortada.files[0]);
     }
 
     // Guardar todos los datos del formulario
@@ -259,6 +290,7 @@ window.guardarPerfil = async function() {
       direccion: fDireccion.value.trim(),
       mensaje: fMensaje.value.trim(),
       foto: fotoBase64,
+      portada: portadaBase64,
       latitud: fLatitud.value,
       longitud: fLongitud.value,
       ownerPin: fPin.value.trim(),
@@ -352,6 +384,15 @@ if (fFoto) {
   });
 }
 
+if (fPortada) {
+  fPortada.addEventListener("change", async () => {
+    const file = fPortada.files[0];
+    if (!file) return;
+    const base64 = await comprimirImagen(file);
+    previewPortada.src = base64;
+  });
+}
+
 // Event Listeners - GPS
 if (btnObtenerGPS) {
   btnObtenerGPS.addEventListener("click", (e) => {
@@ -412,6 +453,7 @@ get(qrRef)
       fMensaje.value = data.mensaje || "";
       
       if (data.foto) previewFoto.src = data.foto;
+      if (data.portada) previewPortada.src = data.portada;
       
       fLatitud.value = data.latitud || "";
       fLongitud.value = data.longitud || "";
