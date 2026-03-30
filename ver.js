@@ -18,8 +18,8 @@ const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
-const cardHeader = document.getElementById("cardHeader");
-
+const perfilCover = document.getElementById("perfilCover");
+document.getElementById("fotoCover").src = data.foto || ""; 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
   nivelZoomActual = 100;
@@ -40,8 +40,8 @@ function actualizarZoom() {
   nivelZoomTexto.textContent = nivelZoomActual + "%";
 }
 
-if (cardHeader) {
-  cardHeader.addEventListener("click", () => {
+if (foto) {
+  foto.addEventListener("click", () => {
     if (foto.src && foto.src !== "") {
       abrirZoom(foto.src);
     }
@@ -200,15 +200,8 @@ function llenarPerfil(data) {
 
   if (data.foto) {
     foto.src = data.foto;
-    cardHeader.style.backgroundImage = `url('${data.foto}')`;
   } else {
     foto.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    cardHeader.style.backgroundImage = `url('https://cdn-icons-png.flaticon.com/512/149/149071.png')`;
-  }
-
-  // Agregar evento de click para zoom en la foto
-  if (foto.src && foto.src !== "") {
-    foto.style.display = "block";
   }
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
@@ -229,22 +222,22 @@ function llenarPerfil(data) {
 
   if (["persona", "nino", "adultoMayor"].includes(data.tipoPerfil)) {
     verPersona.classList.remove("qr-oculto");
-    document.getElementById("verSangre").textContent = data.sangre || "—";
-    document.getElementById("verPadecimientos").textContent = data.padecimientos || "—";
-    document.getElementById("verAlergias").textContent = data.alergias || "—";
+    document.getElementById("verSangre").textContent = data.sangre || "No indicado";
+    document.getElementById("verPadecimientos").textContent = data.padecimientos || "No indicado";
+    document.getElementById("verAlergias").textContent = data.alergias || "No indicado";
   }
 
   if (data.tipoPerfil === "mascota" && data.mascota) {
     verMascota.classList.remove("qr-oculto");
-    document.getElementById("verEspecie").textContent = data.mascota.especie || "—";
-    document.getElementById("verRaza").textContent = data.mascota.raza || "—";
-    document.getElementById("verColor").textContent = data.mascota.color || "—";
+    document.getElementById("verEspecie").textContent = data.mascota.especie || "No indicado";
+    document.getElementById("verRaza").textContent = data.mascota.raza || "No indicado";
+    document.getElementById("verColor").textContent = data.mascota.color || "No indicado";
   }
 
   if (data.tipoPerfil === "objeto" && data.objeto) {
     verObjeto.classList.remove("qr-oculto");
-    document.getElementById("verDescripcion").textContent = data.objeto.descripcion || "—";
-    document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "—";
+    document.getElementById("verDescripcion").textContent = data.objeto.descripcion || "No indicado";
+    document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "No indicado";
   }
 }
 
@@ -343,6 +336,7 @@ if (btnVerComo) {
   btnVerComo.addEventListener("click", () => {
     modoVisitante = !modoVisitante;
     
+    // Mostrar alerta de emergencia si está en modo visitante y está perdido
     if (modoVisitante && dataActual && dataActual.estado === "perdido") {
       mostrarAlertaEmergencia(dataActual);
     } else {
@@ -359,6 +353,7 @@ if (btnCerrarSesionDueno) {
     modoVisitante = false;
     localStorage.removeItem("owner_" + qrId);
     
+    // Mostrar alerta de emergencia si está perdido
     if (dataActual && dataActual.estado === "perdido") {
       mostrarAlertaEmergencia(dataActual);
     }
@@ -396,6 +391,7 @@ if (btnEncontrado) {
         dataActual.estado = "encontrado";
         alertainEmergencia.classList.add("qr-oculto");
         
+        // Recargar la página para mostrar el nuevo estado
         setTimeout(() => {
           location.reload();
         }, 500);
