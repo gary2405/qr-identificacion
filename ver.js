@@ -19,7 +19,7 @@ const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
 const perfilCover = document.getElementById("perfilCover");
-
+document.getElementById("fotoCover").src = data.foto || ""; 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
   nivelZoomActual = 100;
