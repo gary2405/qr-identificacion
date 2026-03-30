@@ -54,15 +54,15 @@
     </div>
 
     <div class="perfil-acciones-principal">
-      <a id="linkLlamar" href="#" class="perfil-accion-btn">
+      <a id="linkLlamar" href="#" class="perfil-accion-btn" title="Llamar">
         <span>☎️</span>
         <span>Llamar</span>
       </a>
-      <a id="linkWhatsapp" href="#" class="perfil-accion-btn">
+      <a id="linkWhatsapp" href="#" class="perfil-accion-btn" title="Enviar WhatsApp">
         <span>💬</span>
         <span>WhatsApp</span>
       </a>
-      <button id="btnCompartir" class="perfil-accion-btn">
+      <button id="btnCompartir" class="perfil-accion-btn" title="Compartir perfil">
         <span>📤</span>
         <span>Compartir</span>
       </button>
@@ -79,7 +79,7 @@
     <div id="bloqueGPS" class="qr-oculto perfil-bloque">
       <h3>📍 Ubicación GPS</h3>
       <p id="textoUbicacion"></p>
-      <a id="linkMapa" href="#" target="_blank" class="perfil-btn-mapa">
+      <a id="linkMapa" href="#" target="_blank" class="perfil-btn-mapa" title="Abrir en Google Maps">
         <span class="mapa-icono">🗺️</span>
         <span class="mapa-texto">Ver en Google Maps</span>
       </a>
@@ -87,7 +87,7 @@
 
     <div class="perfil-bloque">
       <h3>💬 Mensaje</h3>
-      <p id="mensaje"></p>
+      <p id="mensaje">—</p>
     </div>
 
     <div id="verPersona" class="qr-oculto perfil-bloque">
@@ -95,15 +95,15 @@
       <div class="perfil-info-medica">
         <div class="perfil-item">
           <span class="perfil-label">Tipo de sangre:</span>
-          <span class="perfil-valor" id="verSangre">No indicado</span>
+          <span class="perfil-valor" id="verSangre">—</span>
         </div>
         <div class="perfil-item">
           <span class="perfil-label">Padecimientos:</span>
-          <span class="perfil-valor" id="verPadecimientos">No indicado</span>
+          <span class="perfil-valor" id="verPadecimientos">—</span>
         </div>
         <div class="perfil-item">
           <span class="perfil-label">Alergias:</span>
-          <span class="perfil-valor" id="verAlergias">No indicado</span>
+          <span class="perfil-valor" id="verAlergias">—</span>
         </div>
       </div>
     </div>
@@ -113,15 +113,15 @@
       <div class="perfil-item-grid">
         <div class="perfil-item">
           <span class="perfil-label">Especie:</span>
-          <span class="perfil-valor" id="verEspecie">No indicado</span>
+          <span class="perfil-valor" id="verEspecie">—</span>
         </div>
         <div class="perfil-item">
           <span class="perfil-label">Raza:</span>
-          <span class="perfil-valor" id="verRaza">No indicado</span>
+          <span class="perfil-valor" id="verRaza">—</span>
         </div>
         <div class="perfil-item">
           <span class="perfil-label">Color:</span>
-          <span class="perfil-valor" id="verColor">No indicado</span>
+          <span class="perfil-valor" id="verColor">—</span>
         </div>
       </div>
     </div>
@@ -130,11 +130,11 @@
       <h3>📦 Datos del objeto</h3>
       <div class="perfil-item">
         <span class="perfil-label">Descripción:</span>
-        <span class="perfil-valor" id="verDescripcion">No indicado</span>
+        <span class="perfil-valor" id="verDescripcion">—</span>
       </div>
       <div class="perfil-item">
         <span class="perfil-label">Instrucciones:</span>
-        <span class="perfil-valor" id="verInstrucciones">No indicado</span>
+        <span class="perfil-valor" id="verInstrucciones">—</span>
       </div>
     </div>
 
@@ -145,7 +145,7 @@
       </div>
 
       <div id="loginDuenoBox" class="qr-oculto perfil-login">
-        <input id="pinDueno" type="password" placeholder="Ingresa tu PIN" maxlength="8">
+        <input id="pinDueno" type="password" placeholder="Ingresa tu PIN" maxlength="8" inputmode="numeric">
         <div class="perfil-login-botones">
           <button id="btnEntrarDueno" class="qr-btn">Entrar</button>
           <button id="btnCancelarLogin" class="qr-btn perfil-btn-sec">Cancelar</button>
@@ -156,19 +156,19 @@
     <div id="panelDueno" class="qr-oculto perfil-bloque perfil-bloque-dueno">
       <h3>✏️ Administrar tu perfil</h3>
       <div class="perfil-acciones-dueno">
-        <button id="btnEditar" class="perfil-accion-dueno perfil-accion-editar">
+        <button id="btnEditar" class="perfil-accion-dueno perfil-accion-editar" title="Editar perfil">
           <span class="accion-icono">✏️</span>
           <span class="accion-texto">Editar</span>
         </button>
-        <button id="btnVerComo" class="perfil-accion-dueno perfil-accion-ver">
+        <button id="btnVerComo" class="perfil-accion-dueno perfil-accion-ver" title="Ver como visitante">
           <span class="accion-icono">👁️</span>
           <span class="accion-texto">Ver como visitante</span>
         </button>
-        <button id="btnEliminar" class="perfil-accion-dueno perfil-accion-eliminar">
+        <button id="btnEliminar" class="perfil-accion-dueno perfil-accion-eliminar" title="Eliminar perfil">
           <span class="accion-icono">🗑️</span>
           <span class="accion-texto">Eliminar perfil</span>
         </button>
-        <button id="btnCerrarSesionDueno" class="perfil-accion-dueno perfil-accion-cerrar">
+        <button id="btnCerrarSesionDueno" class="perfil-accion-dueno perfil-accion-cerrar" title="Cerrar sesión">
           <span class="accion-icono">🚪</span>
           <span class="accion-texto">Cerrar acceso</span>
         </button>

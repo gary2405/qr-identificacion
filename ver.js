@@ -5,7 +5,7 @@ const params = new URLSearchParams(window.location.search);
 const qrId = params.get("id");
 
 if (!qrId) {
-  document.body.innerHTML = "<h2>QR inválido</h2>";
+  document.body.innerHTML = "<h2>❌ QR inválido</h2>";
   throw new Error("QR inválido");
 }
 
@@ -18,7 +18,6 @@ const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
-const perfilCover = document.getElementById("perfilCover");
 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
@@ -42,7 +41,7 @@ function actualizarZoom() {
 
 if (foto) {
   foto.addEventListener("click", () => {
-    if (foto.src && foto.src !== "") {
+    if (foto.src && foto.src !== "" && !foto.src.includes("flaticon")) {
       abrirZoom(foto.src);
     }
   });
@@ -156,9 +155,9 @@ const estadoColores = {
 };
 
 const estadoTextos = {
-  activo: "Activo",
+  activo: "✓ Activo",
   perdido: "⚠️ Perdido",
-  encontrado: "✓ Encontrado"
+  encontrado: "🔍 Encontrado"
 };
 
 function actualizarVistaDueno() {
@@ -175,24 +174,23 @@ function actualizarVistaDueno() {
   }
 
   if (btnVerComo) {
-    btnVerComo.textContent = modoVisitante ? "👁️ Volver" : "👁️ Ver";
+    btnVerComo.innerHTML = `<span class="accion-icono">${modoVisitante ? "👤" : "👁️"}</span><span class="accion-texto">${modoVisitante ? "Volver" : "Ver como visitante"}</span>`;
   }
 }
 
 function llenarPerfil(data) {
-  nombre.textContent = data.nombre || "";
-  tipo.textContent = data.tipoPerfil || "";
+  nombre.textContent = data.nombre || "Sin nombre";
+  tipo.textContent = data.tipoPerfil || "Sin tipo";
   direccion.textContent = data.direccion || "Sin dirección";
-  mensaje.textContent = data.mensaje || "Sin mensaje";
+  mensaje.textContent = data.mensaje || "—";
 
-  // Estado badge SOLO para mascotas y objetos
+  // Estado badge
   if (["mascota", "objeto"].includes(data.tipoPerfil) && data.estado) {
     const estado = data.estado || "activo";
     estadoBadge.classList.remove("qr-oculto");
     estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
     estadoBadge.textContent = estadoTextos[estado] || "Activo";
 
-    // Mostrar alerta de emergencia si está perdido
     if (estado === "perdido" && !esDueno) {
       mostrarAlertaEmergencia(data);
     }
@@ -205,56 +203,53 @@ function llenarPerfil(data) {
   }
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
-  linkWhatsapp.href = `https://wa.me/${data.contacto || ""}`;
+  linkWhatsapp.href = `https://wa.me/${encodeURIComponent(data.contacto || "")}`;
 
   if (data.contacto2) {
     bloqueEmergencia.classList.remove("qr-oculto");
     linkLlamar2.href = `tel:${data.contacto2}`;
-    linkWhatsapp2.href = `https://wa.me/${data.contacto2}`;
+    linkWhatsapp2.href = `https://wa.me/${encodeURIComponent(data.contacto2)}`;
   }
 
-  // GPS
   if (data.latitud && data.longitud) {
     bloqueGPS.classList.remove("qr-oculto");
-    textoUbicacion.textContent = `Lat: ${data.latitud}, Lng: ${data.longitud}`;
+    textoUbicacion.textContent = `📍 Lat: ${parseFloat(data.latitud).toFixed(4)}, Lng: ${parseFloat(data.longitud).toFixed(4)}`;
     linkMapa.href = `https://maps.google.com/?q=${data.latitud},${data.longitud}`;
   }
 
   if (["persona", "nino", "adultoMayor"].includes(data.tipoPerfil)) {
     verPersona.classList.remove("qr-oculto");
-    document.getElementById("verSangre").textContent = data.sangre || "No indicado";
-    document.getElementById("verPadecimientos").textContent = data.padecimientos || "No indicado";
-    document.getElementById("verAlergias").textContent = data.alergias || "No indicado";
+    document.getElementById("verSangre").textContent = data.sangre || "—";
+    document.getElementById("verPadecimientos").textContent = data.padecimientos || "—";
+    document.getElementById("verAlergias").textContent = data.alergias || "—";
   }
 
   if (data.tipoPerfil === "mascota" && data.mascota) {
     verMascota.classList.remove("qr-oculto");
-    document.getElementById("verEspecie").textContent = data.mascota.especie || "No indicado";
-    document.getElementById("verRaza").textContent = data.mascota.raza || "No indicado";
-    document.getElementById("verColor").textContent = data.mascota.color || "No indicado";
+    document.getElementById("verEspecie").textContent = data.mascota.especie || "—";
+    document.getElementById("verRaza").textContent = data.mascota.raza || "—";
+    document.getElementById("verColor").textContent = data.mascota.color || "—";
   }
 
   if (data.tipoPerfil === "objeto" && data.objeto) {
     verObjeto.classList.remove("qr-oculto");
-    document.getElementById("verDescripcion").textContent = data.objeto.descripcion || "No indicado";
-    document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "No indicado";
+    document.getElementById("verDescripcion").textContent = data.objeto.descripcion || "—";
+    document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "—";
   }
 }
 
 function mostrarAlertaEmergencia(data) {
   const tipoSubtitulo = data.tipoPerfil === "mascota" ? "mascota" : "objeto";
   textoEmergencia.textContent = `Se reportó ${tipoSubtitulo} perdido. ¡Ayuda a encontrarlo!`;
-  
   linkLlamarEmergencia.href = `tel:${data.contacto || ""}`;
-  linkWhatsappEmergencia.href = `https://wa.me/${data.contacto || ""}`;
-  
+  linkWhatsappEmergencia.href = `https://wa.me/${encodeURIComponent(data.contacto || "")}`;
   alertainEmergencia.classList.remove("qr-oculto");
 }
 
-// Cargar datos del QR
+// Cargar datos
 get(ref(db, "qrs/" + qrId)).then((snapshot) => {
   if (!snapshot.exists()) {
-    document.body.innerHTML = "<h2>Registro no encontrado</h2>";
+    document.body.innerHTML = "<h2>❌ Registro no encontrado</h2>";
     return;
   }
 
@@ -262,8 +257,8 @@ get(ref(db, "qrs/" + qrId)).then((snapshot) => {
   llenarPerfil(dataActual);
   actualizarVistaDueno();
 }).catch(error => {
-  console.error("Error al cargar el perfil:", error);
-  document.body.innerHTML = "<h2>Error al cargar la información</h2>";
+  console.error("Error:", error);
+  document.body.innerHTML = "<h2>❌ Error al cargar la información</h2>";
 });
 
 // ========== EVENT LISTENERS ==========
@@ -272,6 +267,7 @@ if (btnSoyDueno) {
   btnSoyDueno.addEventListener("click", () => {
     accesoVisitante.classList.add("qr-oculto");
     loginDuenoBox.classList.remove("qr-oculto");
+    pinDueno.focus();
   });
 }
 
@@ -290,12 +286,17 @@ if (btnEntrarDueno) {
     const pinIngresado = pinDueno.value.trim();
 
     if (!pinIngresado) {
-      alert("Ingresa tu PIN.");
+      alert("❌ Ingresa tu PIN");
+      return;
+    }
+
+    if (!/^\d{4,8}$/.test(pinIngresado)) {
+      alert("❌ El PIN debe contener 4 a 8 dígitos");
       return;
     }
 
     if (pinIngresado !== (dataActual.ownerPin || "")) {
-      alert("PIN incorrecto.");
+      alert("❌ PIN incorrecto");
       return;
     }
 
@@ -305,6 +306,13 @@ if (btnEntrarDueno) {
     pinDueno.value = "";
     alertainEmergencia.classList.add("qr-oculto");
     actualizarVistaDueno();
+  });
+
+  // Enter para confirmar
+  pinDueno.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      btnEntrarDueno.click();
+    }
   });
 }
 
@@ -319,14 +327,15 @@ if (btnEliminar) {
   btnEliminar.addEventListener("click", async () => {
     if (!esDueno) return;
 
-    if (confirm("¿Eliminar este registro?")) {
+    if (confirm("⚠️ ¿Estás seguro? Esta acción no se puede deshacer.")) {
       try {
         await remove(ref(db, "qrs/" + qrId));
         localStorage.removeItem("owner_" + qrId);
+        alert("✓ Perfil eliminado correctamente");
         window.location.href = `index.html?id=${qrId}`;
       } catch (error) {
-        console.error("Error eliminando:", error);
-        alert("No se pudo eliminar el registro.");
+        console.error("Error:", error);
+        alert("❌ No se pudo eliminar el registro");
       }
     }
   });
@@ -336,7 +345,6 @@ if (btnVerComo) {
   btnVerComo.addEventListener("click", () => {
     modoVisitante = !modoVisitante;
     
-    // Mostrar alerta de emergencia si está en modo visitante y está perdido
     if (modoVisitante && dataActual && dataActual.estado === "perdido") {
       mostrarAlertaEmergencia(dataActual);
     } else {
@@ -353,7 +361,6 @@ if (btnCerrarSesionDueno) {
     modoVisitante = false;
     localStorage.removeItem("owner_" + qrId);
     
-    // Mostrar alerta de emergencia si está perdido
     if (dataActual && dataActual.estado === "perdido") {
       mostrarAlertaEmergencia(dataActual);
     }
@@ -366,6 +373,7 @@ if (btnCompartir) {
   btnCompartir.addEventListener("click", () => {
     inputURLCompartir.value = window.location.href;
     modalCompartir.classList.remove("qr-oculto");
+    inputURLCompartir.select();
   });
 }
 
@@ -373,7 +381,10 @@ if (btnCopiarURL) {
   btnCopiarURL.addEventListener("click", () => {
     inputURLCompartir.select();
     document.execCommand("copy");
-    alert("Enlace copiado al portapapeles");
+    btnCopiarURL.textContent = "✓ ¡Copiado!";
+    setTimeout(() => {
+      btnCopiarURL.textContent = "Copiar enlace";
+    }, 2000);
   });
 }
 
@@ -385,19 +396,17 @@ if (btnCerrarModal) {
 
 if (btnEncontrado) {
   btnEncontrado.addEventListener("click", async () => {
-    if (confirm("¿Marcar como encontrado?")) {
+    if (confirm("✓ ¿Marcar como encontrado?")) {
       try {
         await update(ref(db, "qrs/" + qrId), { estado: "encontrado" });
         dataActual.estado = "encontrado";
         alertainEmergencia.classList.add("qr-oculto");
-        
-        // Recargar la página para mostrar el nuevo estado
         setTimeout(() => {
           location.reload();
         }, 500);
       } catch (error) {
-        console.error("Error actualizando estado:", error);
-        alert("No se pudo actualizar el estado.");
+        console.error("Error:", error);
+        alert("❌ No se pudo actualizar el estado");
       }
     }
   });
