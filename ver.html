@@ -2,180 +2,220 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Información registrada</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Perfil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* SOLO DISEÑO NUEVO (NO TOCA TU CSS ORIGINAL) */
+
+    .app-container {
+      max-width: 420px;
+      margin: auto;
+      min-height: 100vh;
+      background: black;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+
+    .app-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .app-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(10px) brightness(0.6);
+      transform: scale(1.1);
+    }
+
+    .app-content {
+      position: relative;
+      z-index: 2;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100vh;
+    }
+
+    .app-header {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 3;
+    }
+
+    .app-btn-top {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .app-info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .app-info h1 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .app-info p {
+      opacity: 0.8;
+      font-size: 14px;
+    }
+
+    .app-actions {
+      display: flex;
+      background: rgba(255,255,255,0.15);
+      border-radius: 30px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      margin-bottom: 15px;
+    }
+
+    .app-actions a,
+    .app-actions button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .app-card {
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 15px;
+      backdrop-filter: blur(15px);
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+  </style>
 </head>
-<body class="qr-body-card">
 
-<!-- MODAL DE ZOOM PARA FOTOS -->
-<div id="modalZoom" class="qr-modal-zoom qr-oculto">
-  <div class="qr-zoom-contenedor">
-    <button id="btnCerrarZoom" class="qr-zoom-cerrar">✕</button>
-    <img id="fotoZoom" class="qr-zoom-imagen" alt="Foto ampliada">
-    <div class="qr-zoom-controles">
-      <button id="btnZoomMenos" class="qr-zoom-btn">−</button>
-      <span id="nivelZoom" class="qr-zoom-nivel">100%</span>
-      <button id="btnZoomMas" class="qr-zoom-btn">+</button>
+<body class="qr-body">
+
+<!-- HEADER TIPO APP -->
+<div class="app-container">
+
+  <div class="app-bg">
+    <img id="fondoApp">
+  </div>
+
+  <div class="app-header">
+    <div class="app-btn-top">✕</div>
+    <div class="app-btn-top">⋯</div>
+  </div>
+
+  <div class="app-content">
+
+    <!-- INFO PRINCIPAL -->
+    <div class="app-info">
+      <h1 id="nombre"></h1>
+      <p id="tipo"></p>
+      <p id="direccion"></p>
     </div>
+
+    <!-- BOTONES -->
+    <div class="app-actions">
+      <a id="linkLlamar">Llamar</a>
+      <a id="linkWhatsapp">WhatsApp</a>
+      <button id="btnCompartir">Compartir</button>
+    </div>
+
+    <!-- MENSAJE -->
+    <div class="app-card">
+      <p id="mensaje"></p>
+    </div>
+
+    <!-- EMERGENCIA -->
+    <div id="bloqueEmergencia" class="app-card qr-oculto">
+      <p><strong>Contacto de emergencia</strong></p>
+      <a id="linkLlamar2">Llamar</a><br>
+      <a id="linkWhatsapp2">WhatsApp</a>
+    </div>
+
+    <!-- GPS -->
+    <div id="bloqueGPS" class="app-card qr-oculto">
+      <p id="textoUbicacion"></p>
+      <a id="linkMapa">Ver ubicación</a>
+    </div>
+
+    <!-- PERSONA -->
+    <div id="verPersona" class="app-card qr-oculto">
+      <p><strong>Información médica</strong></p>
+      <p id="verSangre"></p>
+      <p id="verPadecimientos"></p>
+      <p id="verAlergias"></p>
+    </div>
+
+    <!-- MASCOTA -->
+    <div id="verMascota" class="app-card qr-oculto">
+      <p><strong>Mascota</strong></p>
+      <p id="verEspecie"></p>
+      <p id="verRaza"></p>
+      <p id="verColor"></p>
+    </div>
+
+    <!-- OBJETO -->
+    <div id="verObjeto" class="app-card qr-oculto">
+      <p><strong>Objeto</strong></p>
+      <p id="verDescripcion"></p>
+      <p id="verInstrucciones"></p>
+    </div>
+
   </div>
 </div>
 
-<div id="alertainEmergencia" class="qr-alerta-emergencia qr-oculto">
-  <div class="qr-alerta-contenido">
-    <h1>⚠️ ¡PERDIDO!</h1>
-    <p id="textoEmergencia"></p>
-    <div class="qr-alerta-acciones">
-      <a id="linkLlamarEmergencia" href="#" class="qr-btn qr-btn-emergencia">☎️ Llamar</a>
-      <a id="linkWhatsappEmergencia" href="#" class="qr-btn qr-btn-emergencia">💬 WhatsApp</a>
-    </div>
-    <button id="btnEncontrado" class="qr-btn qr-btn-encontrado">✓ Lo encontré</button>
-    <button id="btnContinuar" class="qr-btn perfil-btn-sec">Continuar</button>
-  </div>
-</div>
-
-<div class="card-container">
-  <div class="card-main">
-    <!-- Header con foto -->
-    <div class="card-header" id="cardHeader">
-      <div class="card-header-overlay"></div>
-      <div class="card-header-top">
-        <button class="card-btn-close">✕</button>
-        <button class="card-btn-menu">⋯</button>
-      </div>
-      <div class="card-header-content">
-        <h1 id="nombre" class="card-title"></h1>
-        <p id="tipo" class="card-subtitle"></p>
-        <p id="direccion" class="card-location"></p>
-      </div>
-      <div id="estadoBadge" class="card-badge qr-oculto"></div>
-    </div>
-
-    <!-- Contenido oscuro -->
-    <div class="card-content">
-      <!-- Botones de estado (solo mascotas/objetos) -->
-      <div id="bloqueEstado" class="qr-oculto card-estado-buttons">
-        <button class="card-estado-btn card-estado-going" data-estado="activo">✓ Activo</button>
-        <button class="card-estado-btn card-estado-notgoing" data-estado="perdido">⚠️ Perdido</button>
-        <button class="card-estado-btn card-estado-maybe" data-estado="encontrado">✓ Encontrado</button>
-      </div>
-
-      <!-- Bloque de información principal -->
-      <div class="card-info-block">
-        <div class="card-info-icon">👤</div>
-        <div class="card-info-text">
-          <p id="mensaje"></p>
-        </div>
-      </div>
-
-      <!-- Scroll content -->
-      <div class="card-scroll">
-        <!-- Contacto de emergencia -->
-        <div id="bloqueEmergencia" class="qr-oculto card-block">
-          <h3>📞 Contacto de emergencia</h3>
-          <div class="card-block-links">
-            <a id="linkLlamar2" href="#" class="card-link">☎️ Llamar</a>
-            <a id="linkWhatsapp2" href="#" class="card-link">💬 WhatsApp</a>
-          </div>
-        </div>
-
-        <!-- Ubicación GPS -->
-        <div id="bloqueGPS" class="qr-oculto card-block">
-          <h3>📍 Ubicación GPS</h3>
-          <p id="textoUbicacion" class="card-location-text"></p>
-          <a id="linkMapa" href="#" target="_blank" class="card-btn-maps">🗺️ Ver en Google Maps</a>
-        </div>
-
-        <!-- Información médica -->
-        <div id="verPersona" class="qr-oculto card-block">
-          <h3>🏥 Información médica</h3>
-          <div class="card-info-row">
-            <span class="card-info-label">Sangre:</span>
-            <span id="verSangre">—</span>
-          </div>
-          <div class="card-info-row">
-            <span class="card-info-label">Padecimientos:</span>
-            <span id="verPadecimientos">—</span>
-          </div>
-          <div class="card-info-row">
-            <span class="card-info-label">Alergias:</span>
-            <span id="verAlergias">—</span>
-          </div>
-        </div>
-
-        <!-- Datos de mascota -->
-        <div id="verMascota" class="qr-oculto card-block">
-          <h3>🐾 Mascota</h3>
-          <div class="card-info-row">
-            <span class="card-info-label">Especie:</span>
-            <span id="verEspecie">—</span>
-          </div>
-          <div class="card-info-row">
-            <span class="card-info-label">Raza:</span>
-            <span id="verRaza">—</span>
-          </div>
-          <div class="card-info-row">
-            <span class="card-info-label">Color:</span>
-            <span id="verColor">—</span>
-          </div>
-        </div>
-
-        <!-- Datos del objeto -->
-        <div id="verObjeto" class="qr-oculto card-block">
-          <h3>📦 Objeto</h3>
-          <div class="card-info-row">
-            <span class="card-info-label">Descripción:</span>
-            <span id="verDescripcion">—</span>
-          </div>
-          <div class="card-info-row">
-            <span class="card-info-label">Instrucciones:</span>
-            <span id="verInstrucciones">—</span>
-          </div>
-        </div>
-
-        <!-- Panel de acceso -->
-        <div id="panelAcceso" class="card-block card-block-access">
-          <h3>🔐 Acceso</h3>
-          <div id="accesoVisitante">
-            <button id="btnSoyDueno" class="card-btn-primary">Soy el dueño</button>
-          </div>
-          <div id="loginDuenoBox" class="qr-oculto card-login">
-            <input id="pinDueno" type="password" placeholder="PIN" maxlength="8">
-            <button id="btnEntrarDueno" class="card-btn-small">Entrar</button>
-            <button id="btnCancelarLogin" class="card-btn-small card-btn-secondary">Cancelar</button>
-          </div>
-        </div>
-
-        <!-- Panel del dueño -->
-        <div id="panelDueno" class="qr-oculto card-block card-block-owner">
-          <h3>✏️ Tu perfil</h3>
-          <div class="card-owner-actions">
-            <button id="btnEditar" class="card-action-btn">✏️ Editar</button>
-            <button id="btnVerComo" class="card-action-btn">👁️ Ver</button>
-            <button id="btnEliminar" class="card-action-btn">🗑️ Eliminar</button>
-            <button id="btnCerrarSesionDueno" class="card-action-btn">🚪 Cerrar</button>
-          </div>
-        </div>
-
-        <div class="card-scroll-hint">Scroll Down to see full post ⬇️</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL DE COMPARTIR -->
+<!-- MODAL COMPARTIR -->
 <div id="modalCompartir" class="qr-modal qr-oculto">
   <div class="qr-modal-contenido">
-    <h3>📤 Compartir perfil</h3>
-    <p>Comparte este perfil</p>
+    <h3>Compartir</h3>
     <input id="inputURLCompartir" type="text" readonly>
-    <div class="qr-modal-botones">
-      <button id="btnCopiarURL" class="qr-btn">Copiar enlace</button>
-      <button id="btnCerrarModal" class="qr-btn perfil-btn-sec">Cerrar</button>
-    </div>
+    <button id="btnCopiarURL">Copiar</button>
+    <button id="btnCerrarModal">Cerrar</button>
   </div>
 </div>
 
 <script type="module" src="ver.js"></script>
+
+<script>
+  // USAR LA FOTO COMO FONDO AUTOMÁTICO
+  const foto = document.getElementById("foto");
+  const fondo = document.getElementById("fondoApp");
+
+  const observer = new MutationObserver(() => {
+    if (foto && foto.src) {
+      fondo.src = foto.src;
+    }
+  });
+
+  if (foto) {
+    observer.observe(foto, { attributes: true });
+  }
+</script>
+
 </body>
 </html>
