@@ -6,7 +6,7 @@ const qrId = params.get("id");
 const editMode = params.get("edit") === "1";
 
 if (!qrId) {
-  document.body.innerHTML = "<h2>QR inválido</h2>";
+  document.body.innerHTML = "<h2>❌ QR inválido</h2>";
   throw new Error("QR inválido");
 }
 
@@ -47,8 +47,22 @@ const btnObtenerGPS = document.getElementById("btnObtenerGPS");
 const textoGPS = document.getElementById("textoGPS");
 const fLatitud = document.getElementById("fLatitud");
 const fLongitud = document.getElementById("fLongitud");
+const msjCount = document.getElementById("msjCount");
+const pinMatch = document.getElementById("pinMatch");
 
 const qrRef = ref(db, "qrs/" + qrId);
+
+// Validaciones
+const validaciones = {
+  nombre: (val) => val.trim().length >= 2 && val.trim().length <= 100,
+  edad: (val) => !isNaN(val) && val >= 0 && val <= 150,
+  contacto: (val) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const telefonoRegex = /^\+?[0-9\s\-\(\)]{7,}$/;
+    return emailRegex.test(val) || telefonoRegex.test(val);
+  },
+  pin: (val) => /^\d{4,8}$/.test(val),
+};
 
 function ocultarCarga() {
   pantallaCarga.classList.add("qr-oculto");
@@ -64,8 +78,8 @@ function actualizarIndices() {
   stepIndicator.textContent = `Paso ${pasoActual} de ${pasosTotales}`;
   const porcentaje = (pasoActual / pasosTotales) * 100;
   progressBar.style.width = porcentaje + "%";
-  
   mostrarPaso(pasoActual);
+  window.scrollTo(0, 0);
 }
 
 function mostrarPaso(numeroPaso) {
@@ -86,20 +100,14 @@ function guardarDatosDelPasoActual() {
   datosFormulario.longitud = fLongitud.value;
   datosFormulario.ownerPin = fPin.value.trim();
   datosFormulario.estado = estadoSeleccionado;
-
-  // Información médica
   datosFormulario.sangre = fSangre.value.trim();
   datosFormulario.padecimientos = fPadecimientos.value.trim();
   datosFormulario.alergias = fAlergias.value.trim();
-
-  // Datos de mascota
   datosFormulario.mascota = {
     especie: fEspecie.value.trim(),
     raza: fRaza.value.trim(),
     color: fColor.value.trim()
   };
-
-  // Datos de objeto
   datosFormulario.objeto = {
     descripcion: fDescripcion.value.trim(),
     instrucciones: fInstrucciones.value.trim()
@@ -107,21 +115,17 @@ function guardarDatosDelPasoActual() {
 }
 
 window.nextStep = function() {
-  // Guardar datos del paso actual ANTES de validar
   guardarDatosDelPasoActual();
 
-  // Validar paso actual
   if (!validarPasoActual()) {
     return;
   }
 
-  // Lógica de navegación
   if (pasoActual === 2) {
-    // Después de paso 2 (Información básica), ir a paso 3 (Estado) solo si es mascota u objeto
     if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 3; // Ir a paso 3 (Estado)
+      pasoActual = 4;
     } else {
-      pasoActual = 4; // Ir a paso 4 (Fotos) saltando el paso 3
+      pasoActual = 3;
     }
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
@@ -132,7 +136,6 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    // Lógica especial: si estamos en paso 4 y paso 3 está oculto, volver al 2
     if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
       pasoActual = 2;
     } else {
@@ -149,64 +152,85 @@ window.omitirPaso = function() {
 function validarPasoActual() {
   if (pasoActual === 1) {
     if (!tipoPerfilSeleccionado) {
-      alert("Por favor selecciona un tipo de perfil");
+      mostrarErrorValidacion("Por favor selecciona un tipo de perfil");
       return false;
     }
   } else if (pasoActual === 2) {
     if (!fNombre.value.trim()) {
-      alert("Por favor ingresa tu nombre");
+      mostrarErrorValidacion("Por favor ingresa tu nombre");
+      return false;
+    }
+    if (!validaciones.nombre(fNombre.value)) {
+      mostrarErrorValidacion("El nombre debe tener entre 2 y 100 caracteres");
+      return false;
+    }
+    if (!validaciones.edad(fEdad.value)) {
+      mostrarErrorValidacion("Por favor ingresa una edad válida (0-150)");
       return false;
     }
     if (!fContacto.value.trim()) {
-      alert("Por favor ingresa un contacto principal");
+      mostrarErrorValidacion("Por favor ingresa un contacto principal");
+      return false;
+    }
+    if (!validaciones.contacto(fContacto.value)) {
+      mostrarErrorValidacion("Ingresa un teléfono o email válido");
+      return false;
+    }
+    if (fContacto2.value.trim() && !validaciones.contacto(fContacto2.value)) {
+      mostrarErrorValidacion("El contacto de emergencia no es válido");
       return false;
     }
   } else if (pasoActual === 7) {
-    const pin = fPin.value.trim();
-    const pinConfirm = fPinConfirmar.value.trim();
-    
-    if (!pin || !pinConfirm) {
-      alert("Por favor ingresa un PIN");
+    if (!fPin.value.trim()) {
+      mostrarErrorValidacion("Por favor ingresa un PIN");
       return false;
     }
-    if (!/^\d{4,8}$/.test(pin)) {
-      alert("El PIN debe tener de 4 a 8 dígitos");
+    if (!validaciones.pin(fPin.value)) {
+      mostrarErrorValidacion("El PIN debe tener 4 a 8 dígitos numéricos");
       return false;
     }
-    if (pin !== pinConfirm) {
-      alert("Los PINs no coinciden");
+    if (fPin.value !== fPinConfirmar.value) {
+      mostrarErrorValidacion("Los PINs no coinciden");
       return false;
     }
   }
   return true;
 }
 
+function mostrarErrorValidacion(mensaje) {
+  alert("❌ " + mensaje);
+}
+
 async function comprimirImagen(file) {
   return new Promise((resolve, reject) => {
-    const lector = new FileReader();
+    if (!file.type.startsWith("image/")) {
+      reject(new Error("El archivo no es una imagen válida"));
+      return;
+    }
 
+    if (file.size > 5 * 1024 * 1024) {
+      reject(new Error("La imagen no debe pesar más de 5MB"));
+      return;
+    }
+
+    const lector = new FileReader();
     lector.onload = () => {
       const img = new Image();
-
       img.onload = () => {
         const canvas = document.createElement("canvas");
-        const maxAncho = 500;
+        const maxAncho = 800;
         const escala = Math.min(1, maxAncho / img.width);
-
         canvas.width = Math.round(img.width * escala);
         canvas.height = Math.round(img.height * escala);
 
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        resolve(canvas.toDataURL("image/jpeg", 0.7));
+        resolve(canvas.toDataURL("image/jpeg", 0.75));
       };
-
-      img.onerror = reject;
+      img.onerror = () => reject(new Error("No se pudo cargar la imagen"));
       img.src = lector.result;
     };
-
-    lector.onerror = reject;
+    lector.onerror = () => reject(new Error("Error al leer el archivo"));
     lector.readAsDataURL(file);
   });
 }
@@ -215,21 +239,17 @@ function aplicarSecciones() {
   document.getElementById("seccionPersona").classList.add("qr-seccion-oculta");
   document.getElementById("seccionMascota").classList.add("qr-seccion-oculta");
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
-  document.getElementById("step3").classList.add("qr-oculto");
+  document.getElementById("step4").classList.add("qr-oculto");
 
-  // Mostrar estado solo para mascotas y objetos
   if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-    document.getElementById("step3").classList.remove("qr-oculto");
+    document.getElementById("step4").classList.remove("qr-oculto");
   }
-
   if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
   }
-
   if (tipoPerfilSeleccionado === "mascota") {
     document.getElementById("seccionMascota").classList.remove("qr-seccion-oculta");
   }
-
   if (tipoPerfilSeleccionado === "objeto") {
     document.getElementById("seccionObjeto").classList.remove("qr-seccion-oculta");
   }
@@ -237,19 +257,24 @@ function aplicarSecciones() {
 
 window.guardarPerfil = async function() {
   try {
-    document.getElementById("btnGuardar").disabled = true;
-    document.getElementById("btnGuardar").textContent = "Guardando...";
+    const btnGuardar = document.getElementById("btnGuardar");
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = "⏳ Guardando...";
 
-    // Guardar datos finales
     guardarDatosDelPasoActual();
 
     let fotoBase64 = previewFoto.src || "";
-
     if (fFoto && fFoto.files[0]) {
-      fotoBase64 = await comprimirImagen(fFoto.files[0]);
+      try {
+        fotoBase64 = await comprimirImagen(fFoto.files[0]);
+      } catch (error) {
+        mostrarErrorValidacion(error.message);
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = "Guardar Perfil";
+        return;
+      }
     }
 
-    // Guardar todos los datos del formulario
     const datosGuardar = {
       tipoPerfil: tipoPerfilSeleccionado,
       nombre: fNombre.value.trim(),
@@ -262,22 +287,20 @@ window.guardarPerfil = async function() {
       latitud: fLatitud.value,
       longitud: fLongitud.value,
       ownerPin: fPin.value.trim(),
-      fecha: new Date().toISOString()
+      fecha: new Date().toISOString(),
+      actualizado: new Date().toISOString()
     };
 
-    // Agregar estado solo para mascotas y objetos
     if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
       datosGuardar.estado = estadoSeleccionado || "activo";
     }
 
-    // Información médica para personas
     if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
       datosGuardar.sangre = fSangre.value.trim();
       datosGuardar.padecimientos = fPadecimientos.value.trim();
       datosGuardar.alergias = fAlergias.value.trim();
     }
 
-    // Datos de mascota
     if (tipoPerfilSeleccionado === "mascota") {
       datosGuardar.mascota = {
         especie: fEspecie.value.trim(),
@@ -286,7 +309,6 @@ window.guardarPerfil = async function() {
       };
     }
 
-    // Datos de objeto
     if (tipoPerfilSeleccionado === "objeto") {
       datosGuardar.objeto = {
         descripcion: fDescripcion.value.trim(),
@@ -303,24 +325,24 @@ window.guardarPerfil = async function() {
       localStorage.setItem("owner_" + qrId, "true");
     }
 
-    console.log("Datos guardados:", datosGuardar);
-    window.location.href = `ver.html?id=${qrId}`;
+    setTimeout(() => {
+      window.location.href = `ver.html?id=${qrId}`;
+    }, 500);
   } catch (error) {
     console.error("Error guardando:", error);
-    alert("No se pudo guardar la información: " + error.message);
-    document.getElementById("btnGuardar").disabled = false;
-    document.getElementById("btnGuardar").textContent = "Guardar Perfil";
+    mostrarErrorValidacion("No se pudo guardar: " + error.message);
+    const btnGuardar = document.getElementById("btnGuardar");
+    btnGuardar.disabled = false;
+    btnGuardar.textContent = "Guardar Perfil";
   }
 };
 
-// Event Listeners - Seleccionar tipo de perfil
+// Event Listeners - Tipo de perfil
 document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   btn.addEventListener("click", function() {
     tipoPerfilSeleccionado = this.getAttribute("data-tipo");
     datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
     aplicarSecciones();
-    
-    // Marcar como seleccionado
     document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(b => {
       b.classList.remove("qr-opcion-seleccionada");
     });
@@ -328,13 +350,10 @@ document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   });
 });
 
-// Event Listeners - Seleccionar estado
+// Event Listeners - Estado
 document.querySelectorAll(".qr-opcion-btn[data-estado]").forEach(btn => {
   btn.addEventListener("click", function() {
     estadoSeleccionado = this.getAttribute("data-estado");
-    datosFormulario.estado = estadoSeleccionado;
-    
-    // Marcar como seleccionado
     document.querySelectorAll(".qr-opcion-btn[data-estado]").forEach(b => {
       b.classList.remove("qr-opcion-seleccionada");
     });
@@ -347,8 +366,38 @@ if (fFoto) {
   fFoto.addEventListener("change", async () => {
     const file = fFoto.files[0];
     if (!file) return;
-    const base64 = await comprimirImagen(file);
-    previewFoto.src = base64;
+    
+    try {
+      const base64 = await comprimirImagen(file);
+      previewFoto.src = base64;
+      document.getElementById("fotoStatus").style.display = "none";
+    } catch (error) {
+      document.getElementById("fotoStatus").textContent = "❌ " + error.message;
+      document.getElementById("fotoStatus").style.display = "block";
+      fFoto.value = "";
+    }
+  });
+}
+
+// Event Listeners - Contador de caracteres
+if (fMensaje) {
+  fMensaje.addEventListener("input", () => {
+    msjCount.textContent = `${fMensaje.value.length}/300 caracteres`;
+  });
+}
+
+// Event Listeners - Validación de PIN
+if (fPinConfirmar) {
+  fPinConfirmar.addEventListener("input", () => {
+    if (fPin.value && fPinConfirmar.value) {
+      if (fPin.value === fPinConfirmar.value) {
+        pinMatch.textContent = "✓ Los PINs coinciden";
+        pinMatch.style.color = "#28a745";
+      } else {
+        pinMatch.textContent = "✗ Los PINs no coinciden";
+        pinMatch.style.color = "#dc3545";
+      }
+    }
   });
 }
 
@@ -358,10 +407,17 @@ if (btnObtenerGPS) {
     e.preventDefault();
     if ("geolocation" in navigator) {
       btnObtenerGPS.disabled = true;
-      btnObtenerGPS.textContent = "Obteniendo ubicación...";
+      btnObtenerGPS.textContent = "⏳ Obteniendo ubicación...";
       
+      const timeoutId = setTimeout(() => {
+        btnObtenerGPS.disabled = false;
+        btnObtenerGPS.textContent = "📍 Obtener ubicación actual";
+        textoGPS.textContent = "⏱️ Tiempo agotado. Intenta de nuevo.";
+      }, 10000);
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          clearTimeout(timeoutId);
           fLatitud.value = position.coords.latitude;
           fLongitud.value = position.coords.longitude;
           textoGPS.textContent = `✓ Ubicación: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
@@ -369,23 +425,28 @@ if (btnObtenerGPS) {
           btnObtenerGPS.textContent = "📍 Obtener ubicación actual";
         },
         (error) => {
-          alert("No se pudo obtener la ubicación: " + error.message);
+          clearTimeout(timeoutId);
+          let mensajeError = "No se pudo obtener la ubicación";
+          if (error.code === error.PERMISSION_DENIED) {
+            mensajeError = "Permiso de ubicación denegado";
+          }
+          textoGPS.textContent = "❌ " + mensajeError;
           btnObtenerGPS.disabled = false;
           btnObtenerGPS.textContent = "📍 Obtener ubicación actual";
-        }
+        },
+        { timeout: 10000, enableHighAccuracy: true }
       );
     } else {
-      alert("Tu navegador no soporta geolocalización.");
+      mostrarErrorValidacion("Tu navegador no soporta geolocalización");
     }
   });
 }
 
-// Cargar datos si estamos en modo edición
+// Cargar datos en modo edición
 get(qrRef)
   .then(snapshot => {
     const existe = snapshot.exists();
     const data = existe ? snapshot.val() : null;
-
     ocultarCarga();
 
     if (editMode) {
@@ -401,7 +462,6 @@ get(qrRef)
         return;
       }
 
-      // Cargar datos en el formulario
       tipoPerfilSeleccionado = data.tipoPerfil;
       estadoSeleccionado = data.estado || "activo";
       fNombre.value = data.nombre || "";
@@ -410,22 +470,17 @@ get(qrRef)
       fContacto2.value = data.contacto2 || "";
       fDireccion.value = data.direccion || "";
       fMensaje.value = data.mensaje || "";
-      
       if (data.foto) previewFoto.src = data.foto;
-      
       fLatitud.value = data.latitud || "";
       fLongitud.value = data.longitud || "";
-      
       if (data.sangre) fSangre.value = data.sangre;
       if (data.padecimientos) fPadecimientos.value = data.padecimientos;
       if (data.alergias) fAlergias.value = data.alergias;
-      
       if (data.mascota) {
         fEspecie.value = data.mascota.especie || "";
         fRaza.value = data.mascota.raza || "";
         fColor.value = data.mascota.color || "";
       }
-      
       if (data.objeto) {
         fDescripcion.value = data.objeto.descripcion || "";
         fInstrucciones.value = data.objeto.instrucciones || "";
@@ -442,7 +497,7 @@ get(qrRef)
     }
   })
   .catch(error => {
-    console.error("Error al consultar Firebase:", error);
+    console.error("Error:", error);
     ocultarCarga();
     mostrarWizard();
   });
