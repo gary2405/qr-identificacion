@@ -18,7 +18,6 @@ const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
-const cardHeader = document.getElementById("cardHeader");
 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
@@ -40,8 +39,8 @@ function actualizarZoom() {
   nivelZoomTexto.textContent = nivelZoomActual + "%";
 }
 
-if (cardHeader) {
-  cardHeader.addEventListener("click", () => {
+if (foto) {
+  foto.addEventListener("click", () => {
     if (foto.src && foto.src !== "") {
       abrirZoom(foto.src);
     }
@@ -200,15 +199,8 @@ function llenarPerfil(data) {
 
   if (data.foto) {
     foto.src = data.foto;
-    cardHeader.style.backgroundImage = `url('${data.foto}')`;
   } else {
     foto.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    cardHeader.style.backgroundImage = `url('https://cdn-icons-png.flaticon.com/512/149/149071.png')`;
-  }
-
-  // Agregar evento de click para zoom en la foto
-  if (foto.src && foto.src !== "") {
-    foto.style.display = "block";
   }
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
