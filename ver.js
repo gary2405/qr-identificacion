@@ -95,6 +95,32 @@ if (fotoZoom) {
   });
 }
 
+// ========== MENÚ DROPDOWN ==========
+const perfilMenuContainer = document.getElementById("perfilMenuContainer");
+const perfílMenuBtn = document.getElementById("perfílMenuBtn");
+const perfilDropdown = document.getElementById("perfilDropdown");
+const btnEditarMenu = document.getElementById("btnEditarMenu");
+const btnVerComoMenu = document.getElementById("btnVerComoMenu");
+const btnEliminarMenu = document.getElementById("btnEliminarMenu");
+const btnCerrarSesionMenu = document.getElementById("btnCerrarSesionMenu");
+const verComoTexto = document.getElementById("verComoTexto");
+
+let modoVisitante = false;
+
+if (perfílMenuBtn) {
+  perfílMenuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    perfilDropdown.classList.toggle("activo");
+  });
+}
+
+// Cerrar dropdown al hacer click fuera
+document.addEventListener("click", () => {
+  if (perfilDropdown && perfilDropdown.classList.contains("activo")) {
+    perfilDropdown.classList.remove("activo");
+  }
+});
+
 // ========== ELEMENTOS DEL PERFIL ==========
 
 const nombre = document.getElementById("nombre");
@@ -127,12 +153,6 @@ const pinDueno = document.getElementById("pinDueno");
 const btnEntrarDueno = document.getElementById("btnEntrarDueno");
 const btnCancelarLogin = document.getElementById("btnCancelarLogin");
 
-const panelDueno = document.getElementById("panelDueno");
-const btnEditar = document.getElementById("btnEditar");
-const btnEliminar = document.getElementById("btnEliminar");
-const btnVerComo = document.getElementById("btnVerComo");
-const btnCerrarSesionDueno = document.getElementById("btnCerrarSesionDueno");
-
 const modalCompartir = document.getElementById("modalCompartir");
 const inputURLCompartir = document.getElementById("inputURLCompartir");
 const btnCopiarURL = document.getElementById("btnCopiarURL");
@@ -148,7 +168,6 @@ const btnContinuar = document.getElementById("btnContinuar");
 
 let dataActual = null;
 let esDueno = localStorage.getItem("owner_" + qrId) === "true";
-let modoVisitante = false;
 
 const estadoColores = {
   activo: "#28a745",
@@ -163,21 +182,19 @@ const estadoTextos = {
 };
 
 function actualizarVistaDueno() {
-  const mostrarPanelDueno = esDueno && !modoVisitante;
+  const mostrarMenuDueno = esDueno && !modoVisitante;
 
-  if (mostrarPanelDueno) {
-    panelDueno.classList.remove("qr-oculto");
+  if (mostrarMenuDueno) {
+    perfilMenuContainer.classList.remove("qr-oculto");
     panelAcceso.classList.add("qr-oculto");
   } else {
-    panelDueno.classList.add("qr-oculto");
+    perfilMenuContainer.classList.add("qr-oculto");
     panelAcceso.classList.remove("qr-oculto");
     loginDuenoBox.classList.add("qr-oculto");
     accesoVisitante.classList.remove("qr-oculto");
   }
 
-  if (btnVerComo) {
-    btnVerComo.innerHTML = `<span class="accion-icono">${modoVisitante ? "👤" : "👁️"}</span><span>${modoVisitante ? "Volver" : "Ver como visitante"}</span>`;
-  }
+  verComoTexto.textContent = modoVisitante ? "Volver" : "Ver como visitante";
 }
 
 async function llenarPerfil(data) {
@@ -199,7 +216,7 @@ async function llenarPerfil(data) {
     }
   }
 
-  // Cargar foto y establecer como fondo difuminado
+  // Cargar foto
   let imagenUrl = data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
   foto.src = imagenUrl;
 
@@ -319,16 +336,18 @@ if (btnEntrarDueno) {
   });
 }
 
-if (btnEditar) {
-  btnEditar.addEventListener("click", () => {
+if (btnEditarMenu) {
+  btnEditarMenu.addEventListener("click", () => {
     if (!esDueno) return;
+    perfilDropdown.classList.remove("activo");
     window.location.href = `index.html?id=${qrId}&edit=1`;
   });
 }
 
-if (btnEliminar) {
-  btnEliminar.addEventListener("click", async () => {
+if (btnEliminarMenu) {
+  btnEliminarMenu.addEventListener("click", async () => {
     if (!esDueno) return;
+    perfilDropdown.classList.remove("activo");
 
     if (confirm("⚠️ ¿Estás seguro? Esta acción no se puede deshacer.")) {
       try {
@@ -344,8 +363,8 @@ if (btnEliminar) {
   });
 }
 
-if (btnVerComo) {
-  btnVerComo.addEventListener("click", () => {
+if (btnVerComoMenu) {
+  btnVerComoMenu.addEventListener("click", () => {
     modoVisitante = !modoVisitante;
     
     if (modoVisitante && dataActual && dataActual.estado === "perdido") {
@@ -358,11 +377,12 @@ if (btnVerComo) {
   });
 }
 
-if (btnCerrarSesionDueno) {
-  btnCerrarSesionDueno.addEventListener("click", () => {
+if (btnCerrarSesionMenu) {
+  btnCerrarSesionMenu.addEventListener("click", () => {
     esDueno = false;
     modoVisitante = false;
     localStorage.removeItem("owner_" + qrId);
+    perfilDropdown.classList.remove("activo");
     
     if (dataActual && dataActual.estado === "perdido") {
       mostrarAlertaEmergencia(dataActual);
