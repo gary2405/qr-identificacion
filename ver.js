@@ -9,6 +9,15 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
+// Mapeo de tipos de perfil para mostrar
+const mapeoTipos = {
+  persona: "Persona",
+  nino: "Niño",
+  adultomayor: "Adulto Mayor",
+  mascota: "Mascota",
+  objeto: "Objeto"
+};
+
 // ========== ZOOM DE FOTOS ==========
 let nivelZoomActual = 100;
 const modalZoom = document.getElementById("modalZoom");
@@ -200,12 +209,22 @@ function actualizarVistaDueno() {
 async function llenarPerfil(data) {
   nombre.textContent = data.nombre || "Sin nombre";
   edad.textContent = data.edad ? `${data.edad} años` : "";
-  tipo.textContent = data.tipoPerfil || "Sin tipo";
+  
+  // Mostrar tipo de perfil con formato legible
+  const tipoLower = data.tipoPerfil.toLowerCase();
+  tipo.textContent = mapeoTipos[tipoLower] || data.tipoPerfil;
+  
   direccion.textContent = data.direccion || "Sin dirección";
   mensaje.textContent = data.mensaje || "—";
 
+  // Debug - mostrar tipo de perfil
+  console.log("Tipo de perfil:", data.tipoPerfil, "Mostrado como:", mapeoTipos[tipoLower]);
+  console.log("Sangre:", data.sangre);
+  console.log("Padecimientos:", data.padecimientos);
+  console.log("Alergias:", data.alergias);
+
   // Estado badge
-  if (["mascota", "objeto"].includes(data.tipoPerfil) && data.estado) {
+  if (["mascota", "objeto"].includes(tipoLower) && data.estado) {
     const estado = data.estado || "activo";
     estadoBadge.classList.remove("qr-oculto");
     estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
@@ -238,21 +257,23 @@ async function llenarPerfil(data) {
     linkMapa.href = `https://maps.google.com/?q=${data.latitud},${data.longitud}`;
   }
 
-  if (["persona", "nino", "adultoMayor"].includes(data.tipoPerfil)) {
+  // Mostrar información médica - CORREGIDO
+  if (["persona", "nino", "adultomayor"].includes(tipoLower)) {
+    console.log("Mostrando información médica para:", tipoLower);
     verPersona.classList.remove("qr-oculto");
-    document.getElementById("verSangre").textContent = data.sangre || "—";
-    document.getElementById("verPadecimientos").textContent = data.padecimientos || "—";
-    document.getElementById("verAlergias").textContent = data.alergias || "—";
+    document.getElementById("verSangre").textContent = data.sangre && data.sangre.trim() ? data.sangre : "—";
+    document.getElementById("verPadecimientos").textContent = data.padecimientos && data.padecimientos.trim() ? data.padecimientos : "—";
+    document.getElementById("verAlergias").textContent = data.alergias && data.alergias.trim() ? data.alergias : "—";
   }
 
-  if (data.tipoPerfil === "mascota" && data.mascota) {
+  if (tipoLower === "mascota" && data.mascota) {
     verMascota.classList.remove("qr-oculto");
     document.getElementById("verEspecie").textContent = data.mascota.especie || "—";
     document.getElementById("verRaza").textContent = data.mascota.raza || "—";
     document.getElementById("verColor").textContent = data.mascota.color || "—";
   }
 
-  if (data.tipoPerfil === "objeto" && data.objeto) {
+  if (tipoLower === "objeto" && data.objeto) {
     verObjeto.classList.remove("qr-oculto");
     document.getElementById("verDescripcion").textContent = data.objeto.descripcion || "—";
     document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "—";
@@ -275,6 +296,7 @@ get(ref(db, "qrs/" + qrId)).then((snapshot) => {
   }
 
   dataActual = snapshot.val();
+  console.log("Datos cargados:", dataActual);
   llenarPerfil(dataActual);
   actualizarVistaDueno();
 }).catch(error => {
