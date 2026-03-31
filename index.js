@@ -123,18 +123,12 @@ window.nextStep = function() {
 
   // Lógica de navegación
   if (pasoActual === 2) {
-    // Después del paso 2 (Información básica)
-    if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 3; // Ir a paso 3 (Fotos)
-    } else {
-      pasoActual = 3; // Ir a paso 3 (Fotos) también
-    }
+    pasoActual = 3;
   } else if (pasoActual === 3) {
-    // Después del paso 3 (Fotos)
-    if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 4; // Ir a paso 4 (Estado) solo si es mascota/objeto
+    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+      pasoActual = 4;
     } else {
-      pasoActual = 5; // Ir a paso 5 (Info adicional) si no
+      pasoActual = 5;
     }
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
@@ -145,10 +139,9 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    if (pasoActual === 4 && !["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
-      // Si estamos en paso 4 pero no es mascota/objeto, no debería pasar aquí
+    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
       pasoActual = 3;
-    } else if (pasoActual === 5 && !["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
+    } else if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
       pasoActual = 3;
     } else {
       pasoActual--;
@@ -253,16 +246,27 @@ function aplicarSecciones() {
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
   document.getElementById("step4").classList.add("qr-oculto");
 
-  if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
+  const tipo = tipoPerfilSeleccionado.toLowerCase();
+  
+  console.log("Tipo seleccionado:", tipo); // Debug
+
+  // Mostrar paso 4 (Estado) solo para mascotas y objetos
+  if (["mascota", "objeto"].includes(tipo)) {
     document.getElementById("step4").classList.remove("qr-oculto");
   }
-  if (["Persona", "Niño", "Adulto Mayor"].includes(tipoPerfilSeleccionado)) {
+
+  // Mostrar sección médica para personas, niños y adultos mayores
+  if (["persona", "nino", "adultomayor"].includes(tipo)) {
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
   }
-  if (tipoPerfilSeleccionado === "Mascota") {
+
+  // Mostrar sección mascota
+  if (tipo === "mascota") {
     document.getElementById("seccionMascota").classList.remove("qr-seccion-oculta");
   }
-  if (tipoPerfilSeleccionado === "Objeto") {
+
+  // Mostrar sección objeto
+  if (tipo === "objeto") {
     document.getElementById("seccionObjeto").classList.remove("qr-seccion-oculta");
   }
 }
@@ -303,17 +307,17 @@ window.guardarPerfil = async function() {
       actualizado: new Date().toISOString()
     };
 
-    if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
+    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
       datosGuardar.estado = estadoSeleccionado || "activo";
     }
 
-    if (["Persona", "Niño", "Adulto Mayor"].includes(tipoPerfilSeleccionado)) {
+    if (["persona", "nino", "adultomayor"].includes(tipoPerfilSeleccionado.toLowerCase())) {
       datosGuardar.sangre = fSangre.value.trim();
       datosGuardar.padecimientos = fPadecimientos.value.trim();
       datosGuardar.alergias = fAlergias.value.trim();
     }
 
-    if (tipoPerfilSeleccionado === "Mascota") {
+    if (tipoPerfilSeleccionado.toLowerCase() === "mascota") {
       datosGuardar.mascota = {
         especie: fEspecie.value.trim(),
         raza: fRaza.value.trim(),
@@ -321,7 +325,7 @@ window.guardarPerfil = async function() {
       };
     }
 
-    if (tipoPerfilSeleccionado === "Objeto") {
+    if (tipoPerfilSeleccionado.toLowerCase() === "objeto") {
       datosGuardar.objeto = {
         descripcion: fDescripcion.value.trim(),
         instrucciones: fInstrucciones.value.trim()
