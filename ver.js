@@ -19,31 +19,41 @@ function getColorFromImage(imgElement) {
 
     imgElement.crossOrigin = "anonymous";
     imgElement.onload = () => {
-      ctx.drawImage(imgElement, 0, 0, 100, 100);
-      const imageData = ctx.getImageData(0, 0, 100, 100);
-      const data = imageData.data;
+      try {
+        ctx.drawImage(imgElement, 0, 0, 100, 100);
+        const imageData = ctx.getImageData(0, 0, 100, 100);
+        const data = imageData.data;
 
-      let r = 0, g = 0, b = 0;
-      for (let i = 0; i < data.length; i += 4) {
-        r += data[i];
-        g += data[i + 1];
-        b += data[i + 2];
+        let r = 0, g = 0, b = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+        }
+
+        const pixelCount = data.length / 4;
+        const avgR = Math.round(r / pixelCount);
+        const avgG = Math.round(g / pixelCount);
+        const avgB = Math.round(b / pixelCount);
+
+        const color1 = `rgb(${avgR}, ${avgG}, ${avgB})`;
+        const darkerR = Math.max(0, avgR - 40);
+        const darkerG = Math.max(0, avgG - 40);
+        const darkerB = Math.max(0, avgB - 40);
+        const color2 = `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
+        
+        resolve({ color1, color2 });
+      } catch (e) {
+        resolve({ 
+          color1: 'rgb(102, 126, 234)', 
+          color2: 'rgb(118, 75, 162)' 
+        });
       }
-
-      const pixelCount = data.length / 4;
-      const avgR = Math.round(r / pixelCount);
-      const avgG = Math.round(g / pixelCount);
-      const avgB = Math.round(b / pixelCount);
-
-      const color1 = `rgb(${avgR}, ${avgG}, ${avgB})`;
-      const color2 = `rgb(${Math.max(0, avgR - 30)}, ${Math.max(0, avgG - 30)}, ${Math.max(0, avgB - 30)})`;
-      
-      resolve({ color1, color2 });
     };
     imgElement.onerror = () => {
       resolve({ 
-        color1: '#667eea', 
-        color2: '#764ba2' 
+        color1: 'rgb(102, 126, 234)', 
+        color2: 'rgb(118, 75, 162)' 
       });
     };
   });
@@ -60,6 +70,7 @@ const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
 const perfilCover = document.getElementById("perfilCover");
 const perfilWrap = document.getElementById("perfilWrap");
+const perfilHeaderContainer = document.getElementById("perfilHeaderContainer");
 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
@@ -242,16 +253,12 @@ async function llenarPerfil(data) {
     foto.src = data.foto;
     // Extraer colores de la imagen
     await getColorFromImage(foto).then(colors => {
-      perfilWrap.style.setProperty('--color-primary', colors.color1);
-      perfilWrap.style.setProperty('--color-secondary', colors.color2);
-      perfilWrap.classList.add('gradient-dynamic');
+      perfilHeaderContainer.style.background = `linear-gradient(180deg, ${colors.color1} 0%, ${colors.color2} 100%)`;
     });
   } else {
     const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
     foto.src = defaultImg;
-    perfilWrap.style.setProperty('--color-primary', '#667eea');
-    perfilWrap.style.setProperty('--color-secondary', '#764ba2');
-    perfilWrap.classList.add('gradient-dynamic');
+    perfilHeaderContainer.style.background = `linear-gradient(180deg, rgb(102, 126, 234) 0%, rgb(118, 75, 162) 100%)`;
   }
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
