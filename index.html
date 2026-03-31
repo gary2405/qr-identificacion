@@ -37,11 +37,11 @@
         <h2>¿Qué tipo de perfil deseas crear?</h2>
         <p class="qr-step-descripcion">Selecciona el tipo que mejor se adapte a tus necesidades</p>
         <div class="qr-step-opciones">
-          <button class="qr-opcion-btn" data-tipo="persona">👤 Persona</button>
-          <button class="qr-opcion-btn" data-tipo="nino">👧 Niño / Niña</button>
-          <button class="qr-opcion-btn" data-tipo="adultoMayor">👴 Adulto Mayor</button>
-          <button class="qr-opcion-btn" data-tipo="mascota">🐾 Mascota</button>
-          <button class="qr-opcion-btn" data-tipo="objeto">📦 Objeto</button>
+          <button class="qr-opcion-btn" data-tipo="persona">Persona</button>
+          <button class="qr-opcion-btn" data-tipo="nino">Niño / Niña</button>
+          <button class="qr-opcion-btn" data-tipo="adultoMayor">Adulto Mayor</button>
+          <button class="qr-opcion-btn" data-tipo="mascota">Mascota</button>
+          <button class="qr-opcion-btn" data-tipo="objeto">Objeto</button>
         </div>
         <div class="qr-wizard-navegacion">
           <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
@@ -54,7 +54,7 @@
         <p class="qr-step-descripcion">Completa los datos principales (*Requerido)</p>
         <div class="qr-form-group">
           <label>Nombre completo *</label>
-          <input id="fNombre" type="text" placeholder="Ej: Juan Pérez" maxlength="100" required>
+          <input id="fNombre" type="text" maxlength="100" required>
           <small class="qr-form-hint">Máximo 100 caracteres</small>
         </div>
         <div class="qr-form-group">
@@ -64,17 +64,17 @@
         </div>
         <div class="qr-form-group">
           <label>Contacto principal * (Teléfono o Email)</label>
-          <input id="fContacto" type="text" placeholder="+34 612 345 678 o email@ejemplo.com" maxlength="50" required>
+          <input id="fContacto" type="text" placeholder="+506 1234 5678 o email@ejemplo.com" maxlength="50" required>
           <small class="qr-form-hint">Teléfono con código país o correo electrónico</small>
         </div>
         <div class="qr-form-group">
           <label>Contacto de emergencia (opcional)</label>
-          <input id="fContacto2" type="text" placeholder="+34 612 345 678 o email@ejemplo.com" maxlength="50">
+          <input id="fContacto2" type="text" placeholder="+506 1234 5678 o email@ejemplo.com" maxlength="50">
           <small class="qr-form-hint">Teléfono o correo alternativo</small>
         </div>
         <div class="qr-form-group">
           <label>Dirección (opcional)</label>
-          <input id="fDireccion" type="text" placeholder="Ej: Calle Principal 123, Madrid" maxlength="150">
+          <input id="fDireccion" type="text" placeholder="Ej: Chacarita, Puntarenas, Costa Rica" maxlength="150">
           <small class="qr-form-hint">Máximo 150 caracteres</small>
         </div>
         <div class="qr-wizard-navegacion">
