@@ -18,6 +18,7 @@ const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
+const perfilCover = document.getElementById("perfilCover");
 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
@@ -174,7 +175,7 @@ function actualizarVistaDueno() {
   }
 
   if (btnVerComo) {
-    btnVerComo.innerHTML = `<span class="accion-icono">${modoVisitante ? "👤" : "👁️"}</span><span class="accion-texto">${modoVisitante ? "Volver" : "Ver como visitante"}</span>`;
+    btnVerComo.innerHTML = `<span class="accion-icono">${modoVisitante ? "👤" : "👁️"}</span><span>${modoVisitante ? "Volver" : "Ver como visitante"}</span>`;
   }
 }
 
@@ -198,8 +199,11 @@ function llenarPerfil(data) {
 
   if (data.foto) {
     foto.src = data.foto;
+    perfilCover.style.setProperty('--bg-image', `url('${data.foto}')`);
   } else {
-    foto.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    foto.src = defaultImg;
+    perfilCover.style.setProperty('--bg-image', `url('${defaultImg}')`);
   }
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
@@ -308,7 +312,6 @@ if (btnEntrarDueno) {
     actualizarVistaDueno();
   });
 
-  // Enter para confirmar
   pinDueno.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       btnEntrarDueno.click();
