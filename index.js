@@ -121,20 +121,11 @@ window.nextStep = function() {
     return;
   }
 
-  // Lógica de navegación
   if (pasoActual === 2) {
-    // Después del paso 2 (Información básica)
     if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 3; // Ir a paso 3 (Fotos)
+      pasoActual = 4;
     } else {
-      pasoActual = 3; // Ir a paso 3 (Fotos) también
-    }
-  } else if (pasoActual === 3) {
-    // Después del paso 3 (Fotos)
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 4; // Ir a paso 4 (Estado) solo si es mascota/objeto
-    } else {
-      pasoActual = 5; // Ir a paso 5 (Info adicional) si no
+      pasoActual = 3;
     }
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
@@ -146,10 +137,7 @@ window.nextStep = function() {
 window.previousStep = function() {
   if (pasoActual > 1) {
     if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      // Si estamos en paso 4 pero no es mascota/objeto, no debería pasar aquí
-      pasoActual = 3;
-    } else if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 3;
+      pasoActual = 2;
     } else {
       pasoActual--;
     }
