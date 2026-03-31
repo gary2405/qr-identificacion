@@ -9,74 +9,6 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
-// ========== FUNCIÓN PARA EXTRAER COLOR DOMINANTE =========
-function getDominantColor(imageSrc) {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 200;
-    canvas.height = 200;
-
-    const tempImg = new Image();
-    tempImg.crossOrigin = "anonymous";
-    
-    tempImg.onload = () => {
-      try {
-        ctx.drawImage(tempImg, 0, 0, 200, 200);
-        const imageData = ctx.getImageData(0, 0, 200, 200);
-        const data = imageData.data;
-
-        // Crear histograma de colores
-        const colorFrequency = {};
-        let maxFreq = 0;
-        let dominantRGB = null;
-
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          const a = data[i + 3];
-
-          // Ignorar píxeles muy transparentes
-          if (a < 128) continue;
-
-          // Crear clave de color con rango más amplio para agrupar colores similares
-          const rBucket = Math.floor(r / 20) * 20;
-          const gBucket = Math.floor(g / 20) * 20;
-          const bBucket = Math.floor(b / 20) * 20;
-          
-          const key = `${rBucket},${gBucket},${bBucket}`;
-          
-          colorFrequency[key] = (colorFrequency[key] || 0) + 1;
-
-          if (colorFrequency[key] > maxFreq) {
-            maxFreq = colorFrequency[key];
-            dominantRGB = { r: rBucket, g: gBucket, b: bBucket };
-          }
-        }
-
-        if (!dominantRGB) {
-          dominantRGB = { r: 102, g: 126, b: 234 };
-        }
-
-        const rgbColor = `rgb(${dominantRGB.r}, ${dominantRGB.g}, ${dominantRGB.b})`;
-        console.log("Color dominante:", rgbColor);
-        resolve(rgbColor);
-      } catch (e) {
-        console.error("Error extrayendo color dominante:", e);
-        resolve('rgb(102, 126, 234)');
-      }
-    };
-    
-    tempImg.onerror = () => {
-      console.error("Error cargando imagen para color dominante");
-      resolve('rgb(102, 126, 234)');
-    };
-
-    tempImg.src = imageSrc;
-  });
-}
-
 // ========== ZOOM DE FOTOS ==========
 let nivelZoomActual = 100;
 const modalZoom = document.getElementById("modalZoom");
@@ -267,13 +199,12 @@ async function llenarPerfil(data) {
     }
   }
 
-  // Cargar foto
+  // Cargar foto y establecer como fondo difuminado
   let imagenUrl = data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
   foto.src = imagenUrl;
 
-  // Extraer color dominante de la foto y establecerlo como fondo
-  const dominantColor = await getDominantColor(imagenUrl);
-  perfilWrap.style.backgroundColor = dominantColor;
+  // Establecer la imagen como fondo difuminado
+  perfilWrap.style.setProperty('--bg-image-blur', `url('${imagenUrl}')`);
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
   linkWhatsapp.href = `https://wa.me/${encodeURIComponent(data.contacto || "")}`;
