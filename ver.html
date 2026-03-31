@@ -82,6 +82,99 @@
       display: none !important;
     }
 
+    /* ========== MENÚ DROPDOWN ========== */
+    .perfil-menu-container {
+      position: absolute !important;
+      top: 20px !important;
+      left: 20px !important;
+      z-index: 6 !important;
+    }
+
+    .perfil-menu-btn {
+      background: rgba(0, 0, 0, 0.5) !important;
+      border: none !important;
+      color: white !important;
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 50% !important;
+      cursor: pointer !important;
+      font-size: 24px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      backdrop-filter: blur(10px) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .perfil-menu-btn:hover {
+      background: rgba(0, 0, 0, 0.7) !important;
+      transform: scale(1.1) !important;
+    }
+
+    .perfil-dropdown {
+      position: absolute !important;
+      top: 60px !important;
+      left: 0 !important;
+      background: rgba(26, 26, 26, 0.95) !important;
+      backdrop-filter: blur(20px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      min-width: 200px !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transform: translateY(-10px) !important;
+      transition: all 0.3s ease !important;
+      z-index: 7 !important;
+    }
+
+    .perfil-dropdown.activo {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(0) !important;
+    }
+
+    .perfil-dropdown-item {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      padding: 12px 16px !important;
+      color: rgba(255, 255, 255, 0.9) !important;
+      border: none !important;
+      background: transparent !important;
+      cursor: pointer !important;
+      width: 100% !important;
+      text-align: left !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      transition: all 0.2s ease !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .perfil-dropdown-item:last-child {
+      border-bottom: none !important;
+    }
+
+    .perfil-dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      padding-left: 20px !important;
+    }
+
+    .perfil-dropdown-item.peligro {
+      color: #ff6b6b !important;
+    }
+
+    .perfil-dropdown-item.peligro:hover {
+      background: rgba(255, 107, 107, 0.15) !important;
+    }
+
+    .perfil-dropdown-icono {
+      font-size: 18px !important;
+      min-width: 24px !important;
+      text-align: center !important;
+    }
+
     .perfil-info {
       position: relative !important;
       z-index: 3 !important;
@@ -289,50 +382,6 @@
       display: none !important;
     }
 
-    .perfil-bloque-dueno {
-      background: transparent !important;
-      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-    }
-
-    .perfil-acciones-dueno {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 12px !important;
-    }
-
-    .perfil-accion-dueno {
-      background: rgba(255, 255, 255, 0.08) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      color: rgba(255, 255, 255, 0.9) !important;
-      border-radius: 12px !important;
-      backdrop-filter: blur(15px) !important;
-      padding: 16px 12px !important;
-      cursor: pointer !important;
-      font-weight: 500 !important;
-      font-size: 12px !important;
-      transition: all 0.3s ease !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      gap: 8px !important;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-    }
-
-    .perfil-accion-dueno:hover {
-      background: rgba(255, 255, 255, 0.15) !important;
-      border-color: rgba(255, 255, 255, 0.35) !important;
-      transform: translateY(-2px) !important;
-    }
-
-    .perfil-accion-dueno:active {
-      transform: scale(0.95) !important;
-    }
-
-    .accion-icono {
-      font-size: 28px !important;
-      display: block !important;
-    }
-
     .perfil-bloque-acceso {
       background: transparent !important;
     }
@@ -426,6 +475,10 @@
       grid-template-columns: 1fr !important;
     }
 
+    #panelDueno {
+      display: none !important;
+    }
+
     @media (max-width: 600px) {
       .perfil-cover {
         height: 70vh !important;
@@ -468,8 +521,9 @@
         padding: 12px 8px !important;
       }
 
-      .perfil-acciones-dueno {
-        grid-template-columns: 1fr !important;
+      .perfil-dropdown {
+        left: auto !important;
+        right: 0 !important;
       }
     }
   </style>
@@ -508,6 +562,30 @@
       <img id="foto" class="perfil-cover-img" alt="Foto del perfil" style="cursor: pointer;">
       <div class="perfil-cover-overlay"></div>
       <div id="estadoBadge" class="perfil-estado-badge qr-oculto"></div>
+      
+      <!-- MENÚ DROPDOWN DE ADMINISTRACIÓN -->
+      <div id="perfilMenuContainer" class="perfil-menu-container qr-oculto">
+        <button id="perfílMenuBtn" class="perfil-menu-btn">⋯</button>
+        <div id="perfilDropdown" class="perfil-dropdown">
+          <button id="btnEditarMenu" class="perfil-dropdown-item">
+            <span class="perfil-dropdown-icono">✏️</span>
+            <span>Editar</span>
+          </button>
+          <button id="btnVerComoMenu" class="perfil-dropdown-item">
+            <span class="perfil-dropdown-icono">👁️</span>
+            <span id="verComoTexto">Ver como visitante</span>
+          </button>
+          <button id="btnEliminarMenu" class="perfil-dropdown-item peligro">
+            <span class="perfil-dropdown-icono">🗑️</span>
+            <span>Eliminar</span>
+          </button>
+          <button id="btnCerrarSesionMenu" class="perfil-dropdown-item">
+            <span class="perfil-dropdown-icono">🚪</span>
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+      </div>
+
       <div class="perfil-info">
         <h1 id="nombre"></h1>
         <p class="perfil-edad"><span id="edad"></span></p>
@@ -618,24 +696,6 @@
 
     <div id="panelDueno" class="qr-oculto perfil-bloque perfil-bloque-dueno">
       <h3>Administrar tu perfil</h3>
-      <div class="perfil-acciones-dueno">
-        <button id="btnEditar" class="perfil-accion-dueno perfil-accion-editar" title="Editar perfil">
-          <span class="accion-icono">✏️</span>
-          <span>Editar</span>
-        </button>
-        <button id="btnVerComo" class="perfil-accion-dueno perfil-accion-ver" title="Ver como visitante">
-          <span class="accion-icono">👁️</span>
-          <span>Ver como visitante</span>
-        </button>
-        <button id="btnEliminar" class="perfil-accion-dueno perfil-accion-eliminar" title="Eliminar perfil">
-          <span class="accion-icono">🗑️</span>
-          <span>Eliminar</span>
-        </button>
-        <button id="btnCerrarSesionDueno" class="perfil-accion-dueno perfil-accion-cerrar" title="Cerrar sesión">
-          <span class="accion-icono">🚪</span>
-          <span>Cerrar</span>
-        </button>
-      </div>
     </div>
   </div>
 </div>
