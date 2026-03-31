@@ -17,6 +17,15 @@ let tipoPerfilSeleccionado = "";
 let estadoSeleccionado = "activo";
 const datosFormulario = {};
 
+// Mapeo de tipos de perfil
+const mapeoTipos = {
+  persona: "Persona",
+  nino: "Niño",
+  adultomayor: "Adulto Mayor",
+  mascota: "Mascota",
+  objeto: "Objeto"
+};
+
 const pantallaCarga = document.getElementById("pantallaCarga");
 const wizardContainer = document.getElementById("wizardContainer");
 const modalNoConfig = document.getElementById("modalNoConfig");
@@ -121,11 +130,14 @@ window.nextStep = function() {
     return;
   }
 
+  // Lógica de navegación
   if (pasoActual === 2) {
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    pasoActual = 3;
+  } else if (pasoActual === 3) {
+    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
       pasoActual = 4;
     } else {
-      pasoActual = 3;
+      pasoActual = 5;
     }
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
@@ -136,8 +148,10 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
-      pasoActual = 2;
+    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+      pasoActual = 3;
+    } else if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+      pasoActual = 3;
     } else {
       pasoActual--;
     }
@@ -241,16 +255,27 @@ function aplicarSecciones() {
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
   document.getElementById("step4").classList.add("qr-oculto");
 
-  if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+  const tipo = tipoPerfilSeleccionado.toLowerCase();
+  
+  console.log("Tipo seleccionado:", tipo);
+
+  // Mostrar paso 4 (Estado) solo para mascotas y objetos
+  if (["mascota", "objeto"].includes(tipo)) {
     document.getElementById("step4").classList.remove("qr-oculto");
   }
-  if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
+
+  // Mostrar sección médica para personas, niños y adultos mayores
+  if (["persona", "nino", "adultomayor"].includes(tipo)) {
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
   }
-  if (tipoPerfilSeleccionado === "mascota") {
+
+  // Mostrar sección mascota
+  if (tipo === "mascota") {
     document.getElementById("seccionMascota").classList.remove("qr-seccion-oculta");
   }
-  if (tipoPerfilSeleccionado === "objeto") {
+
+  // Mostrar sección objeto
+  if (tipo === "objeto") {
     document.getElementById("seccionObjeto").classList.remove("qr-seccion-oculta");
   }
 }
@@ -291,17 +316,17 @@ window.guardarPerfil = async function() {
       actualizado: new Date().toISOString()
     };
 
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
       datosGuardar.estado = estadoSeleccionado || "activo";
     }
 
-    if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
+    if (["persona", "nino", "adultomayor"].includes(tipoPerfilSeleccionado.toLowerCase())) {
       datosGuardar.sangre = fSangre.value.trim();
       datosGuardar.padecimientos = fPadecimientos.value.trim();
       datosGuardar.alergias = fAlergias.value.trim();
     }
 
-    if (tipoPerfilSeleccionado === "mascota") {
+    if (tipoPerfilSeleccionado.toLowerCase() === "mascota") {
       datosGuardar.mascota = {
         especie: fEspecie.value.trim(),
         raza: fRaza.value.trim(),
@@ -309,7 +334,7 @@ window.guardarPerfil = async function() {
       };
     }
 
-    if (tipoPerfilSeleccionado === "objeto") {
+    if (tipoPerfilSeleccionado.toLowerCase() === "objeto") {
       datosGuardar.objeto = {
         descripcion: fDescripcion.value.trim(),
         instrucciones: fInstrucciones.value.trim()
@@ -340,7 +365,8 @@ window.guardarPerfil = async function() {
 // Event Listeners - Tipo de perfil
 document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   btn.addEventListener("click", function() {
-    tipoPerfilSeleccionado = this.getAttribute("data-tipo");
+    const tipoSeleccionado = this.getAttribute("data-tipo");
+    tipoPerfilSeleccionado = tipoSeleccionado;
     datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
     aplicarSecciones();
     document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(b => {
