@@ -9,53 +9,64 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
-// ========== FUNCIÓN PARA EXTRAER COLORES =========
-function getColorFromImage(imgElement) {
+// ========== FUNCIÓN PARA EXTRAER COLORES (ÚNICA) =========
+function getColorFromImage(imageSrc) {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = 100;
     canvas.height = 100;
 
-    imgElement.crossOrigin = "anonymous";
-    imgElement.onload = () => {
+    const tempImg = new Image();
+    tempImg.crossOrigin = "anonymous";
+    
+    tempImg.onload = () => {
       try {
-        ctx.drawImage(imgElement, 0, 0, 100, 100);
+        ctx.drawImage(tempImg, 0, 0, 100, 100);
         const imageData = ctx.getImageData(0, 0, 100, 100);
         const data = imageData.data;
 
-        let r = 0, g = 0, b = 0;
+        let r = 0, g = 0, b = 0, count = 0;
         for (let i = 0; i < data.length; i += 4) {
-          r += data[i];
-          g += data[i + 1];
-          b += data[i + 2];
+          const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          if (brightness > 30 && brightness < 225) {
+            r += data[i];
+            g += data[i + 1];
+            b += data[i + 2];
+            count++;
+          }
         }
 
-        const pixelCount = data.length / 4;
-        const avgR = Math.round(r / pixelCount);
-        const avgG = Math.round(g / pixelCount);
-        const avgB = Math.round(b / pixelCount);
+        if (count === 0) count = 1;
+        const avgR = Math.round(r / count);
+        const avgG = Math.round(g / count);
+        const avgB = Math.round(b / count);
 
         const color1 = `rgb(${avgR}, ${avgG}, ${avgB})`;
-        const darkerR = Math.max(0, avgR - 40);
-        const darkerG = Math.max(0, avgG - 40);
-        const darkerB = Math.max(0, avgB - 40);
+        const darkerR = Math.max(0, avgR - 50);
+        const darkerG = Math.max(0, avgG - 50);
+        const darkerB = Math.max(0, avgB - 50);
         const color2 = `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
         
         resolve({ color1, color2 });
       } catch (e) {
+        console.error("Error extrayendo colores:", e);
         resolve({ 
           color1: 'rgb(102, 126, 234)', 
           color2: 'rgb(118, 75, 162)' 
         });
       }
     };
-    imgElement.onerror = () => {
+    
+    tempImg.onerror = () => {
+      console.error("Error cargando imagen para extraer colores");
       resolve({ 
         color1: 'rgb(102, 126, 234)', 
         color2: 'rgb(118, 75, 162)' 
       });
     };
+
+    tempImg.src = imageSrc;
   });
 }
 
@@ -68,8 +79,6 @@ const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
-const perfilCover = document.getElementById("perfilCover");
-const perfilWrap = document.getElementById("perfilWrap");
 const perfilHeaderContainer = document.getElementById("perfilHeaderContainer");
 
 function abrirZoom(imagenUrl) {
@@ -249,15 +258,25 @@ async function llenarPerfil(data) {
     }
   }
 
+  // Cargar foto y extraer colores
+  let imagenUrl = data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+  foto.src = imagenUrl;
+
+  // Esperar a que la imagen cargue completamente
+  await new Promise((resolve) => {
+    if (foto.complete) {
+      resolve();
+    } else {
+      foto.onload = resolve;
+      foto.onerror = resolve;
+    }
+  });
+
+  // Ahora extraer colores
   if (data.foto) {
-    foto.src = data.foto;
-    // Extraer colores de la imagen
-    await getColorFromImage(foto).then(colors => {
-      perfilHeaderContainer.style.background = `linear-gradient(180deg, ${colors.color1} 0%, ${colors.color2} 100%)`;
-    });
+    const colors = await getColorFromImage(imagenUrl);
+    perfilHeaderContainer.style.background = `linear-gradient(180deg, ${colors.color1} 0%, ${colors.color2} 100%)`;
   } else {
-    const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    foto.src = defaultImg;
     perfilHeaderContainer.style.background = `linear-gradient(180deg, rgb(102, 126, 234) 0%, rgb(118, 75, 162) 100%)`;
   }
 
@@ -473,65 +492,5 @@ if (btnEncontrado) {
 if (btnContinuar) {
   btnContinuar.addEventListener("click", () => {
     alertainEmergencia.classList.add("qr-oculto");
-  });
-}
-
-// ========== FUNCIÓN PARA EXTRAER COLORES =========
-function getColorFromImage(imgElement) {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 100;
-    canvas.height = 100;
-
-    const tempImg = new Image();
-    tempImg.crossOrigin = "anonymous";
-    
-    tempImg.onload = () => {
-      try {
-        ctx.drawImage(tempImg, 0, 0, 100, 100);
-        const imageData = ctx.getImageData(0, 0, 100, 100);
-        const data = imageData.data;
-
-        let r = 0, g = 0, b = 0, count = 0;
-        for (let i = 0; i < data.length; i += 4) {
-          // Evitar píxeles muy oscuros o muy claros
-          const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-          if (brightness > 30 && brightness < 225) {
-            r += data[i];
-            g += data[i + 1];
-            b += data[i + 2];
-            count++;
-          }
-        }
-
-        if (count === 0) count = 1;
-        const avgR = Math.round(r / count);
-        const avgG = Math.round(g / count);
-        const avgB = Math.round(b / count);
-
-        const color1 = `rgb(${avgR}, ${avgG}, ${avgB})`;
-        const darkerR = Math.max(0, avgR - 50);
-        const darkerG = Math.max(0, avgG - 50);
-        const darkerB = Math.max(0, avgB - 50);
-        const color2 = `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
-        
-        resolve({ color1, color2 });
-      } catch (e) {
-        resolve({ 
-          color1: 'rgb(102, 126, 234)', 
-          color2: 'rgb(118, 75, 162)' 
-        });
-      }
-    };
-    
-    tempImg.onerror = () => {
-      resolve({ 
-        color1: 'rgb(102, 126, 234)', 
-        color2: 'rgb(118, 75, 162)' 
-      });
-    };
-
-    tempImg.src = imgElement.src;
   });
 }
