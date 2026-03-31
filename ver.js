@@ -9,67 +9,6 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
-// ========== FUNCIÓN PARA EXTRAER COLORES (ÚNICA) =========
-function getColorFromImage(imageSrc) {
-  return new Promise((resolve) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 100;
-    canvas.height = 100;
-
-    const tempImg = new Image();
-    tempImg.crossOrigin = "anonymous";
-    
-    tempImg.onload = () => {
-      try {
-        ctx.drawImage(tempImg, 0, 0, 100, 100);
-        const imageData = ctx.getImageData(0, 0, 100, 100);
-        const data = imageData.data;
-
-        let r = 0, g = 0, b = 0, count = 0;
-        for (let i = 0; i < data.length; i += 4) {
-          const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-          if (brightness > 30 && brightness < 225) {
-            r += data[i];
-            g += data[i + 1];
-            b += data[i + 2];
-            count++;
-          }
-        }
-
-        if (count === 0) count = 1;
-        const avgR = Math.round(r / count);
-        const avgG = Math.round(g / count);
-        const avgB = Math.round(b / count);
-
-        const color1 = `rgb(${avgR}, ${avgG}, ${avgB})`;
-        const darkerR = Math.max(0, avgR - 50);
-        const darkerG = Math.max(0, avgG - 50);
-        const darkerB = Math.max(0, avgB - 50);
-        const color2 = `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
-        
-        resolve({ color1, color2 });
-      } catch (e) {
-        console.error("Error extrayendo colores:", e);
-        resolve({ 
-          color1: 'rgb(102, 126, 234)', 
-          color2: 'rgb(118, 75, 162)' 
-        });
-      }
-    };
-    
-    tempImg.onerror = () => {
-      console.error("Error cargando imagen para extraer colores");
-      resolve({ 
-        color1: 'rgb(102, 126, 234)', 
-        color2: 'rgb(118, 75, 162)' 
-      });
-    };
-
-    tempImg.src = imageSrc;
-  });
-}
-
 // ========== ZOOM DE FOTOS ==========
 let nivelZoomActual = 100;
 const modalZoom = document.getElementById("modalZoom");
@@ -79,7 +18,7 @@ const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
-const perfilHeaderContainer = document.getElementById("perfilHeaderContainer");
+const perfilWrap = document.getElementById("perfilWrap");
 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
@@ -258,27 +197,12 @@ async function llenarPerfil(data) {
     }
   }
 
-  // Cargar foto y extraer colores
+  // Cargar foto y establecer como fondo difuminado
   let imagenUrl = data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
   foto.src = imagenUrl;
 
-  // Esperar a que la imagen cargue completamente
-  await new Promise((resolve) => {
-    if (foto.complete) {
-      resolve();
-    } else {
-      foto.onload = resolve;
-      foto.onerror = resolve;
-    }
-  });
-
-  // Ahora extraer colores
-  if (data.foto) {
-    const colors = await getColorFromImage(imagenUrl);
-    perfilHeaderContainer.style.background = `linear-gradient(180deg, ${colors.color1} 0%, ${colors.color2} 100%)`;
-  } else {
-    perfilHeaderContainer.style.background = `linear-gradient(180deg, rgb(102, 126, 234) 0%, rgb(118, 75, 162) 100%)`;
-  }
+  // Establecer la imagen como fondo difuminado
+  perfilWrap.style.setProperty('--bg-image-blur', `url('${imagenUrl}')`);
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
   linkWhatsapp.href = `https://wa.me/${encodeURIComponent(data.contacto || "")}`;
