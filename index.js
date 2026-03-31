@@ -123,46 +123,6 @@ function guardarDatosDelPasoActual() {
   };
 }
 
-// Función para calcular el próximo paso considerando pasos condicionales
-function obtenerSiguientePaso(pasoActual) {
-  const tipo = tipoPerfilSeleccionado.toLowerCase();
-  
-  if (pasoActual === 2) {
-    return 3; // Ir a Fotos
-  } else if (pasoActual === 3) {
-    // Después de Fotos, ver si es mascota/objeto
-    if (["mascota", "objeto"].includes(tipo)) {
-      return 4; // Ir a Estado
-    } else {
-      return 5; // Ir a Info adicional
-    }
-  } else if (pasoActual === 4) {
-    return 5; // De Estado a Info adicional
-  } else if (pasoActual < pasosTotales) {
-    return pasoActual + 1;
-  }
-  return pasoActual;
-}
-
-// Función para calcular el paso anterior considerando pasos condicionales
-function getPasoanterior(pasoActual) {
-  const tipo = tipoPerfilSeleccionado.toLowerCase();
-  
-  if (pasoActual === 4) {
-    return 3; // De Estado a Fotos
-  } else if (pasoActual === 5) {
-    // Antes de Info adicional, ver si viene de Estado o Fotos
-    if (["mascota", "objeto"].includes(tipo)) {
-      return 4; // Venía de Estado
-    } else {
-      return 3; // Venía de Fotos
-    }
-  } else if (pasoActual > 1) {
-    return pasoActual - 1;
-  }
-  return pasoActual;
-}
-
 window.nextStep = function() {
   guardarDatosDelPasoActual();
 
@@ -170,12 +130,32 @@ window.nextStep = function() {
     return;
   }
 
-  pasoActual = obtenerSiguientePaso(pasoActual);
+  // Lógica de navegación
+  if (pasoActual === 2) {
+    pasoActual = 3;
+  } else if (pasoActual === 3) {
+    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+      pasoActual = 4;
+    } else {
+      pasoActual = 5;
+    }
+  } else if (pasoActual < pasosTotales) {
+    pasoActual++;
+  }
+
   actualizarIndices();
 };
 
 window.previousStep = function() {
-  pasoActual = getPasoanterior(pasoActual);
+  if (pasoActual > 1) {
+    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+      pasoActual = 3;
+    } else if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+      pasoActual = 3;
+    } else {
+      pasoActual--;
+    }
+  }
   actualizarIndices();
 };
 

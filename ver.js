@@ -9,15 +9,6 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
-// Mapeo de tipos de perfil para mostrar
-const mapeoTipos = {
-  persona: "Persona",
-  nino: "Niño",
-  adultomayor: "Adulto Mayor",
-  mascota: "Mascota",
-  objeto: "Objeto"
-};
-
 // ========== ZOOM DE FOTOS ==========
 let nivelZoomActual = 100;
 const modalZoom = document.getElementById("modalZoom");
@@ -209,22 +200,18 @@ function actualizarVistaDueno() {
 async function llenarPerfil(data) {
   nombre.textContent = data.nombre || "Sin nombre";
   edad.textContent = data.edad ? `${data.edad} años` : "";
-  
-  // Mostrar tipo de perfil con formato legible
-  const tipoLower = data.tipoPerfil.toLowerCase();
-  tipo.textContent = mapeoTipos[tipoLower] || data.tipoPerfil;
-  
+  tipo.textContent = data.tipoPerfil || "Sin tipo";
   direccion.textContent = data.direccion || "Sin dirección";
   mensaje.textContent = data.mensaje || "—";
 
   // Debug - mostrar tipo de perfil
-  console.log("Tipo de perfil:", data.tipoPerfil, "Mostrado como:", mapeoTipos[tipoLower]);
+  console.log("Tipo de perfil:", data.tipoPerfil);
   console.log("Sangre:", data.sangre);
   console.log("Padecimientos:", data.padecimientos);
   console.log("Alergias:", data.alergias);
 
   // Estado badge
-  if (["mascota", "objeto"].includes(tipoLower) && data.estado) {
+  if (["mascota", "objeto"].includes(data.tipoPerfil) && data.estado) {
     const estado = data.estado || "activo";
     estadoBadge.classList.remove("qr-oculto");
     estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
@@ -258,22 +245,23 @@ async function llenarPerfil(data) {
   }
 
   // Mostrar información médica - CORREGIDO
-  if (["persona", "nino", "adultomayor"].includes(tipoLower)) {
-    console.log("Mostrando información médica para:", tipoLower);
+  const tipoPerfil = data.tipoPerfil.toLowerCase();
+  if (["persona", "nino", "adultomayor"].includes(tipoPerfil)) {
+    console.log("Mostrando información médica para:", tipoPerfil);
     verPersona.classList.remove("qr-oculto");
     document.getElementById("verSangre").textContent = data.sangre && data.sangre.trim() ? data.sangre : "—";
     document.getElementById("verPadecimientos").textContent = data.padecimientos && data.padecimientos.trim() ? data.padecimientos : "—";
     document.getElementById("verAlergias").textContent = data.alergias && data.alergias.trim() ? data.alergias : "—";
   }
 
-  if (tipoLower === "mascota" && data.mascota) {
+  if (data.tipoPerfil === "mascota" && data.mascota) {
     verMascota.classList.remove("qr-oculto");
     document.getElementById("verEspecie").textContent = data.mascota.especie || "—";
     document.getElementById("verRaza").textContent = data.mascota.raza || "—";
     document.getElementById("verColor").textContent = data.mascota.color || "—";
   }
 
-  if (tipoLower === "objeto" && data.objeto) {
+  if (data.tipoPerfil === "objeto" && data.objeto) {
     verObjeto.classList.remove("qr-oculto");
     document.getElementById("verDescripcion").textContent = data.objeto.descripcion || "—";
     document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "—";
