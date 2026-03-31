@@ -124,14 +124,14 @@ window.nextStep = function() {
   // Lógica de navegación
   if (pasoActual === 2) {
     // Después del paso 2 (Información básica)
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
       pasoActual = 3; // Ir a paso 3 (Fotos)
     } else {
       pasoActual = 3; // Ir a paso 3 (Fotos) también
     }
   } else if (pasoActual === 3) {
     // Después del paso 3 (Fotos)
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
       pasoActual = 4; // Ir a paso 4 (Estado) solo si es mascota/objeto
     } else {
       pasoActual = 5; // Ir a paso 5 (Info adicional) si no
@@ -145,10 +145,10 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    if (pasoActual === 4 && !["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
       // Si estamos en paso 4 pero no es mascota/objeto, no debería pasar aquí
       pasoActual = 3;
-    } else if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    } else if (pasoActual === 5 && !["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
       pasoActual = 3;
     } else {
       pasoActual--;
@@ -253,16 +253,16 @@ function aplicarSecciones() {
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
   document.getElementById("step4").classList.add("qr-oculto");
 
-  if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+  if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
     document.getElementById("step4").classList.remove("qr-oculto");
   }
-  if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
+  if (["Persona", "Niño", "Adulto Mayor"].includes(tipoPerfilSeleccionado)) {
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
   }
-  if (tipoPerfilSeleccionado === "mascota") {
+  if (tipoPerfilSeleccionado === "Mascota") {
     document.getElementById("seccionMascota").classList.remove("qr-seccion-oculta");
   }
-  if (tipoPerfilSeleccionado === "objeto") {
+  if (tipoPerfilSeleccionado === "Objeto") {
     document.getElementById("seccionObjeto").classList.remove("qr-seccion-oculta");
   }
 }
@@ -303,17 +303,17 @@ window.guardarPerfil = async function() {
       actualizado: new Date().toISOString()
     };
 
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado)) {
+    if (["Mascota", "Objeto"].includes(tipoPerfilSeleccionado)) {
       datosGuardar.estado = estadoSeleccionado || "activo";
     }
 
-    if (["persona", "nino", "adultoMayor"].includes(tipoPerfilSeleccionado)) {
+    if (["Persona", "Niño", "Adulto Mayor"].includes(tipoPerfilSeleccionado)) {
       datosGuardar.sangre = fSangre.value.trim();
       datosGuardar.padecimientos = fPadecimientos.value.trim();
       datosGuardar.alergias = fAlergias.value.trim();
     }
 
-    if (tipoPerfilSeleccionado === "mascota") {
+    if (tipoPerfilSeleccionado === "Mascota") {
       datosGuardar.mascota = {
         especie: fEspecie.value.trim(),
         raza: fRaza.value.trim(),
@@ -321,7 +321,7 @@ window.guardarPerfil = async function() {
       };
     }
 
-    if (tipoPerfilSeleccionado === "objeto") {
+    if (tipoPerfilSeleccionado === "Objeto") {
       datosGuardar.objeto = {
         descripcion: fDescripcion.value.trim(),
         instrucciones: fInstrucciones.value.trim()
