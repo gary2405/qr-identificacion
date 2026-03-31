@@ -475,3 +475,63 @@ if (btnContinuar) {
     alertainEmergencia.classList.add("qr-oculto");
   });
 }
+
+// ========== FUNCIÓN PARA EXTRAER COLORES =========
+function getColorFromImage(imgElement) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 100;
+    canvas.height = 100;
+
+    const tempImg = new Image();
+    tempImg.crossOrigin = "anonymous";
+    
+    tempImg.onload = () => {
+      try {
+        ctx.drawImage(tempImg, 0, 0, 100, 100);
+        const imageData = ctx.getImageData(0, 0, 100, 100);
+        const data = imageData.data;
+
+        let r = 0, g = 0, b = 0, count = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          // Evitar píxeles muy oscuros o muy claros
+          const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          if (brightness > 30 && brightness < 225) {
+            r += data[i];
+            g += data[i + 1];
+            b += data[i + 2];
+            count++;
+          }
+        }
+
+        if (count === 0) count = 1;
+        const avgR = Math.round(r / count);
+        const avgG = Math.round(g / count);
+        const avgB = Math.round(b / count);
+
+        const color1 = `rgb(${avgR}, ${avgG}, ${avgB})`;
+        const darkerR = Math.max(0, avgR - 50);
+        const darkerG = Math.max(0, avgG - 50);
+        const darkerB = Math.max(0, avgB - 50);
+        const color2 = `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
+        
+        resolve({ color1, color2 });
+      } catch (e) {
+        resolve({ 
+          color1: 'rgb(102, 126, 234)', 
+          color2: 'rgb(118, 75, 162)' 
+        });
+      }
+    };
+    
+    tempImg.onerror = () => {
+      resolve({ 
+        color1: 'rgb(102, 126, 234)', 
+        color2: 'rgb(118, 75, 162)' 
+      });
+    };
+
+    tempImg.src = imgElement.src;
+  });
+}
