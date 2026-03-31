@@ -98,6 +98,7 @@ if (fotoZoom) {
 // ========== ELEMENTOS DEL PERFIL ==========
 
 const nombre = document.getElementById("nombre");
+const edad = document.getElementById("edad");
 const tipo = document.getElementById("tipo");
 const direccion = document.getElementById("direccion");
 const mensaje = document.getElementById("mensaje");
@@ -181,6 +182,7 @@ function actualizarVistaDueno() {
 
 async function llenarPerfil(data) {
   nombre.textContent = data.nombre || "Sin nombre";
+  edad.textContent = data.edad ? `${data.edad} años` : "";
   tipo.textContent = data.tipoPerfil || "Sin tipo";
   direccion.textContent = data.direccion || "Sin dirección";
   mensaje.textContent = data.mensaje || "—";
