@@ -13,27 +13,29 @@
       max-width: 100%;
       margin: 0;
       padding: 0;
-      background: #1a1a1a;
+      background: #2a2a2a;
       min-height: 100vh;
     }
 
     .perfil-header-container {
       position: relative;
       width: 100%;
-      padding: 20px;
+      padding: 16px;
+      background: linear-gradient(180deg, var(--color-primary, #667eea) 0%, var(--color-secondary, #764ba2) 100%);
+      min-height: 200px;
     }
 
     .perfil-cover {
       position: relative;
       width: 100%;
-      aspect-ratio: 1;
-      border-radius: 20px;
+      aspect-ratio: 16 / 9;
+      border-radius: 24px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-end;
+      justify-content: flex-start;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     .perfil-cover-img {
@@ -42,87 +44,57 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 20px;
+      border-radius: 24px;
       z-index: 1;
     }
 
     .perfil-cover-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
       z-index: 2;
-      border-radius: 20px;
-    }
-
-    .perfil-avatar-container {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
-      text-align: center;
-      width: 90%;
-    }
-
-    .perfil-avatar {
-      width: 100%;
-      max-width: 200px;
-      height: auto;
-      border-radius: 16px;
-      object-fit: cover;
-      border: 3px solid white;
-      display: block;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .perfil-avatar:hover {
-      transform: scale(1.05);
+      border-radius: 24px;
     }
 
     .perfil-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 4;
-      text-align: center;
-      padding: 60px 20px 20px;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
-      border-radius: 0 0 20px 20px;
+      position: relative;
+      z-index: 3;
+      text-align: left;
+      padding: 0 20px 20px 20px;
+      width: 100%;
     }
 
     .perfil-info h1 {
       color: white;
       margin: 0 0 4px 0;
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
       line-height: 1.2;
       word-break: break-word;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
 
     .perfil-tipo {
-      color: rgba(255,255,255,0.8);
-      margin: 4px 0;
-      font-size: 13px;
-      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      margin: 0 0 2px 0;
+      font-size: 14px;
+      font-weight: 400;
       text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
 
     .perfil-direccion {
-      color: rgba(255,255,255,0.7);
-      margin: 2px 0 0 0;
-      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      margin: 0;
+      font-size: 13px;
+      font-weight: 400;
       word-break: break-word;
       text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
 
     .perfil-estado-badge {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 12px;
+      right: 12px;
       display: inline-block;
       padding: 6px 12px;
       border-radius: 16px;
@@ -138,32 +110,26 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Fondo dinámico con colores */
-    .perfil-wrap.gradient-dynamic {
-      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-    }
-
     .perfil-card {
-      background: rgba(30, 30, 30, 0.7);
-      backdrop-filter: blur(20px);
-      margin: 20px;
-      margin-top: -20px;
+      background: #2a2a2a;
+      margin: 16px;
+      margin-top: -30px;
       padding: 0;
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
       border: 1px solid rgba(255, 255, 255, 0.1);
       position: relative;
-      z-index: 1;
+      z-index: 10;
+      overflow: hidden;
     }
 
     .perfil-acciones-principal {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 20px 12px;
-      background: transparent;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      gap: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      padding: 16px;
+      background: #2a2a2a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .perfil-accion-btn {
@@ -171,36 +137,33 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      flex: 1;
-      padding: 14px 8px;
-      background: rgba(255, 255, 255, 0.1);
+      gap: 8px;
+      padding: 16px 12px;
+      background: rgba(255, 255, 255, 0.08);
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 12px;
       cursor: pointer;
       font-weight: 600;
-      font-size: 12px;
+      font-size: 13px;
       transition: all 0.3s ease;
       text-decoration: none;
       backdrop-filter: blur(10px);
     }
 
     .perfil-accion-btn span:first-child {
-      font-size: 24px;
+      font-size: 28px;
       line-height: 1;
-      margin-bottom: 6px;
     }
 
-    .perfil-accion-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    .perfil-accion-btn:active {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(0.95);
     }
 
     .perfil-bloque {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 20px 16px;
       margin: 0;
       color: white;
     }
@@ -209,69 +172,77 @@
       color: rgba(255, 255, 255, 0.95);
       font-size: 16px;
       font-weight: 700;
-      margin: 0 0 16px 0;
+      margin: 0 0 14px 0;
       padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .perfil-bloque p {
       color: rgba(255, 255, 255, 0.7);
-      font-size: 15px;
+      font-size: 14px;
       margin: 0;
-      line-height: 1.6;
+      line-height: 1.5;
       word-wrap: break-word;
     }
 
     .perfil-item {
       display: flex;
       flex-direction: column;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .perfil-item:last-child {
+      margin-bottom: 0;
     }
 
     .perfil-item-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 14px;
     }
 
     .perfil-label {
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 11px;
       font-weight: 600;
       margin-bottom: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
     }
 
     .perfil-valor {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 15px;
-      font-weight: 500;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 14px;
+      font-weight: 400;
       word-break: break-word;
     }
 
     .perfil-contactos {
       display: flex;
-      gap: 20px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
     .perfil-link-sec {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
       font-weight: 600;
       font-size: 14px;
       transition: all 0.3s ease;
-      padding: 6px 12px;
+      padding: 10px 14px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .perfil-link-sec:hover {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
+    .perfil-link-sec:active {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(0.95);
     }
 
     .perfil-btn-mapa {
@@ -281,9 +252,9 @@
       gap: 10px;
       width: 100%;
       padding: 14px 16px;
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.5), rgba(120, 100, 255, 0.5));
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(120, 100, 255, 0.3));
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(150, 180, 255, 0.3);
       border-radius: 12px;
       cursor: pointer;
       font-weight: 600;
@@ -294,14 +265,13 @@
       backdrop-filter: blur(10px);
     }
 
-    .perfil-btn-mapa:hover {
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.7), rgba(120, 100, 255, 0.7));
-      transform: translateY(-2px);
+    .perfil-btn-mapa:active {
+      transform: scale(0.98);
     }
 
     .perfil-bloque-dueno {
       background: transparent;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .perfil-acciones-dueno {
@@ -317,9 +287,9 @@
       justify-content: center;
       gap: 10px;
       padding: 16px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
       cursor: pointer;
       font-weight: 600;
       font-size: 12px;
@@ -334,16 +304,8 @@
       display: block;
     }
 
-    .perfil-accion-editar:hover {
-      background: rgba(100, 150, 255, 0.3);
-      border-color: rgba(100, 150, 255, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .perfil-accion-eliminar:hover {
-      background: rgba(255, 100, 100, 0.3);
-      border-color: rgba(255, 100, 100, 0.5);
-      transform: translateY(-2px);
+    .perfil-accion-dueno:active {
+      transform: scale(0.95);
     }
 
     .perfil-bloque-acceso {
@@ -353,9 +315,9 @@
     .perfil-btn-accion-bloque {
       width: 100%;
       padding: 12px;
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.4), rgba(120, 100, 255, 0.4));
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(120, 100, 255, 0.3));
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(150, 180, 255, 0.3);
       border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
@@ -364,9 +326,8 @@
       backdrop-filter: blur(10px);
     }
 
-    .perfil-btn-accion-bloque:hover {
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.6), rgba(120, 100, 255, 0.6));
-      transform: translateY(-2px);
+    .perfil-btn-accion-bloque:active {
+      transform: scale(0.98);
     }
 
     .perfil-login {
@@ -378,9 +339,9 @@
 
     .perfil-login input {
       padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       color: white;
       font-size: 14px;
       transition: all 0.3s ease;
@@ -393,8 +354,8 @@
 
     .perfil-login input:focus {
       outline: none;
-      border-color: rgba(255, 255, 255, 0.4);
-      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.12);
     }
 
     .perfil-login-botones {
@@ -405,27 +366,27 @@
     .perfil-login-botones button {
       flex: 1;
       padding: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
       font-size: 14px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       color: white;
       transition: all 0.3s ease;
     }
 
-    .perfil-login-botones button:hover {
-      background: rgba(255, 255, 255, 0.2);
+    .perfil-login-botones button:active {
+      transform: scale(0.95);
     }
 
     @media (max-width: 600px) {
       .perfil-cover {
-        aspect-ratio: 1;
+        aspect-ratio: 16 / 10;
       }
 
       .perfil-info h1 {
-        font-size: 24px;
+        font-size: 28px;
       }
 
       .perfil-item-grid {
@@ -437,17 +398,18 @@
       }
 
       .perfil-header-container {
-        padding: 16px;
+        padding: 12px;
       }
 
       .perfil-card {
-        margin: 16px;
+        margin: 12px;
+        margin-top: -30px;
       }
     }
 
     @media (max-width: 480px) {
       .perfil-info h1 {
-        font-size: 20px;
+        font-size: 24px;
       }
 
       .perfil-acciones-dueno {
@@ -455,7 +417,21 @@
       }
 
       .perfil-bloque {
-        padding: 16px;
+        padding: 16px 12px;
+      }
+
+      .perfil-acciones-principal {
+        padding: 12px;
+        gap: 8px;
+      }
+
+      .perfil-accion-btn {
+        padding: 12px 8px;
+        font-size: 11px;
+      }
+
+      .perfil-accion-btn span:first-child {
+        font-size: 24px;
       }
     }
 
@@ -498,7 +474,7 @@
 </div>
 
 <div class="perfil-wrap" id="perfilWrap">
-  <div class="perfil-header-container">
+  <div class="perfil-header-container" id="perfilHeaderContainer">
     <div class="perfil-cover" id="perfilCover">
       <img id="foto" class="perfil-cover-img" alt="Foto del perfil" style="cursor: pointer;">
       <div class="perfil-cover-overlay"></div>
@@ -528,7 +504,7 @@
     </div>
 
     <div id="bloqueEmergencia" class="qr-oculto perfil-bloque">
-      <h3>📞 Contacto de emergencia</h3>
+      <h3>☎️ Contacto de emergencia</h3>
       <div class="perfil-contactos">
         <a id="linkLlamar2" href="#" class="perfil-link-sec">☎️ Llamar</a>
         <a id="linkWhatsapp2" href="#" class="perfil-link-sec">💬 WhatsApp</a>
