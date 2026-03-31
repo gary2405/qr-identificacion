@@ -14,22 +14,22 @@ function getDominantColor(imageSrc) {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = 150;
-    canvas.height = 150;
+    canvas.width = 200;
+    canvas.height = 200;
 
     const tempImg = new Image();
     tempImg.crossOrigin = "anonymous";
     
     tempImg.onload = () => {
       try {
-        ctx.drawImage(tempImg, 0, 0, 150, 150);
-        const imageData = ctx.getImageData(0, 0, 150, 150);
+        ctx.drawImage(tempImg, 0, 0, 200, 200);
+        const imageData = ctx.getImageData(0, 0, 200, 200);
         const data = imageData.data;
 
-        // Agrupar colores por frecuencia
-        const colorMap = {};
-        let maxCount = 0;
-        let dominantColor = { r: 100, g: 100, b: 100 };
+        // Crear histograma de colores
+        const colorFrequency = {};
+        let maxFreq = 0;
+        let dominantRGB = null;
 
         for (let i = 0; i < data.length; i += 4) {
           const r = data[i];
@@ -38,20 +38,29 @@ function getDominantColor(imageSrc) {
           const a = data[i + 3];
 
           // Ignorar píxeles muy transparentes
-          if (a < 125) continue;
+          if (a < 128) continue;
 
-          // Agrupar colores similares (reducir ruido)
-          const key = `${Math.round(r / 10) * 10},${Math.round(g / 10) * 10},${Math.round(b / 10) * 10}`;
+          // Crear clave de color con rango más amplio para agrupar colores similares
+          const rBucket = Math.floor(r / 20) * 20;
+          const gBucket = Math.floor(g / 20) * 20;
+          const bBucket = Math.floor(b / 20) * 20;
           
-          colorMap[key] = (colorMap[key] || 0) + 1;
+          const key = `${rBucket},${gBucket},${bBucket}`;
+          
+          colorFrequency[key] = (colorFrequency[key] || 0) + 1;
 
-          if (colorMap[key] > maxCount) {
-            maxCount = colorMap[key];
-            dominantColor = { r, g, b };
+          if (colorFrequency[key] > maxFreq) {
+            maxFreq = colorFrequency[key];
+            dominantRGB = { r: rBucket, g: gBucket, b: bBucket };
           }
         }
 
-        const rgbColor = `rgb(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b})`;
+        if (!dominantRGB) {
+          dominantRGB = { r: 102, g: 126, b: 234 };
+        }
+
+        const rgbColor = `rgb(${dominantRGB.r}, ${dominantRGB.g}, ${dominantRGB.b})`;
+        console.log("Color dominante:", rgbColor);
         resolve(rgbColor);
       } catch (e) {
         console.error("Error extrayendo color dominante:", e);
@@ -60,7 +69,7 @@ function getDominantColor(imageSrc) {
     };
     
     tempImg.onerror = () => {
-      console.error("Error cargando imagen");
+      console.error("Error cargando imagen para color dominante");
       resolve('rgb(102, 126, 234)');
     };
 
@@ -258,11 +267,11 @@ async function llenarPerfil(data) {
     }
   }
 
-  // Cargar foto y extraer color dominante
+  // Cargar foto
   let imagenUrl = data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
   foto.src = imagenUrl;
 
-  // Extraer color dominante y establecerlo como fondo
+  // Extraer color dominante de la foto y establecerlo como fondo
   const dominantColor = await getDominantColor(imagenUrl);
   perfilWrap.style.backgroundColor = dominantColor;
 
