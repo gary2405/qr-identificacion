@@ -131,14 +131,23 @@ window.nextStep = function() {
   }
 
   // Lógica de navegación
-  if (pasoActual === 2) {
+  const tipo = tipoPerfilSeleccionado.toLowerCase();
+
+  if (pasoActual === 1) {
+    pasoActual = 2;
+  } else if (pasoActual === 2) {
     pasoActual = 3;
   } else if (pasoActual === 3) {
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+    // Si es mascota u objeto, mostrar paso 4
+    if (["mascota", "objeto"].includes(tipo)) {
       pasoActual = 4;
     } else {
+      // Si NO es mascota u objeto, saltar directo al paso 5
       pasoActual = 5;
     }
+  } else if (pasoActual === 4) {
+    // Del paso 4 siempre ir al 5
+    pasoActual = 5;
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
   }
@@ -148,9 +157,18 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
-      pasoActual = 3;
-    } else if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+    const tipo = tipoPerfilSeleccionado.toLowerCase();
+    
+    if (pasoActual === 5) {
+      // Si venimos del paso 5 y NO es mascota/objeto, volver al 3
+      if (!["mascota", "objeto"].includes(tipo)) {
+        pasoActual = 3;
+      } else {
+        // Si es mascota/objeto, volver al 4
+        pasoActual = 4;
+      }
+    } else if (pasoActual === 4) {
+      // Del paso 4 siempre volver al 3
       pasoActual = 3;
     } else {
       pasoActual--;
