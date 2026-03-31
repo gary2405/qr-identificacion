@@ -6,217 +6,239 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* ========== DISEÑO VER PERFIL ESTILO APPLE MUSIC ========== */
+    /* ========== SOBRESCRITURAS PARA DISEÑO APPLE MUSIC ========== */
 
     .perfil-wrap {
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
-      background: #2a2a2a;
+      background: #2a2a2a !important;
       min-height: 100vh;
     }
 
     .perfil-header-container {
-      position: relative;
-      width: 100%;
-      padding: 16px;
       background: linear-gradient(180deg, var(--color-primary, #667eea) 0%, var(--color-secondary, #764ba2) 100%);
-      min-height: 200px;
+      padding: 0 !important;
+      margin: 0 !important;
+      height: auto !important;
     }
 
     .perfil-cover {
-      position: relative;
       width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 24px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100vh;
+      aspect-ratio: auto;
+      background-size: cover;
+      background-position: center;
       display: flex;
+      flex-direction: column;
       align-items: flex-end;
-      justify-content: flex-start;
+      justify-content: flex-end;
       overflow: hidden;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+      border-radius: 0;
+      box-shadow: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
     }
 
     .perfil-cover-img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 24px;
-      z-index: 1;
-    }
-
-    .perfil-cover-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
-      z-index: 2;
-      border-radius: 24px;
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      border-radius: 0 !important;
+      z-index: 1 !important;
     }
 
     .perfil-info {
-      position: relative;
-      z-index: 3;
-      text-align: left;
-      padding: 0 20px 20px 20px;
-      width: 100%;
+      position: relative !important;
+      z-index: 3 !important;
+      text-align: left !important;
+      padding: 40px 20px 30px 20px !important;
+      width: 100% !important;
+      margin: 0 !important;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+      margin-bottom: 0 !important;
     }
 
     .perfil-info h1 {
-      color: white;
-      margin: 0 0 4px 0;
-      font-size: 32px;
-      font-weight: 700;
-      line-height: 1.2;
-      word-break: break-word;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      color: white !important;
+      margin: 0 0 4px 0 !important;
+      font-size: 36px !important;
+      font-weight: 700 !important;
+      line-height: 1.2 !important;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
     }
 
     .perfil-tipo {
-      color: rgba(255,255,255,0.85);
-      margin: 0 0 2px 0;
-      font-size: 14px;
-      font-weight: 400;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      color: rgba(255,255,255,0.85) !important;
+      margin: 0 0 2px 0 !important;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3) !important;
     }
 
     .perfil-direccion {
-      color: rgba(255,255,255,0.75);
-      margin: 0;
-      font-size: 13px;
-      font-weight: 400;
-      word-break: break-word;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      color: rgba(255,255,255,0.75) !important;
+      margin: 0 !important;
+      font-size: 13px !important;
+      font-weight: 400 !important;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3) !important;
+    }
+
+    .perfil-avatar-container {
+      display: none !important;
     }
 
     .perfil-estado-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 16px;
-      color: white;
-      font-weight: 700;
-      font-size: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      z-index: 5;
-      border: 2px solid white;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
+      position: absolute !important;
+      top: 20px !important;
+      right: 20px !important;
+      background: rgba(0, 0, 0, 0.4) !important;
+      backdrop-filter: blur(10px) !important;
+      z-index: 5 !important;
     }
 
     .perfil-card {
-      background: #2a2a2a;
-      margin: 16px;
-      margin-top: -30px;
-      padding: 0;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #2a2a2a !important;
+      margin: 0 !important;
+      margin-top: -40px !important;
+      padding: 0 !important;
+      border-radius: 24px 24px 0 0 !important;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.5) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
       position: relative;
       z-index: 10;
-      overflow: hidden;
     }
 
     .perfil-acciones-principal {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      padding: 16px;
-      background: #2a2a2a;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: grid !important;
+      grid-template-columns: 1fr 1fr 1fr !important;
+      gap: 12px !important;
+      padding: 16px !important;
+      background: #2a2a2a !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
 
     .perfil-accion-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 16px 12px;
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: white !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 12px !important;
+      backdrop-filter: blur(10px) !important;
     }
 
-    .perfil-accion-btn span:first-child {
-      font-size: 28px;
-      line-height: 1;
-    }
-
-    .perfil-accion-btn:active {
-      background: rgba(255, 255, 255, 0.15);
-      transform: scale(0.95);
+    .perfil-accion-btn:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
     }
 
     .perfil-bloque {
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding: 20px 16px;
-      margin: 0;
-      color: white;
+      background: transparent !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+      color: white !important;
+      padding: 20px 16px !important;
     }
 
     .perfil-bloque h3 {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 14px 0;
-      padding: 0;
+      color: rgba(255, 255, 255, 0.95) !important;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .perfil-bloque p {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 14px;
-      margin: 0;
-      line-height: 1.5;
-      word-wrap: break-word;
-    }
-
-    .perfil-item {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 14px;
-    }
-
-    .perfil-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .perfil-item-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
+      color: rgba(255, 255, 255, 0.7) !important;
     }
 
     .perfil-label {
-      color: rgba(255, 255, 255, 0.45);
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
+      color: rgba(255, 255, 255, 0.45) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.8px !important;
+      font-size: 11px !important;
     }
 
     .perfil-valor {
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 14px;
-      font-weight: 400;
-      word-break: break-word;
+      color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    .perfil-link-sec {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: rgba(255, 255, 255, 0.8) !important;
+      padding: 10px 14px !important;
+      border-radius: 8px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+    .perfil-link-sec:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      color: white !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .perfil-btn-mapa {
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(120, 100, 255, 0.3)) !important;
+      border: 1px solid rgba(150, 180, 255, 0.3) !important;
+      color: white !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    .perfil-btn-mapa:hover {
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.5), rgba(120, 100, 255, 0.5)) !important;
+    }
+
+    .perfil-bloque-dueno {
+      background: transparent !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .perfil-accion-dueno {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: white !important;
+      border-radius: 12px !important;
+    }
+
+    .perfil-accion-dueno:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .perfil-bloque-acceso {
+      background: transparent !important;
+    }
+
+    .perfil-btn-accion-bloque {
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(120, 100, 255, 0.3)) !important;
+      border: 1px solid rgba(150, 180, 255, 0.3) !important;
+      color: white !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    .perfil-btn-accion-bloque:hover {
+      background: linear-gradient(135deg, rgba(100, 150, 255, 0.5), rgba(120, 100, 255, 0.5)) !important;
+    }
+
+    .perfil-login input {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: white !important;
+      backdrop-filter: blur(10px) !important;
+    }
+
+    .perfil-login input::placeholder {
+      color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    .perfil-login input:focus {
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    .perfil-login-botones button {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: white !important;
     }
 
     .perfil-contactos {
@@ -225,222 +247,53 @@
       flex-wrap: wrap;
     }
 
-    .perfil-link-sec {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      padding: 10px 14px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .perfil-link-sec:active {
-      background: rgba(255, 255, 255, 0.15);
-      transform: scale(0.95);
-    }
-
-    .perfil-btn-mapa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 16px;
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(120, 100, 255, 0.3));
-      color: white;
-      border: 1px solid rgba(150, 180, 255, 0.3);
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 15px;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      margin-top: 12px;
-      backdrop-filter: blur(10px);
-    }
-
-    .perfil-btn-mapa:active {
-      transform: scale(0.98);
-    }
-
-    .perfil-bloque-dueno {
-      background: transparent;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .perfil-acciones-dueno {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .perfil-accion-dueno {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 16px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 12px;
-      transition: all 0.3s ease;
-      color: white;
-      text-align: center;
-      backdrop-filter: blur(10px);
-    }
-
-    .accion-icono {
-      font-size: 28px;
-      display: block;
-    }
-
-    .perfil-accion-dueno:active {
-      transform: scale(0.95);
-    }
-
-    .perfil-bloque-acceso {
-      background: transparent;
-    }
-
-    .perfil-btn-accion-bloque {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(120, 100, 255, 0.3));
-      color: white;
-      border: 1px solid rgba(150, 180, 255, 0.3);
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 15px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .perfil-btn-accion-bloque:active {
-      transform: scale(0.98);
-    }
-
-    .perfil-login {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .perfil-login input {
-      padding: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    .perfil-login input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
-    }
-
-    .perfil-login input:focus {
-      outline: none;
-      border-color: rgba(255, 255, 255, 0.3);
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .perfil-login-botones {
-      display: flex;
-      gap: 8px;
-    }
-
-    .perfil-login-botones button {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      transition: all 0.3s ease;
-    }
-
-    .perfil-login-botones button:active {
-      transform: scale(0.95);
+    .perfil-item-grid {
+      grid-template-columns: 1fr !important;
     }
 
     @media (max-width: 600px) {
       .perfil-cover {
-        aspect-ratio: 16 / 10;
+        height: 70vh;
       }
 
       .perfil-info h1 {
-        font-size: 28px;
+        font-size: 28px !important;
       }
 
-      .perfil-item-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .perfil-acciones-dueno {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .perfil-header-container {
-        padding: 12px;
+      .perfil-info {
+        padding: 30px 16px 20px 16px !important;
       }
 
       .perfil-card {
-        margin: 12px;
-        margin-top: -30px;
+        margin-top: -30px !important;
+        border-radius: 20px 20px 0 0 !important;
       }
     }
 
     @media (max-width: 480px) {
+      .perfil-cover {
+        height: 60vh;
+      }
+
       .perfil-info h1 {
-        font-size: 24px;
+        font-size: 24px !important;
       }
 
-      .perfil-acciones-dueno {
-        grid-template-columns: 1fr;
-      }
-
-      .perfil-bloque {
-        padding: 16px 12px;
+      .perfil-card {
+        margin-top: -25px !important;
       }
 
       .perfil-acciones-principal {
-        padding: 12px;
-        gap: 8px;
+        gap: 8px !important;
+        padding: 12px !important;
       }
 
       .perfil-accion-btn {
-        padding: 12px 8px;
-        font-size: 11px;
+        font-size: 11px !important;
       }
 
       .perfil-accion-btn span:first-child {
-        font-size: 24px;
-      }
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.85;
+        font-size: 22px !important;
       }
     }
   </style>
