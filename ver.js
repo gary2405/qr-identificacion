@@ -9,6 +9,46 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
+// ========== FUNCIÓN PARA EXTRAER COLORES =========
+function getColorFromImage(imgElement) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 100;
+    canvas.height = 100;
+
+    imgElement.crossOrigin = "anonymous";
+    imgElement.onload = () => {
+      ctx.drawImage(imgElement, 0, 0, 100, 100);
+      const imageData = ctx.getImageData(0, 0, 100, 100);
+      const data = imageData.data;
+
+      let r = 0, g = 0, b = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i];
+        g += data[i + 1];
+        b += data[i + 2];
+      }
+
+      const pixelCount = data.length / 4;
+      const avgR = Math.round(r / pixelCount);
+      const avgG = Math.round(g / pixelCount);
+      const avgB = Math.round(b / pixelCount);
+
+      const color1 = `rgb(${avgR}, ${avgG}, ${avgB})`;
+      const color2 = `rgb(${Math.max(0, avgR - 30)}, ${Math.max(0, avgG - 30)}, ${Math.max(0, avgB - 30)})`;
+      
+      resolve({ color1, color2 });
+    };
+    imgElement.onerror = () => {
+      resolve({ 
+        color1: '#667eea', 
+        color2: '#764ba2' 
+      });
+    };
+  });
+}
+
 // ========== ZOOM DE FOTOS ==========
 let nivelZoomActual = 100;
 const modalZoom = document.getElementById("modalZoom");
@@ -18,6 +58,8 @@ const btnCerrarZoom = document.getElementById("btnCerrarZoom");
 const btnZoomMas = document.getElementById("btnZoomMas");
 const btnZoomMenos = document.getElementById("btnZoomMenos");
 const foto = document.getElementById("foto");
+const perfilCover = document.getElementById("perfilCover");
+const perfilWrap = document.getElementById("perfilWrap");
 
 function abrirZoom(imagenUrl) {
   fotoZoom.src = imagenUrl;
@@ -174,11 +216,11 @@ function actualizarVistaDueno() {
   }
 
   if (btnVerComo) {
-    btnVerComo.innerHTML = `<span class="accion-icono">${modoVisitante ? "👤" : "👁️"}</span><span class="accion-texto">${modoVisitante ? "Volver" : "Ver como visitante"}</span>`;
+    btnVerComo.innerHTML = `<span class="accion-icono">${modoVisitante ? "👤" : "👁️"}</span><span>${modoVisitante ? "Volver" : "Ver como visitante"}</span>`;
   }
 }
 
-function llenarPerfil(data) {
+async function llenarPerfil(data) {
   nombre.textContent = data.nombre || "Sin nombre";
   tipo.textContent = data.tipoPerfil || "Sin tipo";
   direccion.textContent = data.direccion || "Sin dirección";
@@ -198,8 +240,18 @@ function llenarPerfil(data) {
 
   if (data.foto) {
     foto.src = data.foto;
+    // Extraer colores de la imagen
+    await getColorFromImage(foto).then(colors => {
+      perfilWrap.style.setProperty('--color-primary', colors.color1);
+      perfilWrap.style.setProperty('--color-secondary', colors.color2);
+      perfilWrap.classList.add('gradient-dynamic');
+    });
   } else {
-    foto.src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    foto.src = defaultImg;
+    perfilWrap.style.setProperty('--color-primary', '#667eea');
+    perfilWrap.style.setProperty('--color-secondary', '#764ba2');
+    perfilWrap.classList.add('gradient-dynamic');
   }
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
@@ -308,7 +360,6 @@ if (btnEntrarDueno) {
     actualizarVistaDueno();
   });
 
-  // Enter para confirmar
   pinDueno.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
       btnEntrarDueno.click();
