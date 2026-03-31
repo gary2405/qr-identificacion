@@ -205,7 +205,7 @@ async function llenarPerfil(data) {
   mensaje.textContent = data.mensaje || "—";
 
   // Estado badge
-  if (["mascota", "objeto"].includes(data.tipoPerfil) && data.estado) {
+  if (["Mascota", "Objeto"].includes(data.tipoPerfil) && data.estado) {
     const estado = data.estado || "activo";
     estadoBadge.classList.remove("qr-oculto");
     estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
@@ -238,21 +238,21 @@ async function llenarPerfil(data) {
     linkMapa.href = `https://maps.google.com/?q=${data.latitud},${data.longitud}`;
   }
 
-  if (["persona", "nino", "adultoMayor"].includes(data.tipoPerfil)) {
+  if (["Persona", "Niño", "Adulto Mayor"].includes(data.tipoPerfil)) {
     verPersona.classList.remove("qr-oculto");
     document.getElementById("verSangre").textContent = data.sangre || "—";
     document.getElementById("verPadecimientos").textContent = data.padecimientos || "—";
     document.getElementById("verAlergias").textContent = data.alergias || "—";
   }
 
-  if (data.tipoPerfil === "mascota" && data.mascota) {
+  if (data.tipoPerfil === "Mascota" && data.mascota) {
     verMascota.classList.remove("qr-oculto");
     document.getElementById("verEspecie").textContent = data.mascota.especie || "—";
     document.getElementById("verRaza").textContent = data.mascota.raza || "—";
     document.getElementById("verColor").textContent = data.mascota.color || "—";
   }
 
-  if (data.tipoPerfil === "objeto" && data.objeto) {
+  if (data.tipoPerfil === "Objeto" && data.objeto) {
     verObjeto.classList.remove("qr-oculto");
     document.getElementById("verDescripcion").textContent = data.objeto.descripcion || "—";
     document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "—";
@@ -260,7 +260,7 @@ async function llenarPerfil(data) {
 }
 
 function mostrarAlertaEmergencia(data) {
-  const tipoSubtitulo = data.tipoPerfil === "mascota" ? "mascota" : "objeto";
+  const tipoSubtitulo = data.tipoPerfil === "Mascota" ? "Mascota" : "Objeto";
   textoEmergencia.textContent = `Se reportó ${tipoSubtitulo} perdido. ¡Ayuda a encontrarlo!`;
   linkLlamarEmergencia.href = `tel:${data.contacto || ""}`;
   linkWhatsappEmergencia.href = `https://wa.me/${encodeURIComponent(data.contacto || "")}`;
