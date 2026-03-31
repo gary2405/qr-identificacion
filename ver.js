@@ -9,6 +9,65 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
+// ========== FUNCIÓN PARA EXTRAER COLOR DOMINANTE =========
+function getDominantColor(imageSrc) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 150;
+    canvas.height = 150;
+
+    const tempImg = new Image();
+    tempImg.crossOrigin = "anonymous";
+    
+    tempImg.onload = () => {
+      try {
+        ctx.drawImage(tempImg, 0, 0, 150, 150);
+        const imageData = ctx.getImageData(0, 0, 150, 150);
+        const data = imageData.data;
+
+        // Agrupar colores por frecuencia
+        const colorMap = {};
+        let maxCount = 0;
+        let dominantColor = { r: 100, g: 100, b: 100 };
+
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
+
+          // Ignorar píxeles muy transparentes
+          if (a < 125) continue;
+
+          // Agrupar colores similares (reducir ruido)
+          const key = `${Math.round(r / 10) * 10},${Math.round(g / 10) * 10},${Math.round(b / 10) * 10}`;
+          
+          colorMap[key] = (colorMap[key] || 0) + 1;
+
+          if (colorMap[key] > maxCount) {
+            maxCount = colorMap[key];
+            dominantColor = { r, g, b };
+          }
+        }
+
+        const rgbColor = `rgb(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b})`;
+        resolve(rgbColor);
+      } catch (e) {
+        console.error("Error extrayendo color dominante:", e);
+        resolve('rgb(102, 126, 234)');
+      }
+    };
+    
+    tempImg.onerror = () => {
+      console.error("Error cargando imagen");
+      resolve('rgb(102, 126, 234)');
+    };
+
+    tempImg.src = imageSrc;
+  });
+}
+
 // ========== ZOOM DE FOTOS ==========
 let nivelZoomActual = 100;
 const modalZoom = document.getElementById("modalZoom");
@@ -199,12 +258,13 @@ async function llenarPerfil(data) {
     }
   }
 
-  // Cargar foto y establecer como fondo difuminado
+  // Cargar foto y extraer color dominante
   let imagenUrl = data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
   foto.src = imagenUrl;
 
-  // Establecer la imagen como fondo difuminado
-  perfilWrap.style.setProperty('--bg-image-blur', `url('${imagenUrl}')`);
+  // Extraer color dominante y establecerlo como fondo
+  const dominantColor = await getDominantColor(imagenUrl);
+  perfilWrap.style.backgroundColor = dominantColor;
 
   linkLlamar.href = `tel:${data.contacto || ""}`;
   linkWhatsapp.href = `https://wa.me/${encodeURIComponent(data.contacto || "")}`;
