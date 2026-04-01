@@ -109,17 +109,23 @@ function guardarEnStorage() {
     fLatitud: fLatitud.value,
     fLongitud: fLongitud.value,
     previewFoto: previewFoto.src,
-    textoGPS: textoGPS.textContent
+    textoGPS: textoGPS.textContent,
+    wizardMostrado: !wizardContainer.classList.contains("qr-oculto")
   };
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+  console.log("✓ Datos guardados en sesión:", datos);
 }
 
 function cargarDelStorage() {
   const datos = sessionStorage.getItem(STORAGE_KEY);
-  if (!datos) return false;
+  if (!datos) {
+    console.log("No hay datos en sesión");
+    return false;
+  }
 
   try {
     const obj = JSON.parse(datos);
+    console.log("✓ Cargando datos de sesión:", obj);
     
     pasoActual = obj.paso || 1;
     tipoPerfilSeleccionado = obj.tipo || "";
@@ -171,6 +177,11 @@ function cargarDelStorage() {
       });
     }
 
+    // Actualizar contador de mensajes si es necesario
+    if (fMensaje.value) {
+      msjCount.textContent = `${fMensaje.value.length}/300 caracteres`;
+    }
+
     return true;
   } catch (e) {
     console.error("Error cargando datos del storage:", e);
@@ -214,10 +225,6 @@ function mostrarWizard() {
   modalNoConfig.classList.add("qr-oculto");
   wizardContainer.classList.remove("qr-oculto");
   actualizarIndices();
-}
-
-function mostrarModalNoConfig() {
-  modalNoConfig.classList.remove("qr-oculto");
 }
 
 function actualizarIndices() {
@@ -649,30 +656,38 @@ if (btnConfigurar) {
 }
 
 function cargarDatos() {
+  ocultarCarga();
+
+  // PRIMERO: Verificar si hay datos guardados en sesión
+  if (cargarDelStorage()) {
+    console.log("✓ Datos de sesión encontrados, mostrando wizard en paso", pasoActual);
+    mostrarWizard();
+    return; // IMPORTANTE: terminar aquí si hay datos en sesión
+  }
+
+  // SI NO HAY DATOS EN SESIÓN, verificar Firebase
   get(qrRef)
     .then(snapshot => {
       const existe = snapshot.exists();
       const data = existe ? snapshot.val() : null;
-      
-      ocultarCarga();
 
-      // Primero verificar si hay datos guardados en sesión
-      if (cargarDelStorage()) {
-        // Si hay datos guardados, mostrar el wizard donde estaba
-        mostrarWizard();
-      } else if (editMode) {
+      if (editMode) {
         const esDueno = localStorage.getItem("owner_" + qrId) === "true";
         
         if (!existe) {
+          console.log("Modo edición: QR no existe, mostrando wizard vacío");
           mostrarWizard();
           return;
         }
 
         if (!esDueno) {
+          console.log("No eres el dueño, redirigiendo a ver.html");
           window.location.href = `ver.html?id=${qrId}`;
           return;
         }
 
+        // Cargar datos de Firebase en modo edición
+        console.log("Modo edición: Cargando datos de Firebase");
         tipoPerfilSeleccionado = data.tipoPerfil;
         fNombre.value = data.nombre || "";
         fEdad.value = data.edad || "";
@@ -718,19 +733,22 @@ function cargarDatos() {
         aplicarSecciones();
         mostrarWizard();
       } else {
+        // No es modo edición
         if (existe) {
+          console.log("QR existe, redirigiendo a ver.html");
           window.location.href = `ver.html?id=${qrId}`;
         } else {
-          // NUNCA mostrar modal, siempre mostrar wizard
+          console.log("QR no existe, mostrando wizard vacío para crear");
           mostrarWizard();
         }
       }
     })
     .catch(error => {
-      console.error("Error:", error);
+      console.error("Error Firebase:", error);
       ocultarCarga();
       mostrarWizard();
     });
 }
 
+// INICIAR LA APLICACIÓN
 cargarDatos();
