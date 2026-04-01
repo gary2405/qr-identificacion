@@ -522,6 +522,35 @@
       }
     }
   </style>
+  <!-- Agregar esta sección antes del cierre de </head> -->
+<style>
+  .perfil-estado-explicacion {
+    background: rgba(100, 150, 255, 0.1) !important;
+    border-left: 4px solid rgba(100, 150, 255, 0.5) !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .perfil-estado-explicacion p {
+    margin: 0 !important;
+    font-size: 13px !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    line-height: 1.5 !important;
+  }
+</style>
+
+<!-- Reemplazar la sección de ESTADO BADGE con esto -->
+<div id="bloqueEstadoExplicacion" class="qr-oculto perfil-bloque">
+  <h3>Estado de Registro</h3>
+  <div id="estadoActualContainer" class="perfil-item">
+    <span class="perfil-label">Estado actual:</span>
+    <span class="perfil-valor" id="verEstadoActual">—</span>
+  </div>
+  <div class="perfil-estado-explicacion">
+    <p id="textoExplicacionEstado"></p>
+  </div>
+</div>
 </head>
 <body class="qr-body">
 
