@@ -82,6 +82,59 @@
       display: none !important;
     }
 
+    /* ========== BADGE ESTADO FLOTANTE ========== */
+    #bloqueEstadoExplicacion {
+      position: fixed !important;
+      top: 70px !important;
+      left: 20px !important;
+      background: rgba(0, 0, 0, 0.85) !important;
+      backdrop-filter: blur(20px) !important;
+      padding: 12px 16px !important;
+      border-radius: 12px !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      max-width: 160px !important;
+      z-index: 5 !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+      color: white !important;
+    }
+
+    #bloqueEstadoExplicacion.qr-oculto {
+      display: none !important;
+    }
+
+    #bloqueEstadoExplicacion h3 {
+      display: none !important;
+    }
+
+    #estadoActualContainer {
+      margin-bottom: 8px !important;
+    }
+
+    #estadoActualContainer .perfil-label {
+      font-size: 10px !important;
+      color: rgba(255, 255, 255, 0.6) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.8px !important;
+      display: block !important;
+      margin-bottom: 4px !important;
+    }
+
+    #estadoActualContainer .perfil-valor {
+      font-size: 14px !important;
+      color: white !important;
+      display: block !important;
+    }
+
+    #textoExplicacionEstado {
+      font-size: 11px !important;
+      color: rgba(255, 255, 255, 0.8) !important;
+      margin: 0 !important;
+      line-height: 1.4 !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+
     /* ========== MENÚ DROPDOWN AL LADO DERECHO ========== */
     .perfil-menu-container {
       position: absolute !important;
@@ -522,35 +575,6 @@
       }
     }
   </style>
-  <!-- Agregar esta sección antes del cierre de </head> -->
-<style>
-  .perfil-estado-explicacion {
-    background: rgba(100, 150, 255, 0.1) !important;
-    border-left: 4px solid rgba(100, 150, 255, 0.5) !important;
-    padding: 12px 16px !important;
-    border-radius: 8px !important;
-    margin-bottom: 16px !important;
-  }
-
-  .perfil-estado-explicacion p {
-    margin: 0 !important;
-    font-size: 13px !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    line-height: 1.5 !important;
-  }
-</style>
-
-<!-- Reemplazar la sección de ESTADO BADGE con esto -->
-<div id="bloqueEstadoExplicacion" class="qr-oculto perfil-bloque">
-  <h3>Estado de Registro</h3>
-  <div id="estadoActualContainer" class="perfil-item">
-    <span class="perfil-label">Estado actual:</span>
-    <span class="perfil-valor" id="verEstadoActual">—</span>
-  </div>
-  <div class="perfil-estado-explicacion">
-    <p id="textoExplicacionEstado"></p>
-  </div>
-</div>
 </head>
 <body class="qr-body">
 
@@ -585,7 +609,15 @@
     <div class="perfil-cover" id="perfilCover">
       <img id="foto" class="perfil-cover-img" alt="Foto del perfil" style="cursor: pointer;">
       <div class="perfil-cover-overlay"></div>
-      <div id="estadoBadge" class="perfil-estado-badge qr-oculto"></div>
+      
+      <!-- BADGE DE ESTADO FLOTANTE -->
+      <div id="bloqueEstadoExplicacion" class="qr-oculto">
+        <div id="estadoActualContainer">
+          <span class="perfil-label">Estado:</span>
+          <span class="perfil-valor" id="verEstadoActual">—</span>
+        </div>
+        <p id="textoExplicacionEstado"></p>
+      </div>
       
       <!-- MENÚ DROPDOWN DE ADMINISTRACIÓN AL LADO DERECHO -->
       <div id="perfilMenuContainer" class="perfil-menu-container qr-oculto">
