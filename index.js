@@ -50,7 +50,7 @@ const pinMatch = document.getElementById("pinMatch");
 const fEstatura = document.getElementById("fEstatura");
 const fPadres = document.getElementById("fPadres");
 const fSangre = document.getElementById("fSangre");
-const fPadecimientos = document.getElementById("fPadimientos");
+const fPadecimientos = document.getElementById("fPadecimientos");
 const fAlergias = document.getElementById("fAlergias");
 const fSangreNino = document.getElementById("fSangreNino");
 const fPadecimientosNino = document.getElementById("fPadecimientosNino");
@@ -87,7 +87,7 @@ function guardarEnStorage() {
     fDireccion: fDireccion.value,
     fMensaje: fMensaje.value,
     fSangre: fSangre.value,
-    fPadimientos: fPadimientos.value,
+    fPadecimientos: fPadecimientos.value,
     fAlergias: fAlergias.value,
     fSangreNino: fSangreNino.value,
     fPadecimientosNino: fPadecimientosNino.value,
@@ -132,7 +132,7 @@ function cargarDelStorage() {
     fDireccion.value = obj.fDireccion || "";
     fMensaje.value = obj.fMensaje || "";
     fSangre.value = obj.fSangre || "";
-    fPadimientos.value = obj.fPadimientos || "";
+    fPadecimientos.value = obj.fPadecimientos || "";
     fAlergias.value = obj.fAlergias || "";
     fSangreNino.value = obj.fSangreNino || "";
     fPadecimientosNino.value = obj.fPadecimientosNino || "";
@@ -254,7 +254,7 @@ function guardarDatosDelPasoActual() {
   if (tipo === "persona") {
     datosFormulario.edad = fEdad.value || "";
     datosFormulario.sangre = fSangre.value.trim();
-    datosFormulario.padecimientos = fPadimientos.value.trim();
+    datosFormulario.padecimientos = fPadecimientos.value.trim();
     datosFormulario.alergias = fAlergias.value.trim();
   } else if (tipo === "nino") {
     datosFormulario.edad = fEdad.value || "";
@@ -493,19 +493,19 @@ window.guardarPerfil = async function() {
     if (tipo === "persona") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangre.value.trim();
-      datosGuardar.padimientos = fPadimientos.value.trim();
+      datosGuardar.padecimientos = fPadecimientos.value.trim();
       datosGuardar.alergias = fAlergias.value.trim();
     } else if (tipo === "nino") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.estatura = fEstatura.value || "";
       datosGuardar.padres = fPadres.value.trim();
       datosGuardar.sangre = fSangreNino.value.trim();
-      datosGuardar.padimientos = fPadecimientosNino.value.trim();
+      datosGuardar.padecimientos = fPadecimientosNino.value.trim();
       datosGuardar.alergias = fAlergiasNino.value.trim();
     } else if (tipo === "adultomayor") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangreAdulto.value.trim();
-      datosGuardar.padimientos = fPadecimientosAdulto.value.trim();
+      datosGuardar.padecimientos = fPadecimientosAdulto.value.trim();
       datosGuardar.alergias = fAlergiasAdulto.value.trim();
       datosGuardar.cuidador = fCuidador.value.trim();
     } else if (tipo === "mascota") {
@@ -656,7 +656,11 @@ function cargarDatos() {
       
       ocultarCarga();
 
-      if (editMode) {
+      // Primero verificar si hay datos guardados en sesión
+      if (cargarDelStorage()) {
+        // Si hay datos guardados, mostrar el wizard donde estaba
+        mostrarWizard();
+      } else if (editMode) {
         const esDueno = localStorage.getItem("owner_" + qrId) === "true";
         
         if (!existe) {
@@ -684,17 +688,17 @@ function cargarDatos() {
 
         if (tipo === "persona") {
           if (data.sangre) fSangre.value = data.sangre;
-          if (data.padimientos) fPadimientos.value = data.padimientos;
+          if (data.padecimientos) fPadecimientos.value = data.padecimientos;
           if (data.alergias) fAlergias.value = data.alergias;
         } else if (tipo === "nino") {
           if (data.estatura) fEstatura.value = data.estatura;
           if (data.padres) fPadres.value = data.padres;
           if (data.sangre) fSangreNino.value = data.sangre;
-          if (data.padimientos) fPadecimientosNino.value = data.padimientos;
+          if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
           if (data.alergias) fAlergiasNino.value = data.alergias;
         } else if (tipo === "adultomayor") {
           if (data.sangre) fSangreAdulto.value = data.sangre;
-          if (data.padimientos) fPadecimientosAdulto.value = data.padimientos;
+          if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
           if (data.alergias) fAlergiasAdulto.value = data.alergias;
           if (data.cuidador) fCuidador.value = data.cuidador;
         } else if (tipo === "mascota" && data.mascota) {
@@ -714,16 +718,11 @@ function cargarDatos() {
         aplicarSecciones();
         mostrarWizard();
       } else {
-        // Primero verificar si hay datos guardados en sesión
-        if (cargarDelStorage()) {
-          // Si hay datos guardados, mostrar el wizard donde estaba
-          mostrarWizard();
-        } else if (existe) {
-          // Si no hay datos guardados pero el QR existe, ir a verlo
+        if (existe) {
           window.location.href = `ver.html?id=${qrId}`;
         } else {
-          // Si no existe ni hay datos guardados, mostrar modal
-          mostrarModalNoConfig();
+          // NUNCA mostrar modal, siempre mostrar wizard
+          mostrarWizard();
         }
       }
     })
