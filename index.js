@@ -16,7 +16,6 @@ const pasosTotales = 6;
 let tipoPerfilSeleccionado = "";
 const datosFormulario = {};
 
-// Mapeo de tipos de perfil
 const mapeoTipos = {
   persona: "Persona",
   nino: "Niño",
@@ -25,6 +24,9 @@ const mapeoTipos = {
   objeto: "Objeto"
 };
 
+// ELEMENTOS DEL DOM
+const videoIntro = document.getElementById("videoIntro");
+const introVideoContainer = document.getElementById("introVideo");
 const pantallaCarga = document.getElementById("pantallaCarga");
 const wizardContainer = document.getElementById("wizardContainer");
 const modalNoConfig = document.getElementById("modalNoConfig");
@@ -74,49 +76,6 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
-
-
-// ... (mantén todo lo anterior igual hasta el final)
-
-const introVideo = document.getElementById("introVideo");
-const introVideoContainer = document.getElementById("introVideo").parentElement;
-const introQrafid = document.getElementById("introQrafid");
-
-// Detectar cuando termina el video
-introVideo.addEventListener("ended", () => {
-  ocultarIntro();
-  mostrarCarga();
-  cargarDatos();
-});
-
-// Si el video falla, usar fallback QRAFID
-introVideo.addEventListener("error", () => {
-  console.warn("Video no disponible, usando fallback");
-  introVideoContainer.classList.add("qr-oculto");
-  introQrafid.classList.remove("qr-oculto");
-  setTimeout(() => {
-    introQrafid.classList.add("qr-oculto");
-    mostrarCarga();
-    cargarDatos();
-  }, 3000);
-});
-
-function ocultarIntro() {
-  introVideoContainer.classList.add("qr-oculto");
-  introQrafid.classList.add("qr-oculto");
-}
-
-// INICIO
-setTimeout(() => {
-  // Si el video termina naturalmente, no hacer nada
-  // Si se llega a los 5 segundos, forzar continuación
-  if (!introVideo.ended) {
-    ocultarIntro();
-    mostrarCarga();
-    cargarDatos();
-  }
-}, 5000);
-
 const qrRef = ref(db, "qrs/" + qrId);
 
 // Validaciones
@@ -131,14 +90,26 @@ const validaciones = {
   pin: (val) => /^\d{4,8}$/.test(val),
 };
 
+// FUNCIONES DE INTRO
+function ocultarIntro() {
+  introVideoContainer.classList.add("qr-oculto");
+}
+
+function mostrarCarga() {
+  pantallaCarga.classList.remove("qr-oculto");
+}
+
 function ocultarCarga() {
   pantallaCarga.classList.add("qr-oculto");
 }
 
 function mostrarWizard() {
-  modalNoConfig.classList.add("qr-oculto");
   wizardContainer.classList.remove("qr-oculto");
   actualizarIndices();
+}
+
+function mostrarModalNoConfig() {
+  modalNoConfig.classList.remove("qr-oculto");
 }
 
 function actualizarIndices() {
@@ -168,7 +139,6 @@ function guardarDatosDelPasoActual() {
   datosFormulario.longitud = fLongitud.value;
   datosFormulario.ownerPin = fPin.value.trim();
 
-  // Campos específicos por tipo
   if (tipo === "persona") {
     datosFormulario.edad = fEdad.value || "";
     datosFormulario.sangre = fSangre.value.trim();
@@ -208,12 +178,7 @@ function guardarDatosDelPasoActual() {
 
 window.nextStep = function() {
   guardarDatosDelPasoActual();
-
-  if (!validarPasoActual()) {
-    return;
-  }
-
-  const tipo = tipoPerfilSeleccionado.toLowerCase();
+  if (!validarPasoActual()) return;
 
   if (pasoActual === 1) {
     pasoActual = 2;
@@ -224,7 +189,6 @@ window.nextStep = function() {
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
   }
-
   actualizarIndices();
 };
 
@@ -257,7 +221,6 @@ function validarPasoActual() {
       return false;
     }
 
-    // Validación de edad si es requerida
     if (["persona", "nino", "adultomayor"].includes(tipo)) {
       if (!validaciones.edad(fEdad.value)) {
         mostrarErrorValidacion("Por favor ingresa una edad válida (0-150)");
@@ -278,7 +241,6 @@ function validarPasoActual() {
       return false;
     }
 
-    // Validación de objeto
     if (tipo === "objeto") {
       if (!fDuenoObjeto.value.trim()) {
         mostrarErrorValidacion("Por favor ingresa el nombre del dueño del objeto");
@@ -345,14 +307,12 @@ async function comprimirImagen(file) {
 }
 
 function aplicarSecciones() {
-  // Ocultar todos los campos condicionales
   document.getElementById("fieldEdad").classList.add("qr-oculto");
   document.getElementById("fieldEstatura").classList.add("qr-oculto");
   document.getElementById("fieldPadres").classList.add("qr-oculto");
   document.getElementById("fieldDuenoObjeto").classList.add("qr-oculto");
   document.getElementById("fieldTelDuenoObjeto").classList.add("qr-oculto");
 
-  // Ocultar todas las secciones
   document.getElementById("seccionPersona").classList.add("qr-seccion-oculta");
   document.getElementById("seccionNino").classList.add("qr-seccion-oculta");
   document.getElementById("seccionAdultoMayor").classList.add("qr-seccion-oculta");
@@ -360,10 +320,7 @@ function aplicarSecciones() {
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
 
   const tipo = tipoPerfilSeleccionado.toLowerCase();
-  
-  console.log("Tipo seleccionado:", tipo);
 
-  // Mostrar campos según tipo
   if (tipo === "persona") {
     document.getElementById("fieldEdad").classList.remove("qr-oculto");
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
@@ -421,7 +378,6 @@ window.guardarPerfil = async function() {
       actualizado: new Date().toISOString()
     };
 
-    // Agregar campos específicos
     if (tipo === "persona") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangre.value.trim();
@@ -479,7 +435,7 @@ window.guardarPerfil = async function() {
   }
 };
 
-// Event Listeners - Tipo de perfil
+// EVENT LISTENERS
 document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   btn.addEventListener("click", function() {
     const tipoSeleccionado = this.getAttribute("data-tipo");
@@ -493,12 +449,10 @@ document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   });
 });
 
-// Event Listeners - Fotos
 if (fFoto) {
   fFoto.addEventListener("change", async () => {
     const file = fFoto.files[0];
     if (!file) return;
-    
     try {
       const base64 = await comprimirImagen(file);
       previewFoto.src = base64;
@@ -511,14 +465,12 @@ if (fFoto) {
   });
 }
 
-// Event Listeners - Contador de caracteres
 if (fMensaje) {
   fMensaje.addEventListener("input", () => {
     msjCount.textContent = `${fMensaje.value.length}/300 caracteres`;
   });
 }
 
-// Event Listeners - Validación de PIN
 if (fPinConfirmar) {
   fPinConfirmar.addEventListener("input", () => {
     if (fPin.value && fPinConfirmar.value) {
@@ -533,7 +485,6 @@ if (fPinConfirmar) {
   });
 }
 
-// Event Listeners - GPS
 if (btnObtenerGPS) {
   btnObtenerGPS.addEventListener("click", (e) => {
     e.preventDefault();
@@ -574,83 +525,109 @@ if (btnObtenerGPS) {
   });
 }
 
-// Cargar datos en modo edición
-get(qrRef)
-  .then(snapshot => {
-    const existe = snapshot.exists();
-    const data = existe ? snapshot.val() : null;
-    ocultarCarga();
+// MANEJO DEL VIDEO INTRO
+videoIntro.addEventListener("ended", () => {
+  ocultarIntro();
+  mostrarCarga();
+  cargarDatos();
+});
 
-    if (editMode) {
-      const esDueno = localStorage.getItem("owner_" + qrId) === "true";
-      
-      if (!existe) {
+videoIntro.addEventListener("error", () => {
+  console.warn("Video no disponible, mostrando carga directa");
+  ocultarIntro();
+  mostrarCarga();
+  cargarDatos();
+});
+
+setTimeout(() => {
+  if (!videoIntro.ended) {
+    ocultarIntro();
+    mostrarCarga();
+    cargarDatos();
+  }
+}, 5000);
+
+// FUNCIÓN PARA CARGAR DATOS
+function cargarDatos() {
+  get(qrRef)
+    .then(snapshot => {
+      const existe = snapshot.exists();
+      const data = existe ? snapshot.val() : null;
+
+      if (editMode) {
+        const esDueno = localStorage.getItem("owner_" + qrId) === "true";
+        
+        if (!existe) {
+          ocultarCarga();
+          mostrarWizard();
+          return;
+        }
+
+        if (!esDueno) {
+          window.location.href = `ver.html?id=${qrId}`;
+          return;
+        }
+
+        tipoPerfilSeleccionado = data.tipoPerfil;
+        fNombre.value = data.nombre || "";
+        fEdad.value = data.edad || "";
+        fContacto.value = data.contacto || "";
+        fContacto2.value = data.contacto2 || "";
+        fDireccion.value = data.direccion || "";
+        fMensaje.value = data.mensaje || "";
+        if (data.foto) previewFoto.src = data.foto;
+        fLatitud.value = data.latitud || "";
+        fLongitud.value = data.longitud || "";
+
+        const tipo = data.tipoPerfil.toLowerCase();
+
+        if (tipo === "persona") {
+          if (data.sangre) fSangre.value = data.sangre;
+          if (data.padecimientos) fPadecimientos.value = data.padecimientos;
+          if (data.alergias) fAlergias.value = data.alergias;
+        } else if (tipo === "nino") {
+          if (data.estatura) fEstatura.value = data.estatura;
+          if (data.padres) fPadres.value = data.padres;
+          if (data.sangre) fSangreNino.value = data.sangre;
+          if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
+          if (data.alergias) fAlergiasNino.value = data.alergias;
+        } else if (tipo === "adultomayor") {
+          if (data.sangre) fSangreAdulto.value = data.sangre;
+          if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
+          if (data.alergias) fAlergiasAdulto.value = data.alergias;
+          if (data.cuidador) fCuidador.value = data.cuidador;
+        } else if (tipo === "mascota" && data.mascota) {
+          fEspecie.value = data.mascota.especie || "";
+          fRaza.value = data.mascota.raza || "";
+          fColor.value = data.mascota.color || "";
+          fDuenoMascota.value = data.mascota.dueno || "";
+          fCaracteristicasMascota.value = data.mascota.caracteristicas || "";
+        } else if (tipo === "objeto" && data.objeto) {
+          fDescripcion.value = data.objeto.descripcion || "";
+          fValor.value = data.objeto.valor || "";
+          fInstrucciones.value = data.objeto.instrucciones || "";
+          fDuenoObjeto.value = data.objeto.dueno || "";
+          fTelDuenoObjeto.value = data.objeto.telDueno || "";
+        }
+        
+        aplicarSecciones();
+        ocultarCarga();
         mostrarWizard();
-        return;
-      }
-
-      if (!esDueno) {
-        window.location.href = `ver.html?id=${qrId}`;
-        return;
-      }
-
-      tipoPerfilSeleccionado = data.tipoPerfil;
-      fNombre.value = data.nombre || "";
-      fEdad.value = data.edad || "";
-      fContacto.value = data.contacto || "";
-      fContacto2.value = data.contacto2 || "";
-      fDireccion.value = data.direccion || "";
-      fMensaje.value = data.mensaje || "";
-      if (data.foto) previewFoto.src = data.foto;
-      fLatitud.value = data.latitud || "";
-      fLongitud.value = data.longitud || "";
-
-      const tipo = data.tipoPerfil.toLowerCase();
-
-      if (tipo === "persona") {
-        if (data.sangre) fSangre.value = data.sangre;
-        if (data.padecimientos) fPadecimientos.value = data.padecimientos;
-        if (data.alergias) fAlergias.value = data.alergias;
-      } else if (tipo === "nino") {
-        if (data.estatura) fEstatura.value = data.estatura;
-        if (data.padres) fPadres.value = data.padres;
-        if (data.sangre) fSangreNino.value = data.sangre;
-        if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
-        if (data.alergias) fAlergiasNino.value = data.alergias;
-      } else if (tipo === "adultomayor") {
-        if (data.sangre) fSangreAdulto.value = data.sangre;
-        if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
-        if (data.alergias) fAlergiasAdulto.value = data.alergias;
-        if (data.cuidador) fCuidador.value = data.cuidador;
-      } else if (tipo === "mascota" && data.mascota) {
-        fEspecie.value = data.mascota.especie || "";
-        fRaza.value = data.mascota.raza || "";
-        fColor.value = data.mascota.color || "";
-        fDuenoMascota.value = data.mascota.dueno || "";
-        fCaracteristicasMascota.value = data.mascota.caracteristicas || "";
-      } else if (tipo === "objeto" && data.objeto) {
-        fDescripcion.value = data.objeto.descripcion || "";
-        fValor.value = data.objeto.valor || "";
-        fInstrucciones.value = data.objeto.instrucciones || "";
-        fDuenoObjeto.value = data.objeto.dueno || "";
-        fTelDuenoObjeto.value = data.objeto.telDueno || "";
-      }
-      
-      aplicarSecciones();
-      mostrarWizard();
-    } else {
-      if (existe) {
-        window.location.href = `ver.html?id=${qrId}`;
       } else {
-        modalNoConfig.classList.remove("qr-oculto");
+        if (existe) {
+          window.location.href = `ver.html?id=${qrId}`;
+        } else {
+          ocultarCarga();
+          mostrarModalNoConfig();
+        }
       }
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    ocultarCarga();
-    mostrarWizard();
-  });
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      ocultarCarga();
+      mostrarWizard();
+    });
+}
 
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
