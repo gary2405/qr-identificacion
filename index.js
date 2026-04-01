@@ -90,33 +90,24 @@ const validaciones = {
   pin: (val) => /^\d{4,8}$/.test(val),
 };
 
-function ocultarIntroQrafid() {
-  introQrafid.classList.add("oculto");
-}
-
-function mostrarIntroQrafid() {
-  introQrafid.classList.remove("oculto");
-}
-
-function ocultarCarga() {
-  pantallaCarga.classList.add("qr-oculto");
+function ocultarIntro() {
+  introQrafid.classList.add("qr-oculto");
 }
 
 function mostrarCarga() {
   pantallaCarga.classList.remove("qr-oculto");
 }
 
+function ocultarCarga() {
+  pantallaCarga.classList.add("qr-oculto");
+}
+
 function mostrarWizard() {
-  ocultarIntroQrafid();
-  ocultarCarga();
-  modalNoConfig.classList.add("qr-oculto");
   wizardContainer.classList.remove("qr-oculto");
   actualizarIndices();
 }
 
 function mostrarModalNoConfig() {
-  ocultarIntroQrafid();
-  ocultarCarga();
   modalNoConfig.classList.remove("qr-oculto");
 }
 
@@ -234,7 +225,6 @@ function validarPasoActual() {
       return false;
     }
 
-    // Validación de edad si es requerida
     if (["persona", "nino", "adultomayor"].includes(tipo)) {
       if (!validaciones.edad(fEdad.value)) {
         mostrarErrorValidacion("Por favor ingresa una edad válida (0-150)");
@@ -255,7 +245,6 @@ function validarPasoActual() {
       return false;
     }
 
-    // Validación de objeto
     if (tipo === "objeto") {
       if (!fDuenoObjeto.value.trim()) {
         mostrarErrorValidacion("Por favor ingresa el nombre del dueño del objeto");
@@ -322,14 +311,12 @@ async function comprimirImagen(file) {
 }
 
 function aplicarSecciones() {
-  // Ocultar todos los campos condicionales
   document.getElementById("fieldEdad").classList.add("qr-oculto");
   document.getElementById("fieldEstatura").classList.add("qr-oculto");
   document.getElementById("fieldPadres").classList.add("qr-oculto");
   document.getElementById("fieldDuenoObjeto").classList.add("qr-oculto");
   document.getElementById("fieldTelDuenoObjeto").classList.add("qr-oculto");
 
-  // Ocultar todas las secciones
   document.getElementById("seccionPersona").classList.add("qr-seccion-oculta");
   document.getElementById("seccionNino").classList.add("qr-seccion-oculta");
   document.getElementById("seccionAdultoMayor").classList.add("qr-seccion-oculta");
@@ -338,7 +325,6 @@ function aplicarSecciones() {
 
   const tipo = tipoPerfilSeleccionado.toLowerCase();
 
-  // Mostrar campos según tipo
   if (tipo === "persona") {
     document.getElementById("fieldEdad").classList.remove("qr-oculto");
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
@@ -396,7 +382,6 @@ window.guardarPerfil = async function() {
       actualizado: new Date().toISOString()
     };
 
-    // Agregar campos específicos
     if (tipo === "persona") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangre.value.trim();
@@ -454,7 +439,7 @@ window.guardarPerfil = async function() {
   }
 };
 
-// Event Listeners - Tipo de perfil
+// Event Listeners
 document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   btn.addEventListener("click", function() {
     const tipoSeleccionado = this.getAttribute("data-tipo");
@@ -468,7 +453,6 @@ document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   });
 });
 
-// Event Listeners - Fotos
 if (fFoto) {
   fFoto.addEventListener("change", async () => {
     const file = fFoto.files[0];
@@ -486,14 +470,12 @@ if (fFoto) {
   });
 }
 
-// Event Listeners - Contador de caracteres
 if (fMensaje) {
   fMensaje.addEventListener("input", () => {
     msjCount.textContent = `${fMensaje.value.length}/300 caracteres`;
   });
 }
 
-// Event Listeners - Validación de PIN
 if (fPinConfirmar) {
   fPinConfirmar.addEventListener("input", () => {
     if (fPin.value && fPinConfirmar.value) {
@@ -508,7 +490,6 @@ if (fPinConfirmar) {
   });
 }
 
-// Event Listeners - GPS
 if (btnObtenerGPS) {
   btnObtenerGPS.addEventListener("click", (e) => {
     e.preventDefault();
@@ -549,11 +530,9 @@ if (btnObtenerGPS) {
   });
 }
 
-// Event Listeners - Intro QRAFID
 if (btnEntrarQrafid) {
   btnEntrarQrafid.addEventListener("click", () => {
-    // Saltar la intro y ir directamente a cargar
-    ocultarIntroQrafid();
+    ocultarIntro();
     mostrarCarga();
     cargarDatos();
   });
@@ -561,6 +540,7 @@ if (btnEntrarQrafid) {
 
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
+    ocultarCarga();
     mostrarWizard();
   });
 }
@@ -576,6 +556,7 @@ function cargarDatos() {
         const esDueno = localStorage.getItem("owner_" + qrId) === "true";
         
         if (!existe) {
+          ocultarCarga();
           mostrarWizard();
           return;
         }
@@ -628,11 +609,13 @@ function cargarDatos() {
         }
         
         aplicarSecciones();
+        ocultarCarga();
         mostrarWizard();
       } else {
         if (existe) {
           window.location.href = `ver.html?id=${qrId}`;
         } else {
+          ocultarCarga();
           mostrarModalNoConfig();
         }
       }
@@ -644,11 +627,9 @@ function cargarDatos() {
     });
 }
 
-// INICIO DEL PROGRAMA - MOSTRAR INTRO POR 3 SEGUNDOS
-// La intro ya está visible por defecto en el HTML
-// Esperamos 3 segundos y luego continuamos
+// INICIO: MOSTRAR INTRO POR 3 SEGUNDOS
 setTimeout(() => {
-  ocultarIntroQrafid();
+  ocultarIntro();
   mostrarCarga();
   cargarDatos();
 }, 3000);
