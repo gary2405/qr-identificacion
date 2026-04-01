@@ -27,7 +27,10 @@ const mapeoTipos = {
 
 const pantallaCarga = document.getElementById("pantallaCarga");
 const wizardContainer = document.getElementById("wizardContainer");
+const introContainer = document.getElementById("introContainer");
 const modalNoConfig = document.getElementById("modalNoConfig");
+const btnComenzarIntro = document.getElementById("btnComenzarIntro");
+const btnMasInfo = document.getElementById("btnMasInfo");
 const btnConfigurar = document.getElementById("btnConfigurar");
 const stepIndicator = document.getElementById("stepIndicator");
 const progressBar = document.getElementById("progressBar");
@@ -92,10 +95,24 @@ function ocultarCarga() {
   pantallaCarga.classList.add("qr-oculto");
 }
 
+function mostrarIntro() {
+  introContainer.classList.remove("oculto");
+}
+
+function ocultarIntro() {
+  introContainer.classList.add("oculto");
+}
+
 function mostrarWizard() {
+  ocultarIntro();
   modalNoConfig.classList.add("qr-oculto");
   wizardContainer.classList.remove("qr-oculto");
   actualizarIndices();
+}
+
+function mostrarModalNoConfig() {
+  ocultarIntro();
+  modalNoConfig.classList.remove("qr-oculto");
 }
 
 function actualizarIndices() {
@@ -531,6 +548,25 @@ if (btnObtenerGPS) {
   });
 }
 
+// Event Listeners - Intro
+if (btnComenzarIntro) {
+  btnComenzarIntro.addEventListener("click", () => {
+    mostrarWizard();
+  });
+}
+
+if (btnMasInfo) {
+  btnMasInfo.addEventListener("click", () => {
+    alert("ℹ️ Para más información, visita nuestro sitio web o contacta al soporte técnico.");
+  });
+}
+
+if (btnConfigurar) {
+  btnConfigurar.addEventListener("click", () => {
+    mostrarWizard();
+  });
+}
+
 // Cargar datos en modo edición
 get(qrRef)
   .then(snapshot => {
@@ -599,18 +635,12 @@ get(qrRef)
       if (existe) {
         window.location.href = `ver.html?id=${qrId}`;
       } else {
-        modalNoConfig.classList.remove("qr-oculto");
+        mostrarModalNoConfig();
       }
     }
   })
   .catch(error => {
     console.error("Error:", error);
     ocultarCarga();
-    mostrarWizard();
+    mostrarIntro();
   });
-
-if (btnConfigurar) {
-  btnConfigurar.addEventListener("click", () => {
-    mostrarWizard();
-  });
-}
