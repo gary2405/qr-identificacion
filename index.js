@@ -25,6 +25,8 @@ const mapeoTipos = {
   objeto: "Objeto"
 };
 
+const introQrafid = document.getElementById("introQrafid");
+const btnEntrarQrafid = document.getElementById("btnEntrarQrafid");
 const pantallaCarga = document.getElementById("pantallaCarga");
 const wizardContainer = document.getElementById("wizardContainer");
 const modalNoConfig = document.getElementById("modalNoConfig");
@@ -88,14 +90,34 @@ const validaciones = {
   pin: (val) => /^\d{4,8}$/.test(val),
 };
 
+function ocultarIntroQrafid() {
+  introQrafid.classList.add("oculto");
+}
+
+function mostrarIntroQrafid() {
+  introQrafid.classList.remove("oculto");
+}
+
 function ocultarCarga() {
   pantallaCarga.classList.add("qr-oculto");
 }
 
+function mostrarCarga() {
+  pantallaCarga.classList.remove("qr-oculto");
+}
+
 function mostrarWizard() {
+  ocultarIntroQrafid();
+  ocultarCarga();
   modalNoConfig.classList.add("qr-oculto");
   wizardContainer.classList.remove("qr-oculto");
   actualizarIndices();
+}
+
+function mostrarModalNoConfig() {
+  ocultarIntroQrafid();
+  ocultarCarga();
+  modalNoConfig.classList.remove("qr-oculto");
 }
 
 function actualizarIndices() {
@@ -169,8 +191,6 @@ window.nextStep = function() {
   if (!validarPasoActual()) {
     return;
   }
-
-  const tipo = tipoPerfilSeleccionado.toLowerCase();
 
   if (pasoActual === 1) {
     pasoActual = 2;
@@ -317,8 +337,6 @@ function aplicarSecciones() {
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
 
   const tipo = tipoPerfilSeleccionado.toLowerCase();
-  
-  console.log("Tipo seleccionado:", tipo);
 
   // Mostrar campos según tipo
   if (tipo === "persona") {
@@ -531,86 +549,106 @@ if (btnObtenerGPS) {
   });
 }
 
-// Cargar datos en modo edición
-get(qrRef)
-  .then(snapshot => {
-    const existe = snapshot.exists();
-    const data = existe ? snapshot.val() : null;
-    ocultarCarga();
-
-    if (editMode) {
-      const esDueno = localStorage.getItem("owner_" + qrId) === "true";
-      
-      if (!existe) {
-        mostrarWizard();
-        return;
-      }
-
-      if (!esDueno) {
-        window.location.href = `ver.html?id=${qrId}`;
-        return;
-      }
-
-      tipoPerfilSeleccionado = data.tipoPerfil;
-      fNombre.value = data.nombre || "";
-      fEdad.value = data.edad || "";
-      fContacto.value = data.contacto || "";
-      fContacto2.value = data.contacto2 || "";
-      fDireccion.value = data.direccion || "";
-      fMensaje.value = data.mensaje || "";
-      if (data.foto) previewFoto.src = data.foto;
-      fLatitud.value = data.latitud || "";
-      fLongitud.value = data.longitud || "";
-
-      const tipo = data.tipoPerfil.toLowerCase();
-
-      if (tipo === "persona") {
-        if (data.sangre) fSangre.value = data.sangre;
-        if (data.padecimientos) fPadecimientos.value = data.padecimientos;
-        if (data.alergias) fAlergias.value = data.alergias;
-      } else if (tipo === "nino") {
-        if (data.estatura) fEstatura.value = data.estatura;
-        if (data.padres) fPadres.value = data.padres;
-        if (data.sangre) fSangreNino.value = data.sangre;
-        if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
-        if (data.alergias) fAlergiasNino.value = data.alergias;
-      } else if (tipo === "adultomayor") {
-        if (data.sangre) fSangreAdulto.value = data.sangre;
-        if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
-        if (data.alergias) fAlergiasAdulto.value = data.alergias;
-        if (data.cuidador) fCuidador.value = data.cuidador;
-      } else if (tipo === "mascota" && data.mascota) {
-        fEspecie.value = data.mascota.especie || "";
-        fRaza.value = data.mascota.raza || "";
-        fColor.value = data.mascota.color || "";
-        fDuenoMascota.value = data.mascota.dueno || "";
-        fCaracteristicasMascota.value = data.mascota.caracteristicas || "";
-      } else if (tipo === "objeto" && data.objeto) {
-        fDescripcion.value = data.objeto.descripcion || "";
-        fValor.value = data.objeto.valor || "";
-        fInstrucciones.value = data.objeto.instrucciones || "";
-        fDuenoObjeto.value = data.objeto.dueno || "";
-        fTelDuenoObjeto.value = data.objeto.telDueno || "";
-      }
-      
-      aplicarSecciones();
-      mostrarWizard();
-    } else {
-      if (existe) {
-        window.location.href = `ver.html?id=${qrId}`;
-      } else {
-        modalNoConfig.classList.remove("qr-oculto");
-      }
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    ocultarCarga();
-    mostrarWizard();
+// Event Listeners - Intro QRAFID
+if (btnEntrarQrafid) {
+  btnEntrarQrafid.addEventListener("click", () => {
+    // Saltar la intro y ir directamente a cargar
+    ocultarIntroQrafid();
+    mostrarCarga();
+    cargarDatos();
   });
+}
 
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
     mostrarWizard();
   });
 }
+
+// FUNCIÓN PARA CARGAR DATOS
+function cargarDatos() {
+  get(qrRef)
+    .then(snapshot => {
+      const existe = snapshot.exists();
+      const data = existe ? snapshot.val() : null;
+
+      if (editMode) {
+        const esDueno = localStorage.getItem("owner_" + qrId) === "true";
+        
+        if (!existe) {
+          mostrarWizard();
+          return;
+        }
+
+        if (!esDueno) {
+          window.location.href = `ver.html?id=${qrId}`;
+          return;
+        }
+
+        tipoPerfilSeleccionado = data.tipoPerfil;
+        fNombre.value = data.nombre || "";
+        fEdad.value = data.edad || "";
+        fContacto.value = data.contacto || "";
+        fContacto2.value = data.contacto2 || "";
+        fDireccion.value = data.direccion || "";
+        fMensaje.value = data.mensaje || "";
+        if (data.foto) previewFoto.src = data.foto;
+        fLatitud.value = data.latitud || "";
+        fLongitud.value = data.longitud || "";
+
+        const tipo = data.tipoPerfil.toLowerCase();
+
+        if (tipo === "persona") {
+          if (data.sangre) fSangre.value = data.sangre;
+          if (data.padecimientos) fPadecimientos.value = data.padecimientos;
+          if (data.alergias) fAlergias.value = data.alergias;
+        } else if (tipo === "nino") {
+          if (data.estatura) fEstatura.value = data.estatura;
+          if (data.padres) fPadres.value = data.padres;
+          if (data.sangre) fSangreNino.value = data.sangre;
+          if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
+          if (data.alergias) fAlergiasNino.value = data.alergias;
+        } else if (tipo === "adultomayor") {
+          if (data.sangre) fSangreAdulto.value = data.sangre;
+          if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
+          if (data.alergias) fAlergiasAdulto.value = data.alergias;
+          if (data.cuidador) fCuidador.value = data.cuidador;
+        } else if (tipo === "mascota" && data.mascota) {
+          fEspecie.value = data.mascota.especie || "";
+          fRaza.value = data.mascota.raza || "";
+          fColor.value = data.mascota.color || "";
+          fDuenoMascota.value = data.mascota.dueno || "";
+          fCaracteristicasMascota.value = data.mascota.caracteristicas || "";
+        } else if (tipo === "objeto" && data.objeto) {
+          fDescripcion.value = data.objeto.descripcion || "";
+          fValor.value = data.objeto.valor || "";
+          fInstrucciones.value = data.objeto.instrucciones || "";
+          fDuenoObjeto.value = data.objeto.dueno || "";
+          fTelDuenoObjeto.value = data.objeto.telDueno || "";
+        }
+        
+        aplicarSecciones();
+        mostrarWizard();
+      } else {
+        if (existe) {
+          window.location.href = `ver.html?id=${qrId}`;
+        } else {
+          mostrarModalNoConfig();
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      ocultarCarga();
+      mostrarWizard();
+    });
+}
+
+// INICIO DEL PROGRAMA - MOSTRAR INTRO POR 3 SEGUNDOS
+// La intro ya está visible por defecto en el HTML
+// Esperamos 3 segundos y luego continuamos
+setTimeout(() => {
+  ocultarIntroQrafid();
+  mostrarCarga();
+  cargarDatos();
+}, 3000);
