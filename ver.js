@@ -169,28 +169,8 @@ const inputURLCompartir = document.getElementById("inputURLCompartir");
 const btnCopiarURL = document.getElementById("btnCopiarURL");
 const btnCerrarModal = document.getElementById("btnCerrarModal");
 
-const estadoBadge = document.getElementById("estadoBadge");
-const alertainEmergencia = document.getElementById("alertainEmergencia");
-const textoEmergencia = document.getElementById("textoEmergencia");
-const linkLlamarEmergencia = document.getElementById("linkLlamarEmergencia");
-const linkWhatsappEmergencia = document.getElementById("linkWhatsappEmergencia");
-const btnEncontrado = document.getElementById("btnEncontrado");
-const btnContinuar = document.getElementById("btnContinuar");
-
 let dataActual = null;
 let esDueno = localStorage.getItem("owner_" + qrId) === "true";
-
-const estadoColores = {
-  activo: "#28a745",
-  perdido: "#dc3545",
-  encontrado: "#ffc107"
-};
-
-const estadoTextos = {
-  activo: "✓ Activo",
-  perdido: "⚠️ Perdido",
-  encontrado: "🔍 Encontrado"
-};
 
 function actualizarVistaDueno() {
   const mostrarMenuDueno = esDueno && !modoVisitante;
@@ -218,21 +198,6 @@ async function llenarPerfil(data) {
   
   direccion.textContent = data.direccion || "Sin dirección";
   mensaje.textContent = data.mensaje || "—";
-
-  // Debug
-  console.log("Tipo de perfil:", data.tipoPerfil);
-
-  // Estado badge
-  if (["mascota", "objeto"].includes(tipoLower) && data.estado) {
-    const estado = data.estado || "activo";
-    estadoBadge.classList.remove("qr-oculto");
-    estadoBadge.style.backgroundColor = estadoColores[estado] || "#28a745";
-    estadoBadge.textContent = estadoTextos[estado] || "Activo";
-
-    if (estado === "perdido" && !esDueno) {
-      mostrarAlertaEmergencia(data);
-    }
-  }
 
   // Cargar foto
   let imagenUrl = data.foto || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
@@ -290,14 +255,6 @@ async function llenarPerfil(data) {
     document.getElementById("verTelDuenoObjeto").textContent = data.objeto.telDueno || "—";
     document.getElementById("verInstrucciones").textContent = data.objeto.instrucciones || "—";
   }
-}
-
-function mostrarAlertaEmergencia(data) {
-  const tipoSubtitulo = data.tipoPerfil === "mascota" ? "mascota" : "objeto";
-  textoEmergencia.textContent = `Se reportó ${tipoSubtitulo} perdido. ¡Ayuda a encontrarlo!`;
-  linkLlamarEmergencia.href = `tel:${data.contacto || ""}`;
-  linkWhatsappEmergencia.href = `https://wa.me/${encodeURIComponent(data.contacto || "")}`;
-  alertainEmergencia.classList.remove("qr-oculto");
 }
 
 // Cargar datos
@@ -359,7 +316,6 @@ if (btnEntrarDueno) {
     modoVisitante = false;
     localStorage.setItem("owner_" + qrId, "true");
     pinDueno.value = "";
-    alertainEmergencia.classList.add("qr-oculto");
     actualizarVistaDueno();
   });
 
@@ -400,13 +356,6 @@ if (btnEliminarMenu) {
 if (btnVerComoMenu) {
   btnVerComoMenu.addEventListener("click", () => {
     modoVisitante = !modoVisitante;
-    
-    if (modoVisitante && dataActual && dataActual.estado === "perdido") {
-      mostrarAlertaEmergencia(dataActual);
-    } else {
-      alertainEmergencia.classList.add("qr-oculto");
-    }
-    
     actualizarVistaDueno();
   });
 }
@@ -417,11 +366,6 @@ if (btnCerrarSesionMenu) {
     modoVisitante = false;
     localStorage.removeItem("owner_" + qrId);
     perfilDropdown.classList.remove("activo");
-    
-    if (dataActual && dataActual.estado === "perdido") {
-      mostrarAlertaEmergencia(dataActual);
-    }
-    
     actualizarVistaDueno();
   });
 }
@@ -448,29 +392,5 @@ if (btnCopiarURL) {
 if (btnCerrarModal) {
   btnCerrarModal.addEventListener("click", () => {
     modalCompartir.classList.add("qr-oculto");
-  });
-}
-
-if (btnEncontrado) {
-  btnEncontrado.addEventListener("click", async () => {
-    if (confirm("✓ ¿Marcar como encontrado?")) {
-      try {
-        await update(ref(db, "qrs/" + qrId), { estado: "encontrado" });
-        dataActual.estado = "encontrado";
-        alertainEmergencia.classList.add("qr-oculto");
-        setTimeout(() => {
-          location.reload();
-        }, 500);
-      } catch (error) {
-        console.error("Error:", error);
-        alert("❌ No se pudo actualizar el estado");
-      }
-    }
-  });
-}
-
-if (btnContinuar) {
-  btnContinuar.addEventListener("click", () => {
-    alertainEmergencia.classList.add("qr-oculto");
   });
 }

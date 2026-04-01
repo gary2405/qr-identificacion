@@ -12,9 +12,8 @@ if (!qrId) {
 
 // Variables globales
 let pasoActual = 1;
-const pasosTotales = 7;
+const pasosTotales = 6;
 let tipoPerfilSeleccionado = "";
-let estadoSeleccionado = "activo";
 const datosFormulario = {};
 
 // Mapeo de tipos de perfil
@@ -125,7 +124,6 @@ function guardarDatosDelPasoActual() {
   datosFormulario.latitud = fLatitud.value;
   datosFormulario.longitud = fLongitud.value;
   datosFormulario.ownerPin = fPin.value.trim();
-  datosFormulario.estado = estadoSeleccionado;
 
   // Campos específicos por tipo
   if (tipo === "persona") {
@@ -179,13 +177,7 @@ window.nextStep = function() {
   } else if (pasoActual === 2) {
     pasoActual = 3;
   } else if (pasoActual === 3) {
-    if (["mascota", "objeto"].includes(tipo)) {
-      pasoActual = 4;
-    } else {
-      pasoActual = 5;
-    }
-  } else if (pasoActual === 4) {
-    pasoActual = 5;
+    pasoActual = 4;
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
   }
@@ -195,19 +187,7 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    const tipo = tipoPerfilSeleccionado.toLowerCase();
-    
-    if (pasoActual === 5) {
-      if (!["mascota", "objeto"].includes(tipo)) {
-        pasoActual = 3;
-      } else {
-        pasoActual = 4;
-      }
-    } else if (pasoActual === 4) {
-      pasoActual = 3;
-    } else {
-      pasoActual--;
-    }
+    pasoActual--;
   }
   actualizarIndices();
 };
@@ -266,7 +246,7 @@ function validarPasoActual() {
         return false;
       }
     }
-  } else if (pasoActual === 7) {
+  } else if (pasoActual === 6) {
     if (!fPin.value.trim()) {
       mostrarErrorValidacion("Por favor ingresa un PIN");
       return false;
@@ -335,7 +315,6 @@ function aplicarSecciones() {
   document.getElementById("seccionAdultoMayor").classList.add("qr-seccion-oculta");
   document.getElementById("seccionMascota").classList.add("qr-seccion-oculta");
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
-  document.getElementById("step4").classList.add("qr-oculto");
 
   const tipo = tipoPerfilSeleccionado.toLowerCase();
   
@@ -355,12 +334,10 @@ function aplicarSecciones() {
     document.getElementById("seccionAdultoMayor").classList.remove("qr-seccion-oculta");
   } else if (tipo === "mascota") {
     document.getElementById("seccionMascota").classList.remove("qr-seccion-oculta");
-    document.getElementById("step4").classList.remove("qr-oculto");
   } else if (tipo === "objeto") {
     document.getElementById("fieldDuenoObjeto").classList.remove("qr-oculto");
     document.getElementById("fieldTelDuenoObjeto").classList.remove("qr-oculto");
     document.getElementById("seccionObjeto").classList.remove("qr-seccion-oculta");
-    document.getElementById("step4").classList.remove("qr-oculto");
   }
 }
 
@@ -421,7 +398,6 @@ window.guardarPerfil = async function() {
       datosGuardar.alergias = fAlergiasAdulto.value.trim();
       datosGuardar.cuidador = fCuidador.value.trim();
     } else if (tipo === "mascota") {
-      datosGuardar.estado = estadoSeleccionado || "activo";
       datosGuardar.mascota = {
         especie: fEspecie.value.trim(),
         raza: fRaza.value.trim(),
@@ -430,7 +406,6 @@ window.guardarPerfil = async function() {
         caracteristicas: fCaracteristicasMascota.value.trim()
       };
     } else if (tipo === "objeto") {
-      datosGuardar.estado = estadoSeleccionado || "activo";
       datosGuardar.objeto = {
         descripcion: fDescripcion.value.trim(),
         valor: fValor.value.trim(),
@@ -469,17 +444,6 @@ document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
     datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
     aplicarSecciones();
     document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(b => {
-      b.classList.remove("qr-opcion-seleccionada");
-    });
-    this.classList.add("qr-opcion-seleccionada");
-  });
-});
-
-// Event Listeners - Estado
-document.querySelectorAll(".qr-opcion-btn[data-estado]").forEach(btn => {
-  btn.addEventListener("click", function() {
-    estadoSeleccionado = this.getAttribute("data-estado");
-    document.querySelectorAll(".qr-opcion-btn[data-estado]").forEach(b => {
       b.classList.remove("qr-opcion-seleccionada");
     });
     this.classList.add("qr-opcion-seleccionada");
@@ -588,7 +552,6 @@ get(qrRef)
       }
 
       tipoPerfilSeleccionado = data.tipoPerfil;
-      estadoSeleccionado = data.estado || "activo";
       fNombre.value = data.nombre || "";
       fEdad.value = data.edad || "";
       fContacto.value = data.contacto || "";
