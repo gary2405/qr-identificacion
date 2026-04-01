@@ -33,7 +33,7 @@ const btnConfigurar = document.getElementById("btnConfigurar");
 const stepIndicator = document.getElementById("stepIndicator");
 const progressBar = document.getElementById("progressBar");
 
-// Elementos de entrada
+// Elementos de entrada comunes
 const fNombre = document.getElementById("fNombre");
 const fEdad = document.getElementById("fEdad");
 const fContacto = document.getElementById("fContacto");
@@ -42,14 +42,6 @@ const fDireccion = document.getElementById("fDireccion");
 const fMensaje = document.getElementById("fMensaje");
 const fPin = document.getElementById("fPin");
 const fPinConfirmar = document.getElementById("fPinConfirmar");
-const fSangre = document.getElementById("fSangre");
-const fPadecimientos = document.getElementById("fPadecimientos");
-const fAlergias = document.getElementById("fAlergias");
-const fEspecie = document.getElementById("fEspecie");
-const fRaza = document.getElementById("fRaza");
-const fColor = document.getElementById("fColor");
-const fDescripcion = document.getElementById("fDescripcion");
-const fInstrucciones = document.getElementById("fInstrucciones");
 const fFoto = document.getElementById("fFoto");
 const previewFoto = document.getElementById("previewFoto");
 const btnObtenerGPS = document.getElementById("btnObtenerGPS");
@@ -58,6 +50,30 @@ const fLatitud = document.getElementById("fLatitud");
 const fLongitud = document.getElementById("fLongitud");
 const msjCount = document.getElementById("msjCount");
 const pinMatch = document.getElementById("pinMatch");
+
+// Campos específicos por tipo
+const fEstatura = document.getElementById("fEstatura");
+const fPadres = document.getElementById("fPadres");
+const fSangre = document.getElementById("fSangre");
+const fPadecimientos = document.getElementById("fPadecimientos");
+const fAlergias = document.getElementById("fAlergias");
+const fSangreNino = document.getElementById("fSangreNino");
+const fPadecimientosNino = document.getElementById("fPadecimientosNino");
+const fAlergiasNino = document.getElementById("fAlergiasNino");
+const fSangreAdulto = document.getElementById("fSangreAdulto");
+const fPadecimientosAdulto = document.getElementById("fPadecimientosAdulto");
+const fAlergiasAdulto = document.getElementById("fAlergiasAdulto");
+const fCuidador = document.getElementById("fCuidador");
+const fEspecie = document.getElementById("fEspecie");
+const fRaza = document.getElementById("fRaza");
+const fColor = document.getElementById("fColor");
+const fDuenoMascota = document.getElementById("fDuenoMascota");
+const fCaracteristicasMascota = document.getElementById("fCaracteristicasMascota");
+const fDescripcion = document.getElementById("fDescripcion");
+const fValor = document.getElementById("fValor");
+const fInstrucciones = document.getElementById("fInstrucciones");
+const fDuenoObjeto = document.getElementById("fDuenoObjeto");
+const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
 const qrRef = ref(db, "qrs/" + qrId);
 
@@ -98,9 +114,10 @@ function mostrarPaso(numeroPaso) {
 }
 
 function guardarDatosDelPasoActual() {
+  const tipo = tipoPerfilSeleccionado.toLowerCase();
+
   datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
   datosFormulario.nombre = fNombre.value.trim();
-  datosFormulario.edad = fEdad.value || "";
   datosFormulario.contacto = fContacto.value.trim();
   datosFormulario.contacto2 = fContacto2.value.trim();
   datosFormulario.direccion = fDireccion.value.trim();
@@ -109,18 +126,43 @@ function guardarDatosDelPasoActual() {
   datosFormulario.longitud = fLongitud.value;
   datosFormulario.ownerPin = fPin.value.trim();
   datosFormulario.estado = estadoSeleccionado;
-  datosFormulario.sangre = fSangre.value.trim();
-  datosFormulario.padecimientos = fPadecimientos.value.trim();
-  datosFormulario.alergias = fAlergias.value.trim();
-  datosFormulario.mascota = {
-    especie: fEspecie.value.trim(),
-    raza: fRaza.value.trim(),
-    color: fColor.value.trim()
-  };
-  datosFormulario.objeto = {
-    descripcion: fDescripcion.value.trim(),
-    instrucciones: fInstrucciones.value.trim()
-  };
+
+  // Campos específicos por tipo
+  if (tipo === "persona") {
+    datosFormulario.edad = fEdad.value || "";
+    datosFormulario.sangre = fSangre.value.trim();
+    datosFormulario.padecimientos = fPadecimientos.value.trim();
+    datosFormulario.alergias = fAlergias.value.trim();
+  } else if (tipo === "nino") {
+    datosFormulario.edad = fEdad.value || "";
+    datosFormulario.estatura = fEstatura.value || "";
+    datosFormulario.padres = fPadres.value.trim();
+    datosFormulario.sangre = fSangreNino.value.trim();
+    datosFormulario.padecimientos = fPadecimientosNino.value.trim();
+    datosFormulario.alergias = fAlergiasNino.value.trim();
+  } else if (tipo === "adultomayor") {
+    datosFormulario.edad = fEdad.value || "";
+    datosFormulario.sangre = fSangreAdulto.value.trim();
+    datosFormulario.padecimientos = fPadecimientosAdulto.value.trim();
+    datosFormulario.alergias = fAlergiasAdulto.value.trim();
+    datosFormulario.cuidador = fCuidador.value.trim();
+  } else if (tipo === "mascota") {
+    datosFormulario.mascota = {
+      especie: fEspecie.value.trim(),
+      raza: fRaza.value.trim(),
+      color: fColor.value.trim(),
+      dueno: fDuenoMascota.value.trim(),
+      caracteristicas: fCaracteristicasMascota.value.trim()
+    };
+  } else if (tipo === "objeto") {
+    datosFormulario.objeto = {
+      descripcion: fDescripcion.value.trim(),
+      valor: fValor.value.trim(),
+      instrucciones: fInstrucciones.value.trim(),
+      dueno: fDuenoObjeto.value.trim(),
+      telDueno: fTelDuenoObjeto.value.trim()
+    };
+  }
 }
 
 window.nextStep = function() {
@@ -130,15 +172,20 @@ window.nextStep = function() {
     return;
   }
 
-  // Lógica de navegación
-  if (pasoActual === 2) {
+  const tipo = tipoPerfilSeleccionado.toLowerCase();
+
+  if (pasoActual === 1) {
+    pasoActual = 2;
+  } else if (pasoActual === 2) {
     pasoActual = 3;
   } else if (pasoActual === 3) {
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+    if (["mascota", "objeto"].includes(tipo)) {
       pasoActual = 4;
     } else {
       pasoActual = 5;
     }
+  } else if (pasoActual === 4) {
+    pasoActual = 5;
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
   }
@@ -148,9 +195,15 @@ window.nextStep = function() {
 
 window.previousStep = function() {
   if (pasoActual > 1) {
-    if (pasoActual === 4 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
-      pasoActual = 3;
-    } else if (pasoActual === 5 && !["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+    const tipo = tipoPerfilSeleccionado.toLowerCase();
+    
+    if (pasoActual === 5) {
+      if (!["mascota", "objeto"].includes(tipo)) {
+        pasoActual = 3;
+      } else {
+        pasoActual = 4;
+      }
+    } else if (pasoActual === 4) {
       pasoActual = 3;
     } else {
       pasoActual--;
@@ -164,6 +217,8 @@ window.omitirPaso = function() {
 };
 
 function validarPasoActual() {
+  const tipo = tipoPerfilSeleccionado.toLowerCase();
+
   if (pasoActual === 1) {
     if (!tipoPerfilSeleccionado) {
       mostrarErrorValidacion("Por favor selecciona un tipo de perfil");
@@ -171,17 +226,22 @@ function validarPasoActual() {
     }
   } else if (pasoActual === 2) {
     if (!fNombre.value.trim()) {
-      mostrarErrorValidacion("Por favor ingresa tu nombre");
+      mostrarErrorValidacion("Por favor ingresa un nombre");
       return false;
     }
     if (!validaciones.nombre(fNombre.value)) {
       mostrarErrorValidacion("El nombre debe tener entre 2 y 100 caracteres");
       return false;
     }
-    if (!validaciones.edad(fEdad.value)) {
-      mostrarErrorValidacion("Por favor ingresa una edad válida (0-150)");
-      return false;
+
+    // Validación de edad si es requerida
+    if (["persona", "nino", "adultomayor"].includes(tipo)) {
+      if (!validaciones.edad(fEdad.value)) {
+        mostrarErrorValidacion("Por favor ingresa una edad válida (0-150)");
+        return false;
+      }
     }
+
     if (!fContacto.value.trim()) {
       mostrarErrorValidacion("Por favor ingresa un contacto principal");
       return false;
@@ -193,6 +253,18 @@ function validarPasoActual() {
     if (fContacto2.value.trim() && !validaciones.contacto(fContacto2.value)) {
       mostrarErrorValidacion("El contacto de emergencia no es válido");
       return false;
+    }
+
+    // Validación de objeto
+    if (tipo === "objeto") {
+      if (!fDuenoObjeto.value.trim()) {
+        mostrarErrorValidacion("Por favor ingresa el nombre del dueño del objeto");
+        return false;
+      }
+      if (!fTelDuenoObjeto.value.trim()) {
+        mostrarErrorValidacion("Por favor ingresa el teléfono del dueño");
+        return false;
+      }
     }
   } else if (pasoActual === 7) {
     if (!fPin.value.trim()) {
@@ -250,7 +322,17 @@ async function comprimirImagen(file) {
 }
 
 function aplicarSecciones() {
+  // Ocultar todos los campos condicionales
+  document.getElementById("fieldEdad").classList.add("qr-oculto");
+  document.getElementById("fieldEstatura").classList.add("qr-oculto");
+  document.getElementById("fieldPadres").classList.add("qr-oculto");
+  document.getElementById("fieldDuenoObjeto").classList.add("qr-oculto");
+  document.getElementById("fieldTelDuenoObjeto").classList.add("qr-oculto");
+
+  // Ocultar todas las secciones
   document.getElementById("seccionPersona").classList.add("qr-seccion-oculta");
+  document.getElementById("seccionNino").classList.add("qr-seccion-oculta");
+  document.getElementById("seccionAdultoMayor").classList.add("qr-seccion-oculta");
   document.getElementById("seccionMascota").classList.add("qr-seccion-oculta");
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
   document.getElementById("step4").classList.add("qr-oculto");
@@ -259,24 +341,26 @@ function aplicarSecciones() {
   
   console.log("Tipo seleccionado:", tipo);
 
-  // Mostrar paso 4 (Estado) solo para mascotas y objetos
-  if (["mascota", "objeto"].includes(tipo)) {
-    document.getElementById("step4").classList.remove("qr-oculto");
-  }
-
-  // Mostrar sección médica para personas, niños y adultos mayores
-  if (["persona", "nino", "adultomayor"].includes(tipo)) {
+  // Mostrar campos según tipo
+  if (tipo === "persona") {
+    document.getElementById("fieldEdad").classList.remove("qr-oculto");
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
-  }
-
-  // Mostrar sección mascota
-  if (tipo === "mascota") {
+  } else if (tipo === "nino") {
+    document.getElementById("fieldEdad").classList.remove("qr-oculto");
+    document.getElementById("fieldEstatura").classList.remove("qr-oculto");
+    document.getElementById("fieldPadres").classList.remove("qr-oculto");
+    document.getElementById("seccionNino").classList.remove("qr-seccion-oculta");
+  } else if (tipo === "adultomayor") {
+    document.getElementById("fieldEdad").classList.remove("qr-oculto");
+    document.getElementById("seccionAdultoMayor").classList.remove("qr-seccion-oculta");
+  } else if (tipo === "mascota") {
     document.getElementById("seccionMascota").classList.remove("qr-seccion-oculta");
-  }
-
-  // Mostrar sección objeto
-  if (tipo === "objeto") {
+    document.getElementById("step4").classList.remove("qr-oculto");
+  } else if (tipo === "objeto") {
+    document.getElementById("fieldDuenoObjeto").classList.remove("qr-oculto");
+    document.getElementById("fieldTelDuenoObjeto").classList.remove("qr-oculto");
     document.getElementById("seccionObjeto").classList.remove("qr-seccion-oculta");
+    document.getElementById("step4").classList.remove("qr-oculto");
   }
 }
 
@@ -300,10 +384,11 @@ window.guardarPerfil = async function() {
       }
     }
 
+    const tipo = tipoPerfilSeleccionado.toLowerCase();
+
     const datosGuardar = {
       tipoPerfil: tipoPerfilSeleccionado,
       nombre: fNombre.value.trim(),
-      edad: fEdad.value || "",
       contacto: fContacto.value.trim(),
       contacto2: fContacto2.value.trim(),
       direccion: fDireccion.value.trim(),
@@ -316,28 +401,42 @@ window.guardarPerfil = async function() {
       actualizado: new Date().toISOString()
     };
 
-    if (["mascota", "objeto"].includes(tipoPerfilSeleccionado.toLowerCase())) {
-      datosGuardar.estado = estadoSeleccionado || "activo";
-    }
-
-    if (["persona", "nino", "adultomayor"].includes(tipoPerfilSeleccionado.toLowerCase())) {
+    // Agregar campos específicos
+    if (tipo === "persona") {
+      datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangre.value.trim();
       datosGuardar.padecimientos = fPadecimientos.value.trim();
       datosGuardar.alergias = fAlergias.value.trim();
-    }
-
-    if (tipoPerfilSeleccionado.toLowerCase() === "mascota") {
+    } else if (tipo === "nino") {
+      datosGuardar.edad = fEdad.value || "";
+      datosGuardar.estatura = fEstatura.value || "";
+      datosGuardar.padres = fPadres.value.trim();
+      datosGuardar.sangre = fSangreNino.value.trim();
+      datosGuardar.padecimientos = fPadecimientosNino.value.trim();
+      datosGuardar.alergias = fAlergiasNino.value.trim();
+    } else if (tipo === "adultomayor") {
+      datosGuardar.edad = fEdad.value || "";
+      datosGuardar.sangre = fSangreAdulto.value.trim();
+      datosGuardar.padecimientos = fPadecimientosAdulto.value.trim();
+      datosGuardar.alergias = fAlergiasAdulto.value.trim();
+      datosGuardar.cuidador = fCuidador.value.trim();
+    } else if (tipo === "mascota") {
+      datosGuardar.estado = estadoSeleccionado || "activo";
       datosGuardar.mascota = {
         especie: fEspecie.value.trim(),
         raza: fRaza.value.trim(),
-        color: fColor.value.trim()
+        color: fColor.value.trim(),
+        dueno: fDuenoMascota.value.trim(),
+        caracteristicas: fCaracteristicasMascota.value.trim()
       };
-    }
-
-    if (tipoPerfilSeleccionado.toLowerCase() === "objeto") {
+    } else if (tipo === "objeto") {
+      datosGuardar.estado = estadoSeleccionado || "activo";
       datosGuardar.objeto = {
         descripcion: fDescripcion.value.trim(),
-        instrucciones: fInstrucciones.value.trim()
+        valor: fValor.value.trim(),
+        instrucciones: fInstrucciones.value.trim(),
+        dueno: fDuenoObjeto.value.trim(),
+        telDueno: fTelDuenoObjeto.value.trim()
       };
     }
 
@@ -499,17 +598,36 @@ get(qrRef)
       if (data.foto) previewFoto.src = data.foto;
       fLatitud.value = data.latitud || "";
       fLongitud.value = data.longitud || "";
-      if (data.sangre) fSangre.value = data.sangre;
-      if (data.padecimientos) fPadecimientos.value = data.padecimientos;
-      if (data.alergias) fAlergias.value = data.alergias;
-      if (data.mascota) {
+
+      const tipo = data.tipoPerfil.toLowerCase();
+
+      if (tipo === "persona") {
+        if (data.sangre) fSangre.value = data.sangre;
+        if (data.padecimientos) fPadecimientos.value = data.padecimientos;
+        if (data.alergias) fAlergias.value = data.alergias;
+      } else if (tipo === "nino") {
+        if (data.estatura) fEstatura.value = data.estatura;
+        if (data.padres) fPadres.value = data.padres;
+        if (data.sangre) fSangreNino.value = data.sangre;
+        if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
+        if (data.alergias) fAlergiasNino.value = data.alergias;
+      } else if (tipo === "adultomayor") {
+        if (data.sangre) fSangreAdulto.value = data.sangre;
+        if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
+        if (data.alergias) fAlergiasAdulto.value = data.alergias;
+        if (data.cuidador) fCuidador.value = data.cuidador;
+      } else if (tipo === "mascota" && data.mascota) {
         fEspecie.value = data.mascota.especie || "";
         fRaza.value = data.mascota.raza || "";
         fColor.value = data.mascota.color || "";
-      }
-      if (data.objeto) {
+        fDuenoMascota.value = data.mascota.dueno || "";
+        fCaracteristicasMascota.value = data.mascota.caracteristicas || "";
+      } else if (tipo === "objeto" && data.objeto) {
         fDescripcion.value = data.objeto.descripcion || "";
+        fValor.value = data.objeto.valor || "";
         fInstrucciones.value = data.objeto.instrucciones || "";
+        fDuenoObjeto.value = data.objeto.dueno || "";
+        fTelDuenoObjeto.value = data.objeto.telDueno || "";
       }
       
       aplicarSecciones();
