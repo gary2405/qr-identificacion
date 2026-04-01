@@ -70,6 +70,16 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
+// ========== INTRO IMAGEN ==========
+
+const introImagen = document.getElementById("introImagen");
+
+// Ocultar intro después de 3 segundos
+setTimeout(() => {
+  introImagen.classList.add("qr-oculto");
+  mostrarCarga();
+  cargarDatos();
+}, 3000); 
 const qrRef = ref(db, "qrs/" + qrId);
 
 const validaciones = {
