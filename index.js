@@ -50,7 +50,7 @@ const pinMatch = document.getElementById("pinMatch");
 const fEstatura = document.getElementById("fEstatura");
 const fPadres = document.getElementById("fPadres");
 const fSangre = document.getElementById("fSangre");
-const fPadecimientos = document.getElementById("fPadecimientos");
+const fPadecimientos = document.getElementById("fPadimientos");
 const fAlergias = document.getElementById("fAlergias");
 const fSangreNino = document.getElementById("fSangreNino");
 const fPadecimientosNino = document.getElementById("fPadecimientosNino");
@@ -70,15 +70,122 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
+// ========== SESSIONSTORGE PARA GUARDAR ESTADO ==========
+
+const STORAGE_KEY = `qrafid_${qrId}`;
+
+function guardarEnStorage() {
+  const datos = {
+    paso: pasoActual,
+    tipo: tipoPerfilSeleccionado,
+    fNombre: fNombre.value,
+    fEdad: fEdad.value,
+    fEstatura: fEstatura.value,
+    fPadres: fPadres.value,
+    fContacto: fContacto.value,
+    fContacto2: fContacto2.value,
+    fDireccion: fDireccion.value,
+    fMensaje: fMensaje.value,
+    fSangre: fSangre.value,
+    fPadimientos: fPadimientos.value,
+    fAlergias: fAlergias.value,
+    fSangreNino: fSangreNino.value,
+    fPadecimientosNino: fPadecimientosNino.value,
+    fAlergiasNino: fAlergiasNino.value,
+    fSangreAdulto: fSangreAdulto.value,
+    fPadecimientosAdulto: fPadecimientosAdulto.value,
+    fAlergiasAdulto: fAlergiasAdulto.value,
+    fCuidador: fCuidador.value,
+    fEspecie: fEspecie.value,
+    fRaza: fRaza.value,
+    fColor: fColor.value,
+    fDuenoMascota: fDuenoMascota.value,
+    fCaracteristicasMascota: fCaracteristicasMascota.value,
+    fDescripcion: fDescripcion.value,
+    fValor: fValor.value,
+    fInstrucciones: fInstrucciones.value,
+    fDuenoObjeto: fDuenoObjeto.value,
+    fTelDuenoObjeto: fTelDuenoObjeto.value,
+    fLatitud: fLatitud.value,
+    fLongitud: fLongitud.value,
+    previewFoto: previewFoto.src,
+    textoGPS: textoGPS.textContent
+  };
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+}
+
+function cargarDelStorage() {
+  const datos = sessionStorage.getItem(STORAGE_KEY);
+  if (!datos) return false;
+
+  try {
+    const obj = JSON.parse(datos);
+    
+    pasoActual = obj.paso || 1;
+    tipoPerfilSeleccionado = obj.tipo || "";
+    fNombre.value = obj.fNombre || "";
+    fEdad.value = obj.fEdad || "";
+    fEstatura.value = obj.fEstatura || "";
+    fPadres.value = obj.fPadres || "";
+    fContacto.value = obj.fContacto || "";
+    fContacto2.value = obj.fContacto2 || "";
+    fDireccion.value = obj.fDireccion || "";
+    fMensaje.value = obj.fMensaje || "";
+    fSangre.value = obj.fSangre || "";
+    fPadimientos.value = obj.fPadimientos || "";
+    fAlergias.value = obj.fAlergias || "";
+    fSangreNino.value = obj.fSangreNino || "";
+    fPadecimientosNino.value = obj.fPadecimientosNino || "";
+    fAlergiasNino.value = obj.fAlergiasNino || "";
+    fSangreAdulto.value = obj.fSangreAdulto || "";
+    fPadecimientosAdulto.value = obj.fPadecimientosAdulto || "";
+    fAlergiasAdulto.value = obj.fAlergiasAdulto || "";
+    fCuidador.value = obj.fCuidador || "";
+    fEspecie.value = obj.fEspecie || "";
+    fRaza.value = obj.fRaza || "";
+    fColor.value = obj.fColor || "";
+    fDuenoMascota.value = obj.fDuenoMascota || "";
+    fCaracteristicasMascota.value = obj.fCaracteristicasMascota || "";
+    fDescripcion.value = obj.fDescripcion || "";
+    fValor.value = obj.fValor || "";
+    fInstrucciones.value = obj.fInstrucciones || "";
+    fDuenoObjeto.value = obj.fDuenoObjeto || "";
+    fTelDuenoObjeto.value = obj.fTelDuenoObjeto || "";
+    fLatitud.value = obj.fLatitud || "";
+    fLongitud.value = obj.fLongitud || "";
+    
+    if (obj.previewFoto) {
+      previewFoto.src = obj.previewFoto;
+    }
+    if (obj.textoGPS) {
+      textoGPS.textContent = obj.textoGPS;
+    }
+
+    if (tipoPerfilSeleccionado) {
+      aplicarSecciones();
+      // Marcar el tipo seleccionado
+      document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
+        if (btn.getAttribute("data-tipo") === tipoPerfilSeleccionado) {
+          btn.classList.add("qr-opcion-seleccionada");
+        }
+      });
+    }
+
+    return true;
+  } catch (e) {
+    console.error("Error cargando datos del storage:", e);
+    return false;
+  }
+}
+
 // ========== INTRO IMAGEN ==========
 
 const introImagen = document.getElementById("introImagen");
-const pasoGuardado = sessionStorage.getItem(`paso_${qrId}`);
+const tieneDataGuardada = sessionStorage.getItem(STORAGE_KEY);
 
-// Si hay un paso guardado, ocultar intro inmediatamente
-if (pasoGuardado) {
+// Si hay datos guardados, ocultar intro inmediatamente
+if (tieneDataGuardada) {
   introImagen.classList.add("qr-oculto");
-  pasoActual = parseInt(pasoGuardado);
 } else {
   // Si no, mostrar intro por 3 segundos
   setTimeout(() => {
@@ -119,10 +226,8 @@ function actualizarIndices() {
   progressBar.style.width = porcentaje + "%";
   mostrarPaso(pasoActual);
   
-  // Guardar el paso actual
-  if (wizardContainer.classList.contains("qr-oculto") === false) {
-    sessionStorage.setItem(`paso_${qrId}`, pasoActual);
-  }
+  // Guardar en storage cada vez que se actualiza
+  guardarEnStorage();
   
   window.scrollTo(0, 0);
 }
@@ -149,7 +254,7 @@ function guardarDatosDelPasoActual() {
   if (tipo === "persona") {
     datosFormulario.edad = fEdad.value || "";
     datosFormulario.sangre = fSangre.value.trim();
-    datosFormulario.padecimientos = fPadecimientos.value.trim();
+    datosFormulario.padecimientos = fPadimientos.value.trim();
     datosFormulario.alergias = fAlergias.value.trim();
   } else if (tipo === "nino") {
     datosFormulario.edad = fEdad.value || "";
@@ -388,19 +493,19 @@ window.guardarPerfil = async function() {
     if (tipo === "persona") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangre.value.trim();
-      datosGuardar.padecimientos = fPadecimientos.value.trim();
+      datosGuardar.padimientos = fPadimientos.value.trim();
       datosGuardar.alergias = fAlergias.value.trim();
     } else if (tipo === "nino") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.estatura = fEstatura.value || "";
       datosGuardar.padres = fPadres.value.trim();
       datosGuardar.sangre = fSangreNino.value.trim();
-      datosGuardar.padecimientos = fPadecimientosNino.value.trim();
+      datosGuardar.padimientos = fPadecimientosNino.value.trim();
       datosGuardar.alergias = fAlergiasNino.value.trim();
     } else if (tipo === "adultomayor") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangreAdulto.value.trim();
-      datosGuardar.padecimientos = fPadecimientosAdulto.value.trim();
+      datosGuardar.padimientos = fPadecimientosAdulto.value.trim();
       datosGuardar.alergias = fAlergiasAdulto.value.trim();
       datosGuardar.cuidador = fCuidador.value.trim();
     } else if (tipo === "mascota") {
@@ -431,7 +536,7 @@ window.guardarPerfil = async function() {
     }
 
     // Limpiar sesión al guardar
-    sessionStorage.removeItem(`paso_${qrId}`);
+    sessionStorage.removeItem(STORAGE_KEY);
 
     setTimeout(() => {
       window.location.href = `ver.html?id=${qrId}`;
@@ -455,6 +560,7 @@ document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
       b.classList.remove("qr-opcion-seleccionada");
     });
     this.classList.add("qr-opcion-seleccionada");
+    guardarEnStorage();
   });
 });
 
@@ -466,6 +572,7 @@ if (fFoto) {
       const base64 = await comprimirImagen(file);
       previewFoto.src = base64;
       document.getElementById("fotoStatus").style.display = "none";
+      guardarEnStorage();
     } catch (error) {
       document.getElementById("fotoStatus").textContent = "❌ " + error.message;
       document.getElementById("fotoStatus").style.display = "block";
@@ -515,6 +622,7 @@ if (btnObtenerGPS) {
           textoGPS.textContent = `✓ Ubicación: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
           btnObtenerGPS.disabled = false;
           btnObtenerGPS.textContent = "📍 Obtener ubicación actual";
+          guardarEnStorage();
         },
         (error) => {
           clearTimeout(timeoutId);
@@ -576,17 +684,17 @@ function cargarDatos() {
 
         if (tipo === "persona") {
           if (data.sangre) fSangre.value = data.sangre;
-          if (data.padecimientos) fPadecimientos.value = data.padecimientos;
+          if (data.padimientos) fPadimientos.value = data.padimientos;
           if (data.alergias) fAlergias.value = data.alergias;
         } else if (tipo === "nino") {
           if (data.estatura) fEstatura.value = data.estatura;
           if (data.padres) fPadres.value = data.padres;
           if (data.sangre) fSangreNino.value = data.sangre;
-          if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
+          if (data.padimientos) fPadecimientosNino.value = data.padimientos;
           if (data.alergias) fAlergiasNino.value = data.alergias;
         } else if (tipo === "adultomayor") {
           if (data.sangre) fSangreAdulto.value = data.sangre;
-          if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
+          if (data.padimientos) fPadecimientosAdulto.value = data.padimientos;
           if (data.alergias) fAlergiasAdulto.value = data.alergias;
           if (data.cuidador) fCuidador.value = data.cuidador;
         } else if (tipo === "mascota" && data.mascota) {
@@ -606,9 +714,15 @@ function cargarDatos() {
         aplicarSecciones();
         mostrarWizard();
       } else {
-        if (existe) {
+        // Primero verificar si hay datos guardados en sesión
+        if (cargarDelStorage()) {
+          // Si hay datos guardados, mostrar el wizard donde estaba
+          mostrarWizard();
+        } else if (existe) {
+          // Si no hay datos guardados pero el QR existe, ir a verlo
           window.location.href = `ver.html?id=${qrId}`;
         } else {
+          // Si no existe ni hay datos guardados, mostrar modal
           mostrarModalNoConfig();
         }
       }
