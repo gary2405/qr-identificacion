@@ -226,16 +226,6 @@
       display: none !important;
     }
 
-    .perfil-estado-badge {
-      position: absolute !important;
-      top: 20px !important;
-      left: 20px !important;
-      background: rgba(0, 0, 0, 0.7) !important;
-      backdrop-filter: blur(15px) !important;
-      z-index: 5 !important;
-      border: 2px solid rgba(255, 255, 255, 0.4) !important;
-    }
-
     .perfil-card {
       background: rgba(26, 26, 26, 0.5) !important;
       backdrop-filter: blur(15px) !important;
@@ -538,25 +528,11 @@
   </div>
 </div>
 
-<div id="alertainEmergencia" class="qr-alerta-emergencia qr-oculto">
-  <div class="qr-alerta-contenido">
-    <h1>⚠️ ¡PERDIDO!</h1>
-    <p id="textoEmergencia"></p>
-    <div class="qr-alerta-acciones">
-      <a id="linkLlamarEmergencia" href="#" class="qr-btn qr-btn-emergencia">☎️ Llamar</a>
-      <a id="linkWhatsappEmergencia" href="#" class="qr-btn qr-btn-emergencia">💬 WhatsApp</a>
-    </div>
-    <button id="btnEncontrado" class="qr-btn qr-btn-encontrado">✓ Lo encontré</button>
-    <button id="btnContinuar" class="qr-btn perfil-btn-sec">Continuar</button>
-  </div>
-</div>
-
 <div class="perfil-wrap" id="perfilWrap">
   <div class="perfil-header-container" id="perfilHeaderContainer">
     <div class="perfil-cover" id="perfilCover">
       <img id="foto" class="perfil-cover-img" alt="Foto del perfil" style="cursor: pointer;">
       <div class="perfil-cover-overlay"></div>
-      <div id="estadoBadge" class="perfil-estado-badge qr-oculto"></div>
       
       <!-- MENÚ DROPDOWN DE ADMINISTRACIÓN AL LADO DERECHO -->
       <div id="perfilMenuContainer" class="perfil-menu-container qr-oculto">
