@@ -5,181 +5,33 @@
   <title>Identificación QR - Crear Perfil</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <style>
-    /* ========== INTRO CODEPEN ========== */
-    .intro-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9998;
-      animation: fadeInIntro 0.5s ease-out;
-    }
-
-    @keyframes fadeInIntro {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    .intro-container.oculto {
-      display: none !important;
-    }
-
-    .intro-content {
-      text-align: center;
-      color: white;
-      max-width: 600px;
-      padding: 40px 20px;
-      animation: slideInUp 0.6s ease-out;
-    }
-
-    .intro-content h1 {
-      font-size: 48px;
-      font-weight: 700;
-      margin: 0 0 20px 0;
-      line-height: 1.2;
-    }
-
-    .intro-content p {
-      font-size: 18px;
-      margin: 0 0 30px 0;
-      line-height: 1.6;
-      opacity: 0.95;
-    }
-
-    .intro-features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 20px;
-      margin: 40px 0;
-    }
-
-    .intro-feature {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 20px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-    }
-
-    .intro-feature:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-5px);
-    }
-
-    .intro-feature-icon {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
-
-    .intro-feature-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .intro-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .intro-btn-primary {
-      background: white;
-      color: #667eea;
-      padding: 14px 32px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    .intro-btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
-    }
-
-    .intro-btn-primary:active {
-      transform: scale(0.98);
-    }
-
-    .intro-btn-secondary {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 14px 32px;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-    }
-
-    .intro-btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.6);
-      transform: translateY(-2px);
-    }
-
-    .intro-btn-secondary:active {
-      transform: scale(0.98);
-    }
-  </style>
 </head>
 <body class="qr-body">
+
+  <!-- INTRO QRAFID AL INICIO -->
+  <div id="introQrafid" class="intro-qrafid-container">
+    <h1 class="jt">
+      <span class="jt__row">
+        <span class="jt__text">Qrafid</span>
+      </span>
+      <span class="jt__row jt__row--sibling" aria-hidden="true">
+        <span class="jt__text">Qrafid</span>
+      </span>
+      <span class="jt__row jt__row--sibling" aria-hidden="true">
+        <span class="jt__text">Qrafid</span>
+      </span>
+      <span class="jt__row jt__row--sibling" aria-hidden="true">
+        <span class="jt__text">Qrafid</span>
+      </span>
+    </h1>
+    <p class="intro-qrafid-subtitle">Tus QR seguros en un solo lugar</p>
+    <button id="btnEntrarQrafid" class="intro-qrafid-btn">Entrar</button>
+  </div>
 
   <div id="pantallaCarga" class="qr-loader-pantalla">
     <div class="qr-loader-caja">
       <div class="qr-loader-spinner"></div>
       <p>Cargando información...</p>
-    </div>
-  </div>
-
-  <!-- INTRO CODEPEN -->
-  <div id="introContainer" class="intro-container">
-    <div class="intro-content">
-      <h1>👋 Bienvenido</h1>
-      <p>Crea perfiles QR seguros para personas, niños, adultos mayores, mascotas u objetos</p>
-      
-      <div class="intro-features">
-        <div class="intro-feature">
-          <div class="intro-feature-icon">🛡️</div>
-          <p class="intro-feature-title">Información Segura</p>
-        </div>
-        <div class="intro-feature">
-          <div class="intro-feature-icon">📱</div>
-          <p class="intro-feature-title">Fácil de Usar</p>
-        </div>
-        <div class="intro-feature">
-          <div class="intro-feature-icon">🌍</div>
-          <p class="intro-feature-title">Acceso Global</p>
-        </div>
-        <div class="intro-feature">
-          <div class="intro-feature-icon">⚡</div>
-          <p class="intro-feature-title">Rápido y Eficiente</p>
-        </div>
-      </div>
-
-      <div class="intro-buttons">
-        <button id="btnComenzarIntro" class="intro-btn-primary">Comenzar Ahora</button>
-        <button id="btnMasInfo" class="intro-btn-secondary">Más Información</button>
-      </div>
     </div>
   </div>
 
