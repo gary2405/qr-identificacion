@@ -74,6 +74,49 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
+
+
+// ... (mantén todo lo anterior igual hasta el final)
+
+const introVideo = document.getElementById("introVideo");
+const introVideoContainer = document.getElementById("introVideo").parentElement;
+const introQrafid = document.getElementById("introQrafid");
+
+// Detectar cuando termina el video
+introVideo.addEventListener("ended", () => {
+  ocultarIntro();
+  mostrarCarga();
+  cargarDatos();
+});
+
+// Si el video falla, usar fallback QRAFID
+introVideo.addEventListener("error", () => {
+  console.warn("Video no disponible, usando fallback");
+  introVideoContainer.classList.add("qr-oculto");
+  introQrafid.classList.remove("qr-oculto");
+  setTimeout(() => {
+    introQrafid.classList.add("qr-oculto");
+    mostrarCarga();
+    cargarDatos();
+  }, 3000);
+});
+
+function ocultarIntro() {
+  introVideoContainer.classList.add("qr-oculto");
+  introQrafid.classList.add("qr-oculto");
+}
+
+// INICIO
+setTimeout(() => {
+  // Si el video termina naturalmente, no hacer nada
+  // Si se llega a los 5 segundos, forzar continuación
+  if (!introVideo.ended) {
+    ocultarIntro();
+    mostrarCarga();
+    cargarDatos();
+  }
+}, 5000);
+
 const qrRef = ref(db, "qrs/" + qrId);
 
 // Validaciones
