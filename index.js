@@ -10,13 +10,11 @@ if (!qrId) {
   throw new Error("QR inválido");
 }
 
-// Variables globales
 let pasoActual = 1;
 const pasosTotales = 6;
 let tipoPerfilSeleccionado = "";
 const datosFormulario = {};
 
-// Mapeo de tipos de perfil
 const mapeoTipos = {
   persona: "Persona",
   nino: "Niño",
@@ -32,7 +30,6 @@ const btnConfigurar = document.getElementById("btnConfigurar");
 const stepIndicator = document.getElementById("stepIndicator");
 const progressBar = document.getElementById("progressBar");
 
-// Elementos de entrada comunes
 const fNombre = document.getElementById("fNombre");
 const fEdad = document.getElementById("fEdad");
 const fContacto = document.getElementById("fContacto");
@@ -50,7 +47,6 @@ const fLongitud = document.getElementById("fLongitud");
 const msjCount = document.getElementById("msjCount");
 const pinMatch = document.getElementById("pinMatch");
 
-// Campos específicos por tipo
 const fEstatura = document.getElementById("fEstatura");
 const fPadres = document.getElementById("fPadres");
 const fSangre = document.getElementById("fSangre");
@@ -76,7 +72,6 @@ const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
 const qrRef = ref(db, "qrs/" + qrId);
 
-// Validaciones
 const validaciones = {
   nombre: (val) => val.trim().length >= 2 && val.trim().length <= 100,
   edad: (val) => !isNaN(val) && val >= 0 && val <= 150,
@@ -88,6 +83,10 @@ const validaciones = {
   pin: (val) => /^\d{4,8}$/.test(val),
 };
 
+function mostrarCarga() {
+  pantallaCarga.classList.remove("qr-oculto");
+}
+
 function ocultarCarga() {
   pantallaCarga.classList.add("qr-oculto");
 }
@@ -96,6 +95,10 @@ function mostrarWizard() {
   modalNoConfig.classList.add("qr-oculto");
   wizardContainer.classList.remove("qr-oculto");
   actualizarIndices();
+}
+
+function mostrarModalNoConfig() {
+  modalNoConfig.classList.remove("qr-oculto");
 }
 
 function actualizarIndices() {
@@ -125,7 +128,6 @@ function guardarDatosDelPasoActual() {
   datosFormulario.longitud = fLongitud.value;
   datosFormulario.ownerPin = fPin.value.trim();
 
-  // Campos específicos por tipo
   if (tipo === "persona") {
     datosFormulario.edad = fEdad.value || "";
     datosFormulario.sangre = fSangre.value.trim();
@@ -165,12 +167,7 @@ function guardarDatosDelPasoActual() {
 
 window.nextStep = function() {
   guardarDatosDelPasoActual();
-
-  if (!validarPasoActual()) {
-    return;
-  }
-
-  const tipo = tipoPerfilSeleccionado.toLowerCase();
+  if (!validarPasoActual()) return;
 
   if (pasoActual === 1) {
     pasoActual = 2;
@@ -181,7 +178,6 @@ window.nextStep = function() {
   } else if (pasoActual < pasosTotales) {
     pasoActual++;
   }
-
   actualizarIndices();
 };
 
@@ -214,7 +210,6 @@ function validarPasoActual() {
       return false;
     }
 
-    // Validación de edad si es requerida
     if (["persona", "nino", "adultomayor"].includes(tipo)) {
       if (!validaciones.edad(fEdad.value)) {
         mostrarErrorValidacion("Por favor ingresa una edad válida (0-150)");
@@ -235,7 +230,6 @@ function validarPasoActual() {
       return false;
     }
 
-    // Validación de objeto
     if (tipo === "objeto") {
       if (!fDuenoObjeto.value.trim()) {
         mostrarErrorValidacion("Por favor ingresa el nombre del dueño del objeto");
@@ -302,14 +296,12 @@ async function comprimirImagen(file) {
 }
 
 function aplicarSecciones() {
-  // Ocultar todos los campos condicionales
   document.getElementById("fieldEdad").classList.add("qr-oculto");
   document.getElementById("fieldEstatura").classList.add("qr-oculto");
   document.getElementById("fieldPadres").classList.add("qr-oculto");
   document.getElementById("fieldDuenoObjeto").classList.add("qr-oculto");
   document.getElementById("fieldTelDuenoObjeto").classList.add("qr-oculto");
 
-  // Ocultar todas las secciones
   document.getElementById("seccionPersona").classList.add("qr-seccion-oculta");
   document.getElementById("seccionNino").classList.add("qr-seccion-oculta");
   document.getElementById("seccionAdultoMayor").classList.add("qr-seccion-oculta");
@@ -317,10 +309,7 @@ function aplicarSecciones() {
   document.getElementById("seccionObjeto").classList.add("qr-seccion-oculta");
 
   const tipo = tipoPerfilSeleccionado.toLowerCase();
-  
-  console.log("Tipo seleccionado:", tipo);
 
-  // Mostrar campos según tipo
   if (tipo === "persona") {
     document.getElementById("fieldEdad").classList.remove("qr-oculto");
     document.getElementById("seccionPersona").classList.remove("qr-seccion-oculta");
@@ -378,7 +367,6 @@ window.guardarPerfil = async function() {
       actualizado: new Date().toISOString()
     };
 
-    // Agregar campos específicos
     if (tipo === "persona") {
       datosGuardar.edad = fEdad.value || "";
       datosGuardar.sangre = fSangre.value.trim();
@@ -436,7 +424,6 @@ window.guardarPerfil = async function() {
   }
 };
 
-// Event Listeners - Tipo de perfil
 document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   btn.addEventListener("click", function() {
     const tipoSeleccionado = this.getAttribute("data-tipo");
@@ -450,12 +437,10 @@ document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
   });
 });
 
-// Event Listeners - Fotos
 if (fFoto) {
   fFoto.addEventListener("change", async () => {
     const file = fFoto.files[0];
     if (!file) return;
-    
     try {
       const base64 = await comprimirImagen(file);
       previewFoto.src = base64;
@@ -468,29 +453,26 @@ if (fFoto) {
   });
 }
 
-// Event Listeners - Contador de caracteres
 if (fMensaje) {
   fMensaje.addEventListener("input", () => {
     msjCount.textContent = `${fMensaje.value.length}/300 caracteres`;
   });
 }
 
-// Event Listeners - Validación de PIN
 if (fPinConfirmar) {
   fPinConfirmar.addEventListener("input", () => {
     if (fPin.value && fPinConfirmar.value) {
       if (fPin.value === fPinConfirmar.value) {
         pinMatch.textContent = "✓ Los PINs coinciden";
-        pinMatch.style.color = "#28a745";
+        pinMatch.style.color = "#E15D0A";
       } else {
         pinMatch.textContent = "✗ Los PINs no coinciden";
-        pinMatch.style.color = "#dc3545";
+        pinMatch.style.color = "#E15D0A";
       }
     }
   });
 }
 
-// Event Listeners - GPS
 if (btnObtenerGPS) {
   btnObtenerGPS.addEventListener("click", (e) => {
     e.preventDefault();
@@ -531,86 +513,91 @@ if (btnObtenerGPS) {
   });
 }
 
-// Cargar datos en modo edición
-get(qrRef)
-  .then(snapshot => {
-    const existe = snapshot.exists();
-    const data = existe ? snapshot.val() : null;
-    ocultarCarga();
-
-    if (editMode) {
-      const esDueno = localStorage.getItem("owner_" + qrId) === "true";
-      
-      if (!existe) {
-        mostrarWizard();
-        return;
-      }
-
-      if (!esDueno) {
-        window.location.href = `ver.html?id=${qrId}`;
-        return;
-      }
-
-      tipoPerfilSeleccionado = data.tipoPerfil;
-      fNombre.value = data.nombre || "";
-      fEdad.value = data.edad || "";
-      fContacto.value = data.contacto || "";
-      fContacto2.value = data.contacto2 || "";
-      fDireccion.value = data.direccion || "";
-      fMensaje.value = data.mensaje || "";
-      if (data.foto) previewFoto.src = data.foto;
-      fLatitud.value = data.latitud || "";
-      fLongitud.value = data.longitud || "";
-
-      const tipo = data.tipoPerfil.toLowerCase();
-
-      if (tipo === "persona") {
-        if (data.sangre) fSangre.value = data.sangre;
-        if (data.padecimientos) fPadecimientos.value = data.padecimientos;
-        if (data.alergias) fAlergias.value = data.alergias;
-      } else if (tipo === "nino") {
-        if (data.estatura) fEstatura.value = data.estatura;
-        if (data.padres) fPadres.value = data.padres;
-        if (data.sangre) fSangreNino.value = data.sangre;
-        if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
-        if (data.alergias) fAlergiasNino.value = data.alergias;
-      } else if (tipo === "adultomayor") {
-        if (data.sangre) fSangreAdulto.value = data.sangre;
-        if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
-        if (data.alergias) fAlergiasAdulto.value = data.alergias;
-        if (data.cuidador) fCuidador.value = data.cuidador;
-      } else if (tipo === "mascota" && data.mascota) {
-        fEspecie.value = data.mascota.especie || "";
-        fRaza.value = data.mascota.raza || "";
-        fColor.value = data.mascota.color || "";
-        fDuenoMascota.value = data.mascota.dueno || "";
-        fCaracteristicasMascota.value = data.mascota.caracteristicas || "";
-      } else if (tipo === "objeto" && data.objeto) {
-        fDescripcion.value = data.objeto.descripcion || "";
-        fValor.value = data.objeto.valor || "";
-        fInstrucciones.value = data.objeto.instrucciones || "";
-        fDuenoObjeto.value = data.objeto.dueno || "";
-        fTelDuenoObjeto.value = data.objeto.telDueno || "";
-      }
-      
-      aplicarSecciones();
-      mostrarWizard();
-    } else {
-      if (existe) {
-        window.location.href = `ver.html?id=${qrId}`;
-      } else {
-        modalNoConfig.classList.remove("qr-oculto");
-      }
-    }
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    ocultarCarga();
-    mostrarWizard();
-  });
-
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
     mostrarWizard();
   });
 }
+
+function cargarDatos() {
+  get(qrRef)
+    .then(snapshot => {
+      const existe = snapshot.exists();
+      const data = existe ? snapshot.val() : null;
+      
+      ocultarCarga();
+
+      if (editMode) {
+        const esDueno = localStorage.getItem("owner_" + qrId) === "true";
+        
+        if (!existe) {
+          mostrarWizard();
+          return;
+        }
+
+        if (!esDueno) {
+          window.location.href = `ver.html?id=${qrId}`;
+          return;
+        }
+
+        tipoPerfilSeleccionado = data.tipoPerfil;
+        fNombre.value = data.nombre || "";
+        fEdad.value = data.edad || "";
+        fContacto.value = data.contacto || "";
+        fContacto2.value = data.contacto2 || "";
+        fDireccion.value = data.direccion || "";
+        fMensaje.value = data.mensaje || "";
+        if (data.foto) previewFoto.src = data.foto;
+        fLatitud.value = data.latitud || "";
+        fLongitud.value = data.longitud || "";
+
+        const tipo = data.tipoPerfil.toLowerCase();
+
+        if (tipo === "persona") {
+          if (data.sangre) fSangre.value = data.sangre;
+          if (data.padecimientos) fPadecimientos.value = data.padecimientos;
+          if (data.alergias) fAlergias.value = data.alergias;
+        } else if (tipo === "nino") {
+          if (data.estatura) fEstatura.value = data.estatura;
+          if (data.padres) fPadres.value = data.padres;
+          if (data.sangre) fSangreNino.value = data.sangre;
+          if (data.padecimientos) fPadecimientosNino.value = data.padecimientos;
+          if (data.alergias) fAlergiasNino.value = data.alergias;
+        } else if (tipo === "adultomayor") {
+          if (data.sangre) fSangreAdulto.value = data.sangre;
+          if (data.padecimientos) fPadecimientosAdulto.value = data.padecimientos;
+          if (data.alergias) fAlergiasAdulto.value = data.alergias;
+          if (data.cuidador) fCuidador.value = data.cuidador;
+        } else if (tipo === "mascota" && data.mascota) {
+          fEspecie.value = data.mascota.especie || "";
+          fRaza.value = data.mascota.raza || "";
+          fColor.value = data.mascota.color || "";
+          fDuenoMascota.value = data.mascota.dueno || "";
+          fCaracteristicasMascota.value = data.mascota.caracteristicas || "";
+        } else if (tipo === "objeto" && data.objeto) {
+          fDescripcion.value = data.objeto.descripcion || "";
+          fValor.value = data.objeto.valor || "";
+          fInstrucciones.value = data.objeto.instrucciones || "";
+          fDuenoObjeto.value = data.objeto.dueno || "";
+          fTelDuenoObjeto.value = data.objeto.telDueno || "";
+        }
+        
+        aplicarSecciones();
+        mostrarWizard();
+      } else {
+        if (existe) {
+          window.location.href = `ver.html?id=${qrId}`;
+        } else {
+          mostrarModalNoConfig();
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      ocultarCarga();
+      mostrarWizard();
+    });
+}
+
+mostrarCarga();
+cargarDatos();
