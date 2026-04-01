@@ -525,27 +525,11 @@ if (btnObtenerGPS) {
   });
 }
 
-// MANEJO DEL VIDEO INTRO
-videoIntro.addEventListener("ended", () => {
-  ocultarIntro();
-  mostrarCarga();
-  cargarDatos();
-});
-
-videoIntro.addEventListener("error", () => {
-  console.warn("Video no disponible, mostrando carga directa");
-  ocultarIntro();
-  mostrarCarga();
-  cargarDatos();
-});
-
-setTimeout(() => {
-  if (!videoIntro.ended) {
-    ocultarIntro();
-    mostrarCarga();
-    cargarDatos();
-  }
-}, 5000);
+if (btnConfigurar) {
+  btnConfigurar.addEventListener("click", () => {
+    mostrarWizard();
+  });
+}
 
 // FUNCIÓN PARA CARGAR DATOS
 function cargarDatos() {
@@ -629,8 +613,7 @@ function cargarDatos() {
     });
 }
 
-if (btnConfigurar) {
-  btnConfigurar.addEventListener("click", () => {
-    mostrarWizard();
-  });
-}
+// MANEJO DEL VIDEO INTRO - Ocultar intro inmediatamente y mostrar carga
+ocultarIntro();
+mostrarCarga();
+cargarDatos();
