@@ -39,7 +39,7 @@
         <div class="qr-step-opciones">
           <button class="qr-opcion-btn" data-tipo="persona">Persona</button>
           <button class="qr-opcion-btn" data-tipo="nino">Niño / Niña</button>
-          <button class="qr-opcion-btn" data-tipo="adultoMayor">Adulto Mayor</button>
+          <button class="qr-opcion-btn" data-tipo="adultomayor">Adulto Mayor</button>
           <button class="qr-opcion-btn" data-tipo="mascota">Mascota</button>
           <button class="qr-opcion-btn" data-tipo="objeto">Objeto</button>
         </div>
@@ -48,35 +48,74 @@
         </div>
       </div>
 
-      <!-- PASO 2: Información Básica -->
+      <!-- PASO 2: Información Básica (Dinámico según tipo) -->
       <div id="step2" class="qr-wizard-step">
-        <h2>Información Básica</h2>
-        <p class="qr-step-descripcion">Completa los datos principales (*Requerido)</p>
+        <h2 id="step2Title">Información Básica</h2>
+        <p class="qr-step-descripcion" id="step2Description">Completa los datos principales (*Requerido)</p>
+        
+        <!-- Campos comunes -->
         <div class="qr-form-group">
-          <label>Nombre completo *</label>
+          <label id="labelNombre">Nombre completo *</label>
           <input id="fNombre" type="text" maxlength="100" required>
-          <small class="qr-form-hint">Máximo 100 caracteres</small>
+          <small class="qr-form-hint" id="hintNombre">Máximo 100 caracteres</small>
         </div>
-        <div class="qr-form-group">
+
+        <!-- Edad (para Persona, Niño, Adulto Mayor) -->
+        <div id="fieldEdad" class="qr-form-group qr-oculto">
           <label>Edad *</label>
           <input id="fEdad" type="number" placeholder="Edad" min="0" max="150" required>
           <small class="qr-form-hint">Valor entre 0 y 150 años</small>
         </div>
+
+        <!-- Estatura (solo para Niño) -->
+        <div id="fieldEstatura" class="qr-form-group qr-oculto">
+          <label>Estatura (cm) (opcional)</label>
+          <input id="fEstatura" type="number" placeholder="Ej: 120" min="0" max="250">
+          <small class="qr-form-hint">Altura en centímetros</small>
+        </div>
+
+        <!-- Padres (solo para Niño) -->
+        <div id="fieldPadres" class="qr-form-group qr-oculto">
+          <label>Nombre de Padres / Tutores (opcional)</label>
+          <input id="fPadres" type="text" maxlength="150" placeholder="Ej: Juan Pérez y María García">
+          <small class="qr-form-hint">Nombres de padres o tutores legales</small>
+        </div>
+
+        <!-- Contacto principal -->
         <div class="qr-form-group">
-          <label>Contacto principal * (Teléfono o Email)</label>
+          <label id="labelContacto">Contacto principal * (Teléfono o Email)</label>
           <input id="fContacto" type="text" placeholder="+506 1234 5678 o email@ejemplo.com" maxlength="50" required>
           <small class="qr-form-hint">Teléfono con código país o correo electrónico</small>
         </div>
+
+        <!-- Contacto de emergencia -->
         <div class="qr-form-group">
-          <label>Contacto de emergencia (opcional)</label>
+          <label id="labelContacto2">Contacto de emergencia (opcional)</label>
           <input id="fContacto2" type="text" placeholder="+506 1234 5678 o email@ejemplo.com" maxlength="50">
           <small class="qr-form-hint">Teléfono o correo alternativo</small>
         </div>
+
+        <!-- Dirección -->
         <div class="qr-form-group">
-          <label>Dirección (opcional)</label>
+          <label id="labelDireccion">Dirección (opcional)</label>
           <input id="fDireccion" type="text" placeholder="Ej: Chacarita, Puntarenas, Costa Rica" maxlength="150">
           <small class="qr-form-hint">Máximo 150 caracteres</small>
         </div>
+
+        <!-- Dueño (solo para Objeto) -->
+        <div id="fieldDuenoObjeto" class="qr-form-group qr-oculto">
+          <label>Dueño del objeto *</label>
+          <input id="fDuenoObjeto" type="text" maxlength="100" placeholder="Nombre del dueño" required>
+          <small class="qr-form-hint">Nombre completo del dueño</small>
+        </div>
+
+        <!-- Teléfono Dueño (solo para Objeto) -->
+        <div id="fieldTelDuenoObjeto" class="qr-form-group qr-oculto">
+          <label>Teléfono del dueño *</label>
+          <input id="fTelDuenoObjeto" type="text" maxlength="50" placeholder="+506 1234 5678" required>
+          <small class="qr-form-hint">Teléfono del dueño del objeto</small>
+        </div>
+
         <div class="qr-wizard-navegacion">
           <button class="qr-btn-wizard qr-btn-atras" onclick="previousStep()">Atrás</button>
           <button class="qr-btn-wizard qr-btn-siguiente" onclick="nextStep()">Siguiente</button>
@@ -132,6 +171,7 @@
           <small class="qr-form-hint" id="msjCount">0/300 caracteres</small>
         </div>
 
+        <!-- SECCIÓN PERSONA -->
         <div id="seccionPersona" class="qr-seccion-oculta">
           <h3>Información Médica</h3>
           <div class="qr-form-group">
@@ -150,6 +190,50 @@
           </div>
         </div>
 
+        <!-- SECCIÓN NIÑO -->
+        <div id="seccionNino" class="qr-seccion-oculta">
+          <h3>Información Médica del Niño</h3>
+          <div class="qr-form-group">
+            <label>Tipo de sangre (opcional)</label>
+            <input id="fSangreNino" type="text" placeholder="O+, O-, A+, A-, B+, B-, AB+, AB-" maxlength="3">
+          </div>
+          <div class="qr-form-group">
+            <label>Padecimientos (opcional)</label>
+            <textarea id="fPadecimientosNino" placeholder="Describe condiciones médicas importantes" maxlength="300"></textarea>
+            <small class="qr-form-hint">Máximo 300 caracteres</small>
+          </div>
+          <div class="qr-form-group">
+            <label>Alergias (opcional)</label>
+            <textarea id="fAlergiasNino" placeholder="Lista de alergias" maxlength="300"></textarea>
+            <small class="qr-form-hint">Máximo 300 caracteres</small>
+          </div>
+        </div>
+
+        <!-- SECCIÓN ADULTO MAYOR -->
+        <div id="seccionAdultoMayor" class="qr-seccion-oculta">
+          <h3>Información Médica y Emergencia</h3>
+          <div class="qr-form-group">
+            <label>Tipo de sangre (opcional)</label>
+            <input id="fSangreAdulto" type="text" placeholder="O+, O-, A+, A-, B+, B-, AB+, AB-" maxlength="3">
+          </div>
+          <div class="qr-form-group">
+            <label>Padecimientos o medicamentos (opcional)</label>
+            <textarea id="fPadecimientosAdulto" placeholder="Diabetes, Hipertensión, medicamentos que toma, etc." maxlength="300"></textarea>
+            <small class="qr-form-hint">Máximo 300 caracteres</small>
+          </div>
+          <div class="qr-form-group">
+            <label>Alergias (opcional)</label>
+            <textarea id="fAlergiasAdulto" placeholder="Lista de alergias" maxlength="300"></textarea>
+            <small class="qr-form-hint">Máximo 300 caracteres</small>
+          </div>
+          <div class="qr-form-group">
+            <label>Cuidador / Familiar de confianza (opcional)</label>
+            <input id="fCuidador" type="text" maxlength="100" placeholder="Nombre de cuidador o familiar">
+            <small class="qr-form-hint">Persona responsable en caso de emergencia</small>
+          </div>
+        </div>
+
+        <!-- SECCIÓN MASCOTA -->
         <div id="seccionMascota" class="qr-seccion-oculta">
           <h3>Datos de la Mascota</h3>
           <div class="qr-form-group">
@@ -161,21 +245,39 @@
             <input id="fRaza" type="text" placeholder="Ej: Labrador, Siamés, Loro" maxlength="50">
           </div>
           <div class="qr-form-group">
-            <label>Color (opcional)</label>
+            <label>Color / Características (opcional)</label>
             <input id="fColor" type="text" placeholder="Ej: Negro, Blanco y marrón, Gris" maxlength="50">
+          </div>
+          <h3 style="margin-top: 20px;">Dueño de la Mascota</h3>
+          <div class="qr-form-group">
+            <label>Nombre del dueño (opcional)</label>
+            <input id="fDuenoMascota" type="text" maxlength="100" placeholder="Nombre del dueño">
+            <small class="qr-form-hint">Nombre completo del dueño</small>
+          </div>
+          <div class="qr-form-group">
+            <label>Características especiales (opcional)</label>
+            <textarea id="fCaracteristicasMascota" placeholder="Comportamiento, dieta especial, medicamentos, etc." maxlength="300"></textarea>
+            <small class="qr-form-hint">Máximo 300 caracteres</small>
           </div>
         </div>
 
+        <!-- SECCIÓN OBJETO -->
         <div id="seccionObjeto" class="qr-seccion-oculta">
           <h3>Datos del Objeto</h3>
           <div class="qr-form-group">
-            <label>Descripción (opcional)</label>
-            <textarea id="fDescripcion" placeholder="Describe detalladamente el objeto" maxlength="300"></textarea>
+            <label>Descripción detallada (opcional)</label>
+            <textarea id="fDescripcion" placeholder="Describe detalladamente el objeto (marca, modelo, número de serie, etc.)" maxlength="300"></textarea>
             <small class="qr-form-hint">Máximo 300 caracteres</small>
           </div>
           <div class="qr-form-group">
-            <label>Instrucciones (opcional)</label>
-            <textarea id="fInstrucciones" placeholder="Qué hacer si se encuentra (Ej: Devolver a Juana Perez en ...)" maxlength="300"></textarea>
+            <label>Valor aproximado (opcional)</label>
+            <input id="fValor" type="text" maxlength="50" placeholder="Ej: $500">
+            <small class="qr-form-hint">Valor estimado del objeto</small>
+          </div>
+          <h3 style="margin-top: 20px;">Información del Dueño</h3>
+          <div class="qr-form-group">
+            <label>Instrucciones si se encuentra (opcional)</label>
+            <textarea id="fInstrucciones" placeholder="Qué hacer si se encuentra (Ej: Devolver a Juan Pérez en ...)" maxlength="300"></textarea>
             <small class="qr-form-hint">Máximo 300 caracteres</small>
           </div>
         </div>
