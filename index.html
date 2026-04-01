@@ -5,11 +5,12 @@
   <title>Identificación QR - Crear Perfil</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
+ 
 </head>
 <body class="qr-body">
 
-  <!-- INTRO QRAFID AL INICIO -->
-  <div id="introQrafid" class="intro-qrafid-container">
+  <!-- INTRO QRAFID AL INICIO - VISIBLE POR DEFECTO -->
+  <div id="introQrafid">
     <h1 class="jt">
       <span class="jt__row">
         <span class="jt__text">Qrafid</span>
@@ -28,13 +29,15 @@
     <button id="btnEntrarQrafid" class="intro-qrafid-btn">Entrar</button>
   </div>
 
-  <div id="pantallaCarga" class="qr-loader-pantalla">
+  <!-- PANTALLA DE CARGANDO - OCULTA POR DEFECTO -->
+  <div id="pantallaCarga" class="qr-loader-pantalla qr-oculto">
     <div class="qr-loader-caja">
       <div class="qr-loader-spinner"></div>
       <p>Cargando información...</p>
     </div>
   </div>
 
+  <!-- MODAL SIN CONFIGURAR - OCULTO POR DEFECTO -->
   <div id="modalNoConfig" class="qr-modal qr-oculto">
     <div class="qr-modal-contenido">
       <h3>🎯 Código no configurado</h3>
@@ -43,6 +46,7 @@
     </div>
   </div>
 
+  <!-- WIZARD - OCULTO POR DEFECTO -->
   <div id="wizardContainer" class="qr-wizard qr-oculto">
     <div class="qr-wizard-header">
       <div class="qr-wizard-progress">
