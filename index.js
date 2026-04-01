@@ -73,13 +73,19 @@ const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 // ========== INTRO IMAGEN ==========
 
 const introImagen = document.getElementById("introImagen");
+const pasoGuardado = sessionStorage.getItem(`paso_${qrId}`);
 
-// Ocultar intro después de 3 segundos
-setTimeout(() => {
+// Si hay un paso guardado, ocultar intro inmediatamente
+if (pasoGuardado) {
   introImagen.classList.add("qr-oculto");
-  mostrarCarga();
-  cargarDatos();
-}, 3000); 
+  pasoActual = parseInt(pasoGuardado);
+} else {
+  // Si no, mostrar intro por 3 segundos
+  setTimeout(() => {
+    introImagen.classList.add("qr-oculto");
+  }, 3000);
+}
+
 const qrRef = ref(db, "qrs/" + qrId);
 
 const validaciones = {
@@ -92,10 +98,6 @@ const validaciones = {
   },
   pin: (val) => /^\d{4,8}$/.test(val),
 };
-
-function mostrarCarga() {
-  pantallaCarga.classList.remove("qr-oculto");
-}
 
 function ocultarCarga() {
   pantallaCarga.classList.add("qr-oculto");
@@ -116,6 +118,12 @@ function actualizarIndices() {
   const porcentaje = (pasoActual / pasosTotales) * 100;
   progressBar.style.width = porcentaje + "%";
   mostrarPaso(pasoActual);
+  
+  // Guardar el paso actual
+  if (wizardContainer.classList.contains("qr-oculto") === false) {
+    sessionStorage.setItem(`paso_${qrId}`, pasoActual);
+  }
+  
   window.scrollTo(0, 0);
 }
 
@@ -422,6 +430,9 @@ window.guardarPerfil = async function() {
       localStorage.setItem("owner_" + qrId, "true");
     }
 
+    // Limpiar sesión al guardar
+    sessionStorage.removeItem(`paso_${qrId}`);
+
     setTimeout(() => {
       window.location.href = `ver.html?id=${qrId}`;
     }, 500);
@@ -609,5 +620,4 @@ function cargarDatos() {
     });
 }
 
-mostrarCarga();
 cargarDatos();
