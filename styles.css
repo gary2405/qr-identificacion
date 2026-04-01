@@ -1491,15 +1491,27 @@ body {
   justify-content: center;
   z-index: 9999;
   flex-direction: column;
+  animation: fadeOutDelicate 0.8s ease-out 2.2s forwards;
 }
 
-#introQrafid.oculto {
+#introQrafid.qr-oculto {
   display: none !important;
+}
+
+@keyframes fadeOutDelicate {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 .jt {
   position: relative;
-  font-size: 50vmin;
+  font-size: 35vmin;
   font-family: 'Staatliches', sans-serif;
   font-display: swap;
   margin: 0;
@@ -1572,84 +1584,20 @@ body {
   }
 }
 
-.intro-qrafid-subtitle {
-  color: #ff6b35;
-  font-size: 18px;
-  margin-top: 60px;
-  text-align: center;
-  animation: fadeInUp 3s ease-out forwards;
-  opacity: 0;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-
-.intro-qrafid-btn {
-  background: #ff6b35;
-  color: white;
-  border: none;
-  padding: 14px 32px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 40px;
-  transition: all 0.3s ease;
-  animation: fadeInUp 3.5s ease-out forwards;
-  opacity: 0;
-  box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
-}
-
-.intro-qrafid-btn:hover {
-  background: #ff8855;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(255, 107, 53, 0.5);
-}
-
-.intro-qrafid-btn:active {
-  transform: scale(0.98);
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (max-width: 768px) {
   .jt {
-    font-size: 40vmin;
-  }
-
-  .intro-qrafid-subtitle {
-    font-size: 16px;
-    margin-top: 40px;
-  }
-
-  .intro-qrafid-btn {
-    padding: 12px 28px;
-    font-size: 14px;
-    margin-top: 30px;
+    font-size: 30vmin;
   }
 }
 
 @media (max-width: 480px) {
   .jt {
-    font-size: 35vmin;
+    font-size: 25vmin;
   }
+}
 
-  .intro-qrafid-subtitle {
-    font-size: 14px;
-    margin-top: 30px;
-  }
-
-  .intro-qrafid-btn {
-    padding: 11px 24px;
-    font-size: 13px;
-    margin-top: 25px;
+@media (max-width: 380px) {
+  .jt {
+    font-size: 20vmin;
   }
 }
