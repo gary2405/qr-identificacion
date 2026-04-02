@@ -1624,7 +1624,9 @@ body {
   padding: 0 !important;
   display: flex;
   flex-direction: column;
-  background: rgba(239, 236, 229, 0.98) !important;
+  background: #1a1a1a !important;
+  border: 2px solid #E15D0A;
+  box-shadow: 0 0 40px rgba(225, 93, 10, 0.3);
 }
 
 .qr-modal-cerrar {
@@ -1635,7 +1637,7 @@ body {
   border: none;
   font-size: 32px;
   cursor: pointer;
-  color: #000000;
+  color: #E15D0A;
   width: 40px;
   height: 40px;
   display: flex;
@@ -1643,11 +1645,12 @@ body {
   justify-content: center;
   transition: all 0.3s ease;
   z-index: 10;
+  font-weight: bold;
 }
 
 .qr-modal-cerrar:hover {
   transform: scale(1.2);
-  color: #E15D0A;
+  color: #ff7f3f;
 }
 
 .qr-about-screen {
@@ -1660,13 +1663,16 @@ body {
   flex-direction: column;
 }
 
-.qr-about-titulo {
-  color: #000000;
+.qr-about-titulo-grande {
+  color: #E15D0A;
   margin: 0;
-  font-size: 26px;
-  font-weight: 700;
-  padding: 24px 28px 16px 28px;
-  border-bottom: 2px solid rgba(225, 93, 10, 0.2);
+  font-size: 48px;
+  font-weight: 900;
+  padding: 28px 28px 12px 28px;
+  border-bottom: 3px solid #E15D0A;
+  font-family: 'League Spartan', Arial, sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .qr-about-content {
@@ -1680,21 +1686,21 @@ body {
 }
 
 .qr-about-content::-webkit-scrollbar-track {
-  background: rgba(163, 163, 163, 0.1);
+  background: rgba(225, 93, 10, 0.1);
   border-radius: 10px;
 }
 
 .qr-about-content::-webkit-scrollbar-thumb {
-  background: rgba(163, 163, 163, 0.3);
+  background: rgba(225, 93, 10, 0.4);
   border-radius: 10px;
 }
 
 .qr-about-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(163, 163, 163, 0.5);
+  background: rgba(225, 93, 10, 0.6);
 }
 
 .qr-about-content p {
-  color: #000000;
+  color: #EFECE5;
   margin: 0 0 16px 0;
   font-size: 14px;
   line-height: 1.7;
@@ -1711,41 +1717,48 @@ body {
 }
 
 .qr-about-paso {
-  background: rgba(225, 93, 10, 0.1);
-  border: 1px solid rgba(225, 93, 10, 0.2);
-  border-radius: 10px;
+  background: rgba(225, 93, 10, 0.15);
+  border: 2px solid rgba(225, 93, 10, 0.3);
+  border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
   position: relative;
   padding-left: 60px;
+  transition: all 0.3s ease;
+}
+
+.qr-about-paso:hover {
+  background: rgba(225, 93, 10, 0.2);
+  border-color: rgba(225, 93, 10, 0.5);
 }
 
 .qr-paso-numero {
   position: absolute;
-  left: 16px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, #E15D0A, #ff7f3f);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 900;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(225, 93, 10, 0.4);
 }
 
 .qr-about-paso h3 {
   color: #E15D0A;
   margin: 0 0 8px 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .qr-about-paso p {
-  color: #000000;
+  color: #EFECE5;
   margin: 0 0 8px 0;
   font-size: 13px;
   line-height: 1.6;
@@ -1756,9 +1769,9 @@ body {
 }
 
 .qr-about-beneficios {
-  background: rgba(225, 93, 10, 0.1);
-  border: 2px solid rgba(225, 93, 10, 0.3);
-  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(225, 93, 10, 0.2), rgba(225, 93, 10, 0.1));
+  border: 2px solid #E15D0A;
+  border-radius: 12px;
   padding: 16px;
   margin-top: 16px;
 }
@@ -1766,7 +1779,7 @@ body {
 .qr-about-beneficios h3 {
   color: #E15D0A;
   margin: 0 0 12px 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -1777,7 +1790,7 @@ body {
 }
 
 .qr-about-beneficios li {
-  color: #000000;
+  color: #EFECE5;
   font-size: 13px;
   line-height: 1.6;
   margin-bottom: 8px;
@@ -1791,8 +1804,8 @@ body {
   display: flex;
   gap: 12px;
   padding: 16px 28px;
-  border-top: 1px solid rgba(225, 93, 10, 0.1);
-  background: rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #E15D0A;
+  background: rgba(225, 93, 10, 0.1);
 }
 
 .qr-about-botones .qr-btn-wizard {
@@ -1804,9 +1817,9 @@ body {
     max-width: 95%;
   }
 
-  .qr-about-titulo {
-    font-size: 22px;
-    padding: 20px 16px 12px 16px;
+  .qr-about-titulo-grande {
+    font-size: 36px;
+    padding: 20px 16px 10px 16px;
   }
 
   .qr-about-content {
@@ -1823,9 +1836,9 @@ body {
   }
 
   .qr-paso-numero {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
   }
 }
 
