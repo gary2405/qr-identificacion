@@ -250,14 +250,19 @@ function cargarDelStorage() {
 const introImagen = document.getElementById("introImagen");
 const tieneDataGuardada = sessionStorage.getItem(STORAGE_KEY);
 
-// Si hay datos guardados, ocultar intro inmediatamente
+// Si hay datos guardados, ocultar intro inmediatamente y mostrar about
 if (tieneDataGuardada) {
   introImagen.classList.add("qr-oculto");
+  // Pequeño delay para que se vea bien la transición
+  setTimeout(() => {
+    mostrarModalAboutUs();
+  }, 300);
 } else {
-  // Si no, mostrar intro por 3 segundos
+  // Si no, mostrar intro por 4 segundos y luego about
   setTimeout(() => {
     introImagen.classList.add("qr-oculto");
-  }, 3000);
+    mostrarModalAboutUs();
+  }, 4000);
 }
 
 const qrRef = ref(db, "qrs/" + qrId);
@@ -795,14 +800,13 @@ function cargarDatos() {
           window.location.href = `ver.html?id=${qrId}`;
         } else {
           console.log("QR no existe, mostrando wizard vacío para crear");
-          mostrarWizard();
+          // NO mostrar about aquí, ya se mostró en intro imagen
         }
       }
     })
     .catch(error => {
       console.error("Error Firebase:", error);
       ocultarCarga();
-      mostrarWizard();
     });
 }
 
