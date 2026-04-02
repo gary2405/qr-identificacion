@@ -35,8 +35,9 @@
     contenedor.innerHTML = "";
 
     const id = generarID();
-    const url =
-      `https://gary2405.github.io/qr-identificacion/index.html?id=${id}`;
+
+    // 🔥 CAMBIO IMPORTANTE AQUÍ
+    const url = window.location.origin + "/index.html?id=" + id;
 
     new QRCode(contenedor, {
       text: url,
@@ -57,5 +58,4 @@
 
 </body>
 </html>
-
 
