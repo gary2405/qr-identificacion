@@ -134,6 +134,8 @@ function guardarEnStorage() {
 
 function mostrarLoginPin() {
   document.body.innerHTML = `
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+
     <style>
       body {
         margin: 0;
@@ -151,17 +153,27 @@ function mostrarLoginPin() {
         align-items: center;
       }
 
-      /* TEXTO QRAFID DE FONDO */
+      /* TEXTO DE FONDO */
       .marca-fondo {
         position: absolute;
-        font-size: 120px;
+        font-size: 100px;
         color: rgba(255,255,255,0.03);
-        font-weight: bold;
+        font-family: 'Zen Dots', sans-serif;
         letter-spacing: 10px;
         user-select: none;
       }
 
-      /* CARD GLASS */
+      .logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #FFFFFF;
+        font-family: 'Zen Dots', sans-serif;
+        font-size: 14px;
+        opacity: 0.6;
+        letter-spacing: 2px;
+      }
+
       .card {
         position: relative;
         z-index: 2;
@@ -173,12 +185,24 @@ function mostrarLoginPin() {
         text-align: center;
         box-shadow: 0 0 40px rgba(0,0,0,0.6);
         border: 1px solid rgba(255,255,255,0.08);
+        animation: aparecer 0.6s ease;
+      }
+
+      @keyframes aparecer {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .titulo {
         color: #FFFFFF;
         margin-bottom: 20px;
-        font-size: 20px;
+        font-size: 18px;
       }
 
       .input {
@@ -215,35 +239,22 @@ function mostrarLoginPin() {
         box-shadow: 0 0 15px #D67347;
       }
 
-      .logo {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        color: #FFFFFF;
-        font-size: 14px;
-        opacity: 0.6;
-        letter-spacing: 2px;
-      }
-
     </style>
 
     <div class="fondo">
-
       <div class="marca-fondo">QRAFID</div>
-
       <div class="logo">QRAFID</div>
 
       <div class="card">
-        <div class="titulo">Acceder a tu perfil</div>
+        <div class="titulo">Acceder con PIN</div>
 
         <input id="pinInput" class="input" type="password" placeholder="Ingresa tu PIN">
 
         <button class="btn" onclick="buscarPorPin()">Entrar</button>
       </div>
-
     </div>
   `;
-} 
+}
 
 window.buscarPorPin = async function () {
   const pin = document.getElementById("pinInput").value.trim();
@@ -262,7 +273,6 @@ window.buscarPorPin = async function () {
     }
 
     const data = snapshot.val();
-
     let encontrado = null;
 
     for (const key in data) {
@@ -283,7 +293,6 @@ window.buscarPorPin = async function () {
     alert("Error buscando perfil");
   }
 };
-
 function cargarDelStorage() {
   const datos = sessionStorage.getItem(STORAGE_KEY);
   if (!datos) {
