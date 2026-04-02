@@ -70,62 +70,6 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
-// ========== MODAL ABOUT US ==========
-
-const modalAboutUs = document.getElementById("modalAboutUs");
-const aboutScreen1 = document.getElementById("aboutScreen1");
-const aboutScreen2 = document.getElementById("aboutScreen2");
-const btnCerrarAbout = document.getElementById("btnCerrarAbout");
-const btnAtrasAbout = document.getElementById("btnAtrasAbout");
-const btnOmitirAbout = document.getElementById("btnOmitirAbout");
-const btnSiguienteAbout = document.getElementById("btnSiguienteAbout");
-
-let aboutScreen = 1; // Pantalla actual del about
-
-function mostrarModalAboutUs() {
-  modalAboutUs.classList.remove("qr-oculto");
-  aboutScreen = 1;
-  actualizarPantallasAbout();
-}
-
-function cerrarModalAboutUs() {
-  modalAboutUs.classList.add("qr-oculto");
-  mostrarWizard();
-}
-
-function actualizarPantallasAbout() {
-  if (aboutScreen === 1) {
-    aboutScreen1.classList.add("qr-about-activo");
-    aboutScreen2.classList.remove("qr-about-activo");
-    btnAtrasAbout.classList.add("qr-oculto");
-    btnSiguienteAbout.classList.remove("qr-oculto");
-    btnOmitirAbout.textContent = "Cerrar";
-  } else {
-    aboutScreen1.classList.remove("qr-about-activo");
-    aboutScreen2.classList.add("qr-about-activo");
-    btnAtrasAbout.classList.remove("qr-oculto");
-    btnSiguienteAbout.classList.add("qr-oculto");
-    btnOmitirAbout.textContent = "Cerrar";
-  }
-}
-
-btnCerrarAbout.addEventListener("click", cerrarModalAboutUs);
-btnOmitirAbout.addEventListener("click", cerrarModalAboutUs);
-
-btnSiguienteAbout.addEventListener("click", () => {
-  if (aboutScreen === 1) {
-    aboutScreen = 2;
-    actualizarPantallasAbout();
-  }
-});
-
-btnAtrasAbout.addEventListener("click", () => {
-  if (aboutScreen === 2) {
-    aboutScreen = 1;
-    actualizarPantallasAbout();
-  }
-});
-
 // ========== SESSIONSTORGE PARA GUARDAR ESTADO ==========
 
 const STORAGE_KEY = `qrafid_${qrId}`;
@@ -169,19 +113,16 @@ function guardarEnStorage() {
     wizardMostrado: !wizardContainer.classList.contains("qr-oculto")
   };
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
-  console.log("✓ Datos guardados en sesión:", datos);
 }
 
 function cargarDelStorage() {
   const datos = sessionStorage.getItem(STORAGE_KEY);
   if (!datos) {
-    console.log("No hay datos en sesión");
     return false;
   }
 
   try {
     const obj = JSON.parse(datos);
-    console.log("✓ Cargando datos de sesión:", obj);
     
     pasoActual = obj.paso || 1;
     tipoPerfilSeleccionado = obj.tipo || "";
@@ -225,7 +166,6 @@ function cargarDelStorage() {
 
     if (tipoPerfilSeleccionado) {
       aplicarSecciones();
-      // Marcar el tipo seleccionado
       document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
         if (btn.getAttribute("data-tipo") === tipoPerfilSeleccionado) {
           btn.classList.add("qr-opcion-seleccionada");
@@ -233,7 +173,6 @@ function cargarDelStorage() {
       });
     }
 
-    // Actualizar contador de mensajes si es necesario
     if (fMensaje.value) {
       msjCount.textContent = `${fMensaje.value.length}/300 caracteres`;
     }
@@ -250,19 +189,12 @@ function cargarDelStorage() {
 const introImagen = document.getElementById("introImagen");
 const tieneDataGuardada = sessionStorage.getItem(STORAGE_KEY);
 
-// Si hay datos guardados, ocultar intro inmediatamente y mostrar about
 if (tieneDataGuardada) {
   introImagen.classList.add("qr-oculto");
-  // Pequeño delay para que se vea bien la transición
-  setTimeout(() => {
-    mostrarModalAboutUs();
-  }, 300);
 } else {
-  // Si no, mostrar intro por 4 segundos y luego about
   setTimeout(() => {
     introImagen.classList.add("qr-oculto");
-    mostrarModalAboutUs();
-  }, 5000);
+  }, 4000);
 }
 
 const qrRef = ref(db, "qrs/" + qrId);
@@ -294,7 +226,6 @@ function actualizarIndices() {
   progressBar.style.width = porcentaje + "%";
   mostrarPaso(pasoActual);
   
-  // Guardar en storage cada vez que se actualiza
   guardarEnStorage();
   
   window.scrollTo(0, 0);
@@ -603,7 +534,6 @@ window.guardarPerfil = async function() {
       localStorage.setItem("owner_" + qrId, "true");
     }
 
-    // Limpiar sesión al guardar
     sessionStorage.removeItem(STORAGE_KEY);
 
     setTimeout(() => {
@@ -719,14 +649,11 @@ if (btnConfigurar) {
 function cargarDatos() {
   ocultarCarga();
 
-  // PRIMERO: Verificar si hay datos guardados en sesión
   if (cargarDelStorage()) {
-    console.log("✓ Datos de sesión encontrados, mostrando wizard en paso", pasoActual);
     mostrarWizard();
-    return; // IMPORTANTE: terminar aquí si hay datos en sesión
+    return;
   }
 
-  // SI NO HAY DATOS EN SESIÓN, verificar Firebase
   get(qrRef)
     .then(snapshot => {
       const existe = snapshot.exists();
@@ -736,19 +663,15 @@ function cargarDatos() {
         const esDueno = localStorage.getItem("owner_" + qrId) === "true";
         
         if (!existe) {
-          console.log("Modo edición: QR no existe, mostrando wizard vacío");
           mostrarWizard();
           return;
         }
 
         if (!esDueno) {
-          console.log("No eres el dueño, redirigiendo a ver.html");
           window.location.href = `ver.html?id=${qrId}`;
           return;
         }
 
-        // Cargar datos de Firebase en modo edición
-        console.log("Modo edición: Cargando datos de Firebase");
         tipoPerfilSeleccionado = data.tipoPerfil;
         fNombre.value = data.nombre || "";
         fEdad.value = data.edad || "";
@@ -794,21 +717,18 @@ function cargarDatos() {
         aplicarSecciones();
         mostrarWizard();
       } else {
-        // No es modo edición
         if (existe) {
-          console.log("QR existe, redirigiendo a ver.html");
           window.location.href = `ver.html?id=${qrId}`;
         } else {
-          console.log("QR no existe, mostrando wizard vacío para crear");
-          // NO mostrar about aquí, ya se mostró en intro imagen
+          mostrarWizard();
         }
       }
     })
     .catch(error => {
       console.error("Error Firebase:", error);
       ocultarCarga();
+      mostrarWizard();
     });
 }
 
-// INICIAR LA APLICACIÓN
 cargarDatos();
