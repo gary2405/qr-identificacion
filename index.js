@@ -6,8 +6,8 @@ const qrId = params.get("id");
 const editMode = params.get("edit") === "1";
 
 if (!qrId) {
-  document.body.innerHTML = "<h2>❌ QR inválido</h2>";
-  throw new Error("QR inválido");
+  mostrarLoginPin();
+  throw new Error("Modo acceso por PIN");
 }
 
 let pasoActual = 1;
@@ -130,6 +130,159 @@ function guardarEnStorage() {
   };
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
 }
+
+
+function mostrarLoginPin() {
+  document.body.innerHTML = `
+    <style>
+      body {
+        margin: 0;
+        background: #000000;
+        font-family: 'Segoe UI', sans-serif;
+        overflow: hidden;
+      }
+
+      .fondo {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* TEXTO QRAFID DE FONDO */
+      .marca-fondo {
+        position: absolute;
+        font-size: 120px;
+        color: rgba(255,255,255,0.03);
+        font-weight: bold;
+        letter-spacing: 10px;
+        user-select: none;
+      }
+
+      /* CARD GLASS */
+      .card {
+        position: relative;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 30px;
+        width: 280px;
+        text-align: center;
+        box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .titulo {
+        color: #FFFFFF;
+        margin-bottom: 20px;
+        font-size: 20px;
+      }
+
+      .input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        background: rgba(255,255,255,0.08);
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 15px;
+      }
+
+      .input::placeholder {
+        color: rgba(255,255,255,0.5);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #D67347;
+        color: #FFFFFF;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px #D67347;
+      }
+
+      .logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #FFFFFF;
+        font-size: 14px;
+        opacity: 0.6;
+        letter-spacing: 2px;
+      }
+
+    </style>
+
+    <div class="fondo">
+
+      <div class="marca-fondo">QRAFID</div>
+
+      <div class="logo">QRAFID</div>
+
+      <div class="card">
+        <div class="titulo">Acceder a tu perfil</div>
+
+        <input id="pinInput" class="input" type="password" placeholder="Ingresa tu PIN">
+
+        <button class="btn" onclick="buscarPorPin()">Entrar</button>
+      </div>
+
+    </div>
+  `;
+} 
+
+window.buscarPorPin = async function () {
+  const pin = document.getElementById("pinInput").value.trim();
+
+  if (!pin) {
+    alert("Ingresa tu PIN");
+    return;
+  }
+
+  try {
+    const snapshot = await get(ref(db, "qrs"));
+    
+    if (!snapshot.exists()) {
+      alert("No hay datos");
+      return;
+    }
+
+    const data = snapshot.val();
+
+    let encontrado = null;
+
+    for (const key in data) {
+      if (data[key].ownerPin === pin) {
+        encontrado = key;
+        break;
+      }
+    }
+
+    if (encontrado) {
+      window.location.href = `ver.html?id=${encontrado}`;
+    } else {
+      alert("PIN incorrecto");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Error buscando perfil");
+  }
+};
 
 function cargarDelStorage() {
   const datos = sessionStorage.getItem(STORAGE_KEY);
@@ -480,7 +633,7 @@ window.guardarPerfil = async function() {
   try {
     const btnGuardar = document.getElementById("btnGuardar");
     btnGuardar.disabled = true;
-    btnGuardar.textContent = "⏳ Guardando...";
+    btnGuardar.textContent = "Guardando...";
 
     guardarDatosDelPasoActual();
 
