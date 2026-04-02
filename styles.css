@@ -1629,255 +1629,184 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 9999;
+  padding: 20px;
 }
 
 .qr-modal-fullscreen.qr-oculto {
   display: none !important;
 }
 
-.qr-modal-center {
+.qr-modal-card {
   width: 100%;
+  max-width: 750px;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.qr-modal-about-card {
-  width: 100%;
-  max-width: 800px;
-  height: 90vh;
-  max-height: 800px;
+  max-height: 90vh;
   background: #000000;
-  border-radius: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(214, 115, 71, 0.2);
   display: flex;
   flex-direction: column;
-  position: relative;
   overflow: hidden;
+  box-shadow: 0 0 50px rgba(214, 115, 71, 0.2);
+  animation: slideUp 0.5s ease-out;
 }
 
-.qr-about-screen-full {
-  display: none;
+.qr-modal-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 50px 50px 100px 50px;
+  position: relative;
+}
+
+.qr-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 60px 40px 80px 40px;
-  height: 100%;
-  animation: fadeInScale 0.5s ease-out;
+  text-align: center;
 }
 
-.qr-about-activo-full {
-  display: flex !important;
+.qr-modal-body::-webkit-scrollbar {
+  width: 8px;
 }
 
-.qr-about-titulo-full {
+.qr-modal-body::-webkit-scrollbar-track {
+  background: rgba(214, 115, 71, 0.1);
+  border-radius: 10px;
+}
+
+.qr-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(214, 115, 71, 0.5);
+  border-radius: 10px;
+}
+
+.qr-modal-titulo {
   font-family: 'Zen Dots', cursive;
   background: linear-gradient(135deg, #D67347 0%, #E8905C 50%, #D67347 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin: 0 0 30px 0;
-  font-size: 140px;
+  margin: 0 0 40px 0;
+  font-size: 110px;
   font-weight: 900;
-  letter-spacing: 6px;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  text-align: center;
-  filter: drop-shadow(0 0 30px rgba(214, 115, 71, 0.4));
+  filter: drop-shadow(0 0 20px rgba(214, 115, 71, 0.3));
   line-height: 1;
 }
 
-.qr-about-content-full {
-  flex: 1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto;
-  text-align: center;
-}
-
-.qr-about-content-full::-webkit-scrollbar {
-  width: 6px;
-}
-
-.qr-about-content-full::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.qr-about-content-full::-webkit-scrollbar-thumb {
-  background: rgba(214, 115, 71, 0.5);
-  border-radius: 3px;
-}
-
-.qr-about-content-full p {
+.qr-modal-text {
   color: #EFECE5;
-  margin: 0 0 20px 0;
   font-size: 15px;
-  line-height: 1.7;
-  max-width: 600px;
+  line-height: 1.8;
+  max-width: 650px;
 }
 
-.qr-about-content-full p:last-of-type {
+.qr-modal-text p {
+  margin: 0 0 20px 0;
+  text-align: justify;
+}
+
+.qr-modal-text p:last-child {
   margin-bottom: 0;
 }
 
-.qr-about-content-full strong {
+.qr-modal-text strong {
   color: #D67347;
-  font-weight: 600;
-}
-
-.qr-about-pasos-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 30px;
-}
-
-.qr-about-paso-full {
-  background: linear-gradient(135deg, rgba(214, 115, 71, 0.1) 0%, rgba(214, 115, 71, 0.05) 100%);
-  border: 1px solid rgba(214, 115, 71, 0.2);
-  border-radius: 12px;
-  padding: 20px 15px;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.qr-about-paso-full:hover {
-  background: linear-gradient(135deg, rgba(214, 115, 71, 0.15) 0%, rgba(214, 115, 71, 0.08) 100%);
-  border-color: rgba(214, 115, 71, 0.4);
-}
-
-.qr-paso-numero-full {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #D67347, #E8905C);
-  color: #EFECE5;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 18px;
-  margin: 0 auto 12px auto;
-  box-shadow: 0 0 15px rgba(214, 115, 71, 0.4);
-}
-
-.qr-about-paso-full h3 {
-  color: #D67347;
-  margin: 0 0 8px 0;
-  font-size: 15px;
   font-weight: 700;
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 16px;
 }
 
-.qr-about-paso-full p {
-  color: #EFECE5;
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.qr-about-beneficios-full {
-  width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.qr-about-beneficios-full h3 {
-  color: #D67347;
-  margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-.qr-about-pagination {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 30px;
-}
-
-.qr-pagination-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(214, 115, 71, 0.3);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.qr-pagination-dot:hover {
-  background: rgba(214, 115, 71, 0.5);
-}
-
-.qr-pagination-active {
-  background: #D67347 !important;
-  box-shadow: 0 0 12px rgba(214, 115, 71, 0.6);
-}
-
-.qr-about-btn-cerrar {
+.qr-modal-btn-cerrar {
   position: absolute;
-  bottom: 24px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, #D67347, #E8905C);
-  color: #EFECE5;
-  border: none;
-  padding: 12px 40px;
+  background: transparent;
+  color: #D67347;
+  border: 2px solid #D67347;
+  padding: 12px 50px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 0 20px rgba(214, 115, 71, 0.4);
   letter-spacing: 1px;
+  text-transform: capitalize;
 }
 
-.qr-about-btn-cerrar:hover {
-  transform: translateX(-50%) scale(1.05);
-  box-shadow: 0 0 30px rgba(214, 115, 71, 0.6);
+.qr-modal-btn-cerrar:hover {
+  background: #D67347;
+  color: #000000;
+  box-shadow: 0 0 20px rgba(214, 115, 71, 0.4);
 }
 
-.qr-about-btn-cerrar:active {
+.qr-modal-btn-cerrar:active {
   transform: translateX(-50%) scale(0.98);
 }
 
-@keyframes fadeInScale {
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 
 @media (max-width: 768px) {
-  .qr-about-titulo-full {
-    font-size: 100px;
-    margin-bottom: 20px;
+  .qr-modal-inner {
+    padding: 40px 30px 90px 30px;
   }
 
-  .qr-about-content-full p {
+  .qr-modal-titulo {
+    font-size: 80px;
+    margin-bottom: 30px;
+  }
+
+  .qr-modal-text {
     font-size: 14px;
-    margin-bottom: 16px;
   }
 
-  .qr-about-pasos-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .qr-modal-text strong {
+    font-size: 15px;
+  }
+
+  .qr-modal-btn-cerrar {
+    padding: 10px 40px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-modal-card {
+    max-height: 95vh;
+  }
+
+  .qr-modal-inner {
+    padding: 30px 20px 80px 20px;
+  }
+
+  .qr-modal-titulo {
+    font-size: 60px;
     margin-bottom: 20px;
   }
 
-  .qr-modal-about-card {
-    padding-bottom: 80px;
+  .qr-modal-text {
+    font-size: 13px;
+  }
+
+  .qr-modal-btn-cerrar {
+    padding: 10px 30px;
+    font-size: 13px;
+    bottom: 20px;
   }
 }
 

@@ -17,77 +17,36 @@
     <img src="./imagenintro.jpeg" alt="Bienvenido a Qrafid" class="intro-imagen">
   </div>
 
-  <!-- MODAL ABOUT US / TUTORIAL -->
+  <!-- MODAL ABOUT US FULLSCREEN -->
   <div id="modalAboutUs" class="qr-modal-fullscreen qr-oculto">
-    <div class="qr-modal-center">
-      <div class="qr-modal-about-card">
+    <div class="qr-modal-card">
+      <div class="qr-modal-inner">
         
-        <!-- PANTALLA 1: QUÉ ES QRAFID -->
-        <div id="aboutScreen1" class="qr-about-screen-full qr-about-activo-full">
-          <h2 class="qr-about-titulo-full">QRAFID</h2>
+        <!-- CONTENIDO -->
+        <div class="qr-modal-body">
+          <h1 class="qr-modal-titulo">QRAFID</h1>
           
-          <div class="qr-about-content-full">
-            <p>QRAFID es un sistema de identificación personal digital que funciona a través de objetos con códigos QR, como pulseras, llaveros o collares de mascotas.</p>
+          <div class="qr-modal-text">
+            <p>QRAFID es un sistema de identificación personal digital que funciona a través de objetos con códigos QR, como pulseras, llaveros o collares de mascotas. Al escanear el código, la persona es dirigida a una página web donde se muestra información clave que permite identificar rápidamente a una persona, mascota u objeto perdido y contactar a su responsable.</p>
 
-            <p>Al escanear el código, la persona es dirigida a una página web donde se muestra información clave que permite identificar rápidamente a una persona, mascota u objeto perdido y <strong>contactar a su responsable.</strong></p>
+            <p>QRAFID está diseñado para niños, adultos mayores, mascotas y personas en situaciones de emergencia, donde una identificación rápida puede marcar la diferencia. Su objetivo es ayudar a encontrar personas o cosas perdidas de manera segura y eficiente.</p>
 
-            <p>QRAFID está diseñado para <strong>niños, adultos mayores, mascotas y personas en situaciones de emergencia,</strong> donde una identificación rápida puede marcar la diferencia.</p>
+            <p><strong>Cómo funciona QRAFID</strong></p>
+            
+            <p><strong>Paso 1: Escanea el QR</strong><br>Cada objeto (pulsera, llavero, sticker o collar de mascota) tiene un código QR único.</p>
 
-            <p>Su objetivo es <strong>ayudar a encontrar personas o cosas perdidas de manera segura y eficiente.</strong></p>
+            <p><strong>Paso 2: Registro o visualización</strong><br>Si es nuevo: aparecerá un formulario para que el dueño registre los datos. Si ya está configurado: se mostrarán los datos necesarios para identificar el objeto, persona o mascota.</p>
 
-            <div class="qr-about-pagination">
-              <span class="qr-pagination-dot qr-pagination-active" id="dot1"></span>
-              <span class="qr-pagination-dot" id="dot2"></span>
-            </div>
-          </div>
-        </div>
+            <p><strong>Paso 3: Actualiza o desactiva</strong><br>El dueño puede editar información, actualizar contactos o desactivar el QR en caso de pérdida.</p>
 
-        <!-- PANTALLA 2: CÓMO FUNCIONA QRAFID -->
-        <div id="aboutScreen2" class="qr-about-screen-full qr-oculto">
-          <h2 class="qr-about-titulo-full">Cómo Funciona</h2>
-          
-          <div class="qr-about-content-full">
-            <div class="qr-about-pasos-grid">
-              <div class="qr-about-paso-full">
-                <div class="qr-paso-numero-full">1</div>
-                <h3>Escanea el QR</h3>
-                <p>Cada objeto tiene un código QR único.</p>
-              </div>
+            <p><strong>Paso 4: Ayuda de terceros</strong><br>Cualquier persona que encuentre el objeto puede escanear el QR y obtener información clave para contactar al responsable sin ver datos privados.</p>
 
-              <div class="qr-about-paso-full">
-                <div class="qr-paso-numero-full">2</div>
-                <h3>Registro o Visualización</h3>
-                <p><strong>Si es nuevo:</strong> formulario para registrar datos. <strong>Si configurado:</strong> muestra datos del objeto o persona.</p>
-              </div>
-
-              <div class="qr-about-paso-full">
-                <div class="qr-paso-numero-full">3</div>
-                <h3>Actualiza o Desactiva</h3>
-                <p>Edita información, contactos o desactiva el QR en caso de pérdida.</p>
-              </div>
-
-              <div class="qr-about-paso-full">
-                <div class="qr-paso-numero-full">4</div>
-                <h3>Ayuda de Terceros</h3>
-                <p>Cualquier persona obtiene información para contactar al responsable de forma segura.</p>
-              </div>
-            </div>
-
-            <div class="qr-about-beneficios-full">
-              <h3>✓ Identificación rápida y segura</h3>
-              <h3>✓ Ideal para emergencias, hogares, escuelas</h3>
-              <h3>✓ Ayuda a encontrar personas y cosas perdidas</h3>
-            </div>
-
-            <div class="qr-about-pagination">
-              <span class="qr-pagination-dot" id="dot3"></span>
-              <span class="qr-pagination-dot qr-pagination-active" id="dot4"></span>
-            </div>
+            <p><strong>Beneficios:</strong><br>✓ Identificación rápida y segura.<br>✓ Ideal para emergencias, hogares, escuelas y espacios públicos.<br>✓ Facilita que cualquier persona pueda ayudar si encuentra al objeto, mascota o persona perdida.</p>
           </div>
         </div>
 
         <!-- BOTÓN CERRAR -->
-        <button class="qr-about-btn-cerrar" id="btnCerrarAboutFull">Cerrar</button>
+        <button class="qr-modal-btn-cerrar" id="btnCerrarAboutFull">Cerrar</button>
       </div>
     </div>
   </div>
