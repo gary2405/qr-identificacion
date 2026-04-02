@@ -70,6 +70,62 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
+// ========== MODAL ABOUT US ==========
+
+const modalAboutUs = document.getElementById("modalAboutUs");
+const aboutScreen1 = document.getElementById("aboutScreen1");
+const aboutScreen2 = document.getElementById("aboutScreen2");
+const btnCerrarAbout = document.getElementById("btnCerrarAbout");
+const btnAtrasAbout = document.getElementById("btnAtrasAbout");
+const btnOmitirAbout = document.getElementById("btnOmitirAbout");
+const btnSiguienteAbout = document.getElementById("btnSiguienteAbout");
+
+let aboutScreen = 1; // Pantalla actual del about
+
+function mostrarModalAboutUs() {
+  modalAboutUs.classList.remove("qr-oculto");
+  aboutScreen = 1;
+  actualizarPantallasAbout();
+}
+
+function cerrarModalAboutUs() {
+  modalAboutUs.classList.add("qr-oculto");
+  mostrarWizard();
+}
+
+function actualizarPantallasAbout() {
+  if (aboutScreen === 1) {
+    aboutScreen1.classList.add("qr-about-activo");
+    aboutScreen2.classList.remove("qr-about-activo");
+    btnAtrasAbout.classList.add("qr-oculto");
+    btnSiguienteAbout.classList.remove("qr-oculto");
+    btnOmitirAbout.textContent = "Cerrar";
+  } else {
+    aboutScreen1.classList.remove("qr-about-activo");
+    aboutScreen2.classList.add("qr-about-activo");
+    btnAtrasAbout.classList.remove("qr-oculto");
+    btnSiguienteAbout.classList.add("qr-oculto");
+    btnOmitirAbout.textContent = "Cerrar";
+  }
+}
+
+btnCerrarAbout.addEventListener("click", cerrarModalAboutUs);
+btnOmitirAbout.addEventListener("click", cerrarModalAboutUs);
+
+btnSiguienteAbout.addEventListener("click", () => {
+  if (aboutScreen === 1) {
+    aboutScreen = 2;
+    actualizarPantallasAbout();
+  }
+});
+
+btnAtrasAbout.addEventListener("click", () => {
+  if (aboutScreen === 2) {
+    aboutScreen = 1;
+    actualizarPantallasAbout();
+  }
+});
+
 // ========== SESSIONSTORGE PARA GUARDAR ESTADO ==========
 
 const STORAGE_KEY = `qrafid_${qrId}`;
