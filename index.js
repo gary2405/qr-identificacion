@@ -70,6 +70,53 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
+// ========== MODAL ABOUT US ==========
+
+const modalAboutUs = document.getElementById("modalAboutUs");
+const aboutScreen1 = document.getElementById("aboutScreen1");
+const aboutScreen2 = document.getElementById("aboutScreen2");
+const btnSiguienteAbout1 = document.getElementById("btnSiguienteAbout1");
+const btnCerrarAbout1 = document.getElementById("btnCerrarAbout1");
+const btnAtrasAbout2 = document.getElementById("btnAtrasAbout2");
+const btnCerrarAbout2 = document.getElementById("btnCerrarAbout2");
+
+let aboutScreen = 1;
+
+function mostrarModalAboutUs() {
+  modalAboutUs.classList.remove("qr-oculto");
+  aboutScreen = 1;
+  actualizarPantallasAbout();
+}
+
+function cerrarModalAboutUs() {
+  modalAboutUs.classList.add("qr-oculto");
+  mostrarWizard();
+}
+
+function actualizarPantallasAbout() {
+  if (aboutScreen === 1) {
+    aboutScreen1.classList.add("qr-about-activo");
+    aboutScreen2.classList.remove("qr-about-activo");
+  } else {
+    aboutScreen1.classList.remove("qr-about-activo");
+    aboutScreen2.classList.add("qr-about-activo");
+  }
+}
+
+btnSiguienteAbout1.addEventListener("click", () => {
+  aboutScreen = 2;
+  actualizarPantallasAbout();
+});
+
+btnCerrarAbout1.addEventListener("click", cerrarModalAboutUs);
+
+btnAtrasAbout2.addEventListener("click", () => {
+  aboutScreen = 1;
+  actualizarPantallasAbout();
+});
+
+btnCerrarAbout2.addEventListener("click", cerrarModalAboutUs);
+
 // ========== SESSIONSTORGE PARA GUARDAR ESTADO ==========
 
 const STORAGE_KEY = `qrafid_${qrId}`;
@@ -191,9 +238,13 @@ const tieneDataGuardada = sessionStorage.getItem(STORAGE_KEY);
 
 if (tieneDataGuardada) {
   introImagen.classList.add("qr-oculto");
+  setTimeout(() => {
+    mostrarModalAboutUs();
+  }, 300);
 } else {
   setTimeout(() => {
     introImagen.classList.add("qr-oculto");
+    mostrarModalAboutUs();
   }, 4000);
 }
 
