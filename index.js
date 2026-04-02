@@ -70,6 +70,59 @@ const fInstrucciones = document.getElementById("fInstrucciones");
 const fDuenoObjeto = document.getElementById("fDuenoObjeto");
 const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
 
+// ========== MODAL ABOUT US FULLSCREEN ==========
+
+const modalAboutUs = document.getElementById("modalAboutUs");
+const aboutScreen1 = document.getElementById("aboutScreen1");
+const aboutScreen2 = document.getElementById("aboutScreen2");
+const btnCerrarAboutFull = document.getElementById("btnCerrarAboutFull");
+
+let aboutScreenFull = 1;
+
+function mostrarModalAboutUs() {
+  modalAboutUs.classList.remove("qr-oculto");
+  aboutScreenFull = 1;
+  actualizarPantallasAboutFull();
+}
+
+function cerrarModalAboutUs() {
+  modalAboutUs.classList.add("qr-oculto");
+  mostrarWizard();
+}
+
+function actualizarPantallasAboutFull() {
+  if (aboutScreenFull === 1) {
+    aboutScreen1.classList.add("qr-about-activo-full");
+    aboutScreen2.classList.remove("qr-about-activo-full");
+    document.getElementById("dot1").classList.add("qr-pagination-active");
+    document.getElementById("dot2").classList.remove("qr-pagination-active");
+    document.getElementById("dot3").classList.remove("qr-pagination-active");
+    document.getElementById("dot4").classList.remove("qr-pagination-active");
+  } else {
+    aboutScreen1.classList.remove("qr-about-activo-full");
+    aboutScreen2.classList.add("qr-about-activo-full");
+    document.getElementById("dot1").classList.remove("qr-pagination-active");
+    document.getElementById("dot2").classList.remove("qr-pagination-active");
+    document.getElementById("dot3").classList.add("qr-pagination-active");
+    document.getElementById("dot4").classList.add("qr-pagination-active");
+  }
+}
+
+btnCerrarAboutFull.addEventListener("click", cerrarModalAboutUs);
+
+// Navegación con teclas
+document.addEventListener("keydown", (e) => {
+  if (!modalAboutUs.classList.contains("qr-oculto")) {
+    if (e.key === "ArrowRight" && aboutScreenFull === 1) {
+      aboutScreenFull = 2;
+      actualizarPantallasAboutFull();
+    } else if (e.key === "ArrowLeft" && aboutScreenFull === 2) {
+      aboutScreenFull = 1;
+      actualizarPantallasAboutFull();
+    }
+  }
+});
+
 // ========== SESSIONSTORGE PARA GUARDAR ESTADO ==========
 
 const STORAGE_KEY = `qrafid_${qrId}`;
@@ -191,9 +244,13 @@ const tieneDataGuardada = sessionStorage.getItem(STORAGE_KEY);
 
 if (tieneDataGuardada) {
   introImagen.classList.add("qr-oculto");
+  setTimeout(() => {
+    mostrarModalAboutUs();
+  }, 300);
 } else {
   setTimeout(() => {
     introImagen.classList.add("qr-oculto");
+    mostrarModalAboutUs();
   }, 4000);
 }
 

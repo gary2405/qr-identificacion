@@ -8,12 +8,88 @@
   <title>Identificación QR - Crear Perfil</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css?v=2.1">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
 </head>
 <body class="qr-body">
   
   <!-- INTRO IMAGEN - VISIBLE POR DEFECTO -->
   <div id="introImagen" class="intro-imagen-container">
     <img src="./imagenintro.jpeg" alt="Bienvenido a Qrafid" class="intro-imagen">
+  </div>
+
+  <!-- MODAL ABOUT US / TUTORIAL -->
+  <div id="modalAboutUs" class="qr-modal-fullscreen qr-oculto">
+    <div class="qr-modal-center">
+      <div class="qr-modal-about-card">
+        
+        <!-- PANTALLA 1: QUÉ ES QRAFID -->
+        <div id="aboutScreen1" class="qr-about-screen-full qr-about-activo-full">
+          <h2 class="qr-about-titulo-full">QRAFID</h2>
+          
+          <div class="qr-about-content-full">
+            <p>QRAFID es un sistema de identificación personal digital que funciona a través de objetos con códigos QR, como pulseras, llaveros o collares de mascotas.</p>
+
+            <p>Al escanear el código, la persona es dirigida a una página web donde se muestra información clave que permite identificar rápidamente a una persona, mascota u objeto perdido y <strong>contactar a su responsable.</strong></p>
+
+            <p>QRAFID está diseñado para <strong>niños, adultos mayores, mascotas y personas en situaciones de emergencia,</strong> donde una identificación rápida puede marcar la diferencia.</p>
+
+            <p>Su objetivo es <strong>ayudar a encontrar personas o cosas perdidas de manera segura y eficiente.</strong></p>
+
+            <div class="qr-about-pagination">
+              <span class="qr-pagination-dot qr-pagination-active" id="dot1"></span>
+              <span class="qr-pagination-dot" id="dot2"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANTALLA 2: CÓMO FUNCIONA QRAFID -->
+        <div id="aboutScreen2" class="qr-about-screen-full qr-oculto">
+          <h2 class="qr-about-titulo-full">Cómo Funciona</h2>
+          
+          <div class="qr-about-content-full">
+            <div class="qr-about-pasos-grid">
+              <div class="qr-about-paso-full">
+                <div class="qr-paso-numero-full">1</div>
+                <h3>Escanea el QR</h3>
+                <p>Cada objeto tiene un código QR único.</p>
+              </div>
+
+              <div class="qr-about-paso-full">
+                <div class="qr-paso-numero-full">2</div>
+                <h3>Registro o Visualización</h3>
+                <p><strong>Si es nuevo:</strong> formulario para registrar datos. <strong>Si configurado:</strong> muestra datos del objeto o persona.</p>
+              </div>
+
+              <div class="qr-about-paso-full">
+                <div class="qr-paso-numero-full">3</div>
+                <h3>Actualiza o Desactiva</h3>
+                <p>Edita información, contactos o desactiva el QR en caso de pérdida.</p>
+              </div>
+
+              <div class="qr-about-paso-full">
+                <div class="qr-paso-numero-full">4</div>
+                <h3>Ayuda de Terceros</h3>
+                <p>Cualquier persona obtiene información para contactar al responsable de forma segura.</p>
+              </div>
+            </div>
+
+            <div class="qr-about-beneficios-full">
+              <h3>✓ Identificación rápida y segura</h3>
+              <h3>✓ Ideal para emergencias, hogares, escuelas</h3>
+              <h3>✓ Ayuda a encontrar personas y cosas perdidas</h3>
+            </div>
+
+            <div class="qr-about-pagination">
+              <span class="qr-pagination-dot" id="dot3"></span>
+              <span class="qr-pagination-dot qr-pagination-active" id="dot4"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTÓN CERRAR -->
+        <button class="qr-about-btn-cerrar" id="btnCerrarAboutFull">Cerrar</button>
+      </div>
+    </div>
   </div>
 
   <!-- PANTALLA DE CARGANDO - OCULTA POR DEFECTO -->
