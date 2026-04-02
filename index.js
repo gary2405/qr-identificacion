@@ -182,11 +182,15 @@ function cargarDelStorage() {
 
     if (tipoPerfilSeleccionado) {
       aplicarSecciones();
-      document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
-        if (btn.getAttribute("data-tipo") === tipoPerfilSeleccionado) {
-          btn.classList.add("qr-opcion-seleccionada");
-        }
-      });
+      // Marcar el tipo seleccionado DESPUÉS de cargar del storage
+      setTimeout(() => {
+        document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
+          btn.classList.remove("qr-opcion-seleccionada");
+          if (btn.getAttribute("data-tipo") === tipoPerfilSeleccionado) {
+            btn.classList.add("qr-opcion-seleccionada");
+          }
+        });
+      }, 0);
     }
 
     if (fMensaje.value) {
@@ -568,19 +572,32 @@ window.guardarPerfil = async function() {
   }
 };
 
+// ========== EVENT LISTENERS - BOTONES TIPO PERFIL ==========
+
 document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
-  btn.addEventListener("click", function() {
-    const tipoSeleccionado = this.getAttribute("data-tipo");
-    tipoPerfilSeleccionado = tipoSeleccionado;
-    datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
-    aplicarSecciones();
+  btn.addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Remover TODAS las selecciones primero
     document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(b => {
       b.classList.remove("qr-opcion-seleccionada");
     });
+    
+    // Marcar SOLO el actual
     this.classList.add("qr-opcion-seleccionada");
+    
+    // Actualizar variables
+    tipoPerfilSeleccionado = this.getAttribute("data-tipo");
+    datosFormulario.tipoPerfil = tipoPerfilSeleccionado;
+    
+    // Aplicar secciones y guardar
+    aplicarSecciones();
     guardarEnStorage();
   });
 });
+
+// ========== EVENT LISTENERS - FOTO ==========
 
 if (fFoto) {
   fFoto.addEventListener("change", async () => {
@@ -599,11 +616,15 @@ if (fFoto) {
   });
 }
 
+// ========== EVENT LISTENERS - MENSAJE ==========
+
 if (fMensaje) {
   fMensaje.addEventListener("input", () => {
     msjCount.textContent = `${fMensaje.value.length}/300 caracteres`;
   });
 }
+
+// ========== EVENT LISTENERS - PIN ==========
 
 if (fPinConfirmar) {
   fPinConfirmar.addEventListener("input", () => {
@@ -618,6 +639,8 @@ if (fPinConfirmar) {
     }
   });
 }
+
+// ========== EVENT LISTENERS - GPS ==========
 
 if (btnObtenerGPS) {
   btnObtenerGPS.addEventListener("click", (e) => {
@@ -660,11 +683,15 @@ if (btnObtenerGPS) {
   });
 }
 
+// ========== EVENT LISTENERS - CONFIGURAR ==========
+
 if (btnConfigurar) {
   btnConfigurar.addEventListener("click", () => {
     mostrarWizard();
   });
 }
+
+// ========== CARGAR DATOS ==========
 
 function cargarDatos() {
   ocultarCarga();
@@ -735,6 +762,15 @@ function cargarDatos() {
         }
         
         aplicarSecciones();
+        // Marcar el tipo DESPUÉS de aplicar secciones
+        setTimeout(() => {
+          document.querySelectorAll(".qr-opcion-btn[data-tipo]").forEach(btn => {
+            btn.classList.remove("qr-opcion-seleccionada");
+            if (btn.getAttribute("data-tipo") === tipoPerfilSeleccionado) {
+              btn.classList.add("qr-opcion-seleccionada");
+            }
+          });
+        }, 0);
         mostrarWizard();
       } else {
         if (existe) {
