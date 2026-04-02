@@ -262,7 +262,7 @@ if (tieneDataGuardada) {
   setTimeout(() => {
     introImagen.classList.add("qr-oculto");
     mostrarModalAboutUs();
-  }, 4000);
+  }, 5000);
 }
 
 const qrRef = ref(db, "qrs/" + qrId);
