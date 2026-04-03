@@ -7,130 +7,9 @@ const editMode = params.get("edit") === "1";
 
 if (!qrId) {
   mostrarLoginPin();
-  throw new Error("Modo acceso por PIN");
+} else {
+  iniciarApp();
 }
-
-let pasoActual = 1;
-const pasosTotales = 6;
-let tipoPerfilSeleccionado = "";
-const datosFormulario = {};
-
-const mapeoTipos = {
-  persona: "Persona",
-  nino: "Niño",
-  adultomayor: "Adulto Mayor",
-  mascota: "Mascota",
-  objeto: "Objeto"
-};
-
-const pantallaCarga = document.getElementById("pantallaCarga");
-const wizardContainer = document.getElementById("wizardContainer");
-const modalNoConfig = document.getElementById("modalNoConfig");
-const btnConfigurar = document.getElementById("btnConfigurar");
-const stepIndicator = document.getElementById("stepIndicator");
-const progressBar = document.getElementById("progressBar");
-
-const fNombre = document.getElementById("fNombre");
-const fEdad = document.getElementById("fEdad");
-const fContacto = document.getElementById("fContacto");
-const fContacto2 = document.getElementById("fContacto2");
-const fDireccion = document.getElementById("fDireccion");
-const fMensaje = document.getElementById("fMensaje");
-const fPin = document.getElementById("fPin");
-const fPinConfirmar = document.getElementById("fPinConfirmar");
-const fFoto = document.getElementById("fFoto");
-const previewFoto = document.getElementById("previewFoto");
-const btnObtenerGPS = document.getElementById("btnObtenerGPS");
-const textoGPS = document.getElementById("textoGPS");
-const fLatitud = document.getElementById("fLatitud");
-const fLongitud = document.getElementById("fLongitud");
-const msjCount = document.getElementById("msjCount");
-const pinMatch = document.getElementById("pinMatch");
-
-const fEstatura = document.getElementById("fEstatura");
-const fPadres = document.getElementById("fPadres");
-const fSangre = document.getElementById("fSangre");
-const fPadecimientos = document.getElementById("fPadecimientos");
-const fAlergias = document.getElementById("fAlergias");
-const fSangreNino = document.getElementById("fSangreNino");
-const fPadecimientosNino = document.getElementById("fPadecimientosNino");
-const fAlergiasNino = document.getElementById("fAlergiasNino");
-const fSangreAdulto = document.getElementById("fSangreAdulto");
-const fPadecimientosAdulto = document.getElementById("fPadecimientosAdulto");
-const fAlergiasAdulto = document.getElementById("fAlergiasAdulto");
-const fCuidador = document.getElementById("fCuidador");
-const fEspecie = document.getElementById("fEspecie");
-const fRaza = document.getElementById("fRaza");
-const fColor = document.getElementById("fColor");
-const fDuenoMascota = document.getElementById("fDuenoMascota");
-const fCaracteristicasMascota = document.getElementById("fCaracteristicasMascota");
-const fDescripcion = document.getElementById("fDescripcion");
-const fValor = document.getElementById("fValor");
-const fInstrucciones = document.getElementById("fInstrucciones");
-const fDuenoObjeto = document.getElementById("fDuenoObjeto");
-const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
-
-// ========== MODAL ABOUT US ==========
-
-const modalAboutUs = document.getElementById("modalAboutUs");
-const btnCerrarAboutFull = document.getElementById("btnCerrarAboutFull");
-
-function mostrarModalAboutUs() {
-  modalAboutUs.classList.remove("qr-oculto");
-}
-
-function cerrarModalAboutUs() {
-  modalAboutUs.classList.add("qr-oculto");
-  mostrarWizard();
-}
-
-btnCerrarAboutFull.addEventListener("click", cerrarModalAboutUs);
-
-// ========== SESSIONSTORGE PARA GUARDAR ESTADO ==========
-
-const STORAGE_KEY = `qrafid_${qrId}`;
-
-function guardarEnStorage() {
-  const datos = {
-    paso: pasoActual,
-    tipo: tipoPerfilSeleccionado,
-    fNombre: fNombre.value,
-    fEdad: fEdad.value,
-    fEstatura: fEstatura.value,
-    fPadres: fPadres.value,
-    fContacto: fContacto.value,
-    fContacto2: fContacto2.value,
-    fDireccion: fDireccion.value,
-    fMensaje: fMensaje.value,
-    fSangre: fSangre.value,
-    fPadecimientos: fPadecimientos.value,
-    fAlergias: fAlergias.value,
-    fSangreNino: fSangreNino.value,
-    fPadecimientosNino: fPadecimientosNino.value,
-    fAlergiasNino: fAlergiasNino.value,
-    fSangreAdulto: fSangreAdulto.value,
-    fPadecimientosAdulto: fPadecimientosAdulto.value,
-    fAlergiasAdulto: fAlergiasAdulto.value,
-    fCuidador: fCuidador.value,
-    fEspecie: fEspecie.value,
-    fRaza: fRaza.value,
-    fColor: fColor.value,
-    fDuenoMascota: fDuenoMascota.value,
-    fCaracteristicasMascota: fCaracteristicasMascota.value,
-    fDescripcion: fDescripcion.value,
-    fValor: fValor.value,
-    fInstrucciones: fInstrucciones.value,
-    fDuenoObjeto: fDuenoObjeto.value,
-    fTelDuenoObjeto: fTelDuenoObjeto.value,
-    fLatitud: fLatitud.value,
-    fLongitud: fLongitud.value,
-    previewFoto: previewFoto.src,
-    textoGPS: textoGPS.textContent,
-    wizardMostrado: !wizardContainer.classList.contains("qr-oculto")
-  };
-  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
-}
-
 
 function mostrarLoginPin() {
   document.body.innerHTML = `
@@ -254,7 +133,135 @@ function mostrarLoginPin() {
       </div>
     </div>
   `;
+}  
+
+function iniciarApp() {
+  inicializarVariables();
+  configurarEventos();
+  cargarDatos();
 }
+
+let pasoActual = 1;
+const pasosTotales = 6;
+let tipoPerfilSeleccionado = "";
+const datosFormulario = {};
+
+const mapeoTipos = {
+  persona: "Persona",
+  nino: "Niño",
+  adultomayor: "Adulto Mayor",
+  mascota: "Mascota",
+  objeto: "Objeto"
+};
+
+const pantallaCarga = document.getElementById("pantallaCarga");
+const wizardContainer = document.getElementById("wizardContainer");
+const modalNoConfig = document.getElementById("modalNoConfig");
+const btnConfigurar = document.getElementById("btnConfigurar");
+const stepIndicator = document.getElementById("stepIndicator");
+const progressBar = document.getElementById("progressBar");
+
+const fNombre = document.getElementById("fNombre");
+const fEdad = document.getElementById("fEdad");
+const fContacto = document.getElementById("fContacto");
+const fContacto2 = document.getElementById("fContacto2");
+const fDireccion = document.getElementById("fDireccion");
+const fMensaje = document.getElementById("fMensaje");
+const fPin = document.getElementById("fPin");
+const fPinConfirmar = document.getElementById("fPinConfirmar");
+const fFoto = document.getElementById("fFoto");
+const previewFoto = document.getElementById("previewFoto");
+const btnObtenerGPS = document.getElementById("btnObtenerGPS");
+const textoGPS = document.getElementById("textoGPS");
+const fLatitud = document.getElementById("fLatitud");
+const fLongitud = document.getElementById("fLongitud");
+const msjCount = document.getElementById("msjCount");
+const pinMatch = document.getElementById("pinMatch");
+
+const fEstatura = document.getElementById("fEstatura");
+const fPadres = document.getElementById("fPadres");
+const fSangre = document.getElementById("fSangre");
+const fPadecimientos = document.getElementById("fPadecimientos");
+const fAlergias = document.getElementById("fAlergias");
+const fSangreNino = document.getElementById("fSangreNino");
+const fPadecimientosNino = document.getElementById("fPadecimientosNino");
+const fAlergiasNino = document.getElementById("fAlergiasNino");
+const fSangreAdulto = document.getElementById("fSangreAdulto");
+const fPadecimientosAdulto = document.getElementById("fPadecimientosAdulto");
+const fAlergiasAdulto = document.getElementById("fAlergiasAdulto");
+const fCuidador = document.getElementById("fCuidador");
+const fEspecie = document.getElementById("fEspecie");
+const fRaza = document.getElementById("fRaza");
+const fColor = document.getElementById("fColor");
+const fDuenoMascota = document.getElementById("fDuenoMascota");
+const fCaracteristicasMascota = document.getElementById("fCaracteristicasMascota");
+const fDescripcion = document.getElementById("fDescripcion");
+const fValor = document.getElementById("fValor");
+const fInstrucciones = document.getElementById("fInstrucciones");
+const fDuenoObjeto = document.getElementById("fDuenoObjeto");
+const fTelDuenoObjeto = document.getElementById("fTelDuenoObjeto");
+
+// ========== MODAL ABOUT US ==========
+
+const modalAboutUs = document.getElementById("modalAboutUs");
+const btnCerrarAboutFull = document.getElementById("btnCerrarAboutFull");
+
+function mostrarModalAboutUs() {
+  modalAboutUs.classList.remove("qr-oculto");
+}
+
+function cerrarModalAboutUs() {
+  modalAboutUs.classList.add("qr-oculto");
+  mostrarWizard();
+}
+
+btnCerrarAboutFull.addEventListener("click", cerrarModalAboutUs);
+
+// ========== SESSIONSTORGE PARA GUARDAR ESTADO ==========
+
+const STORAGE_KEY = `qrafid_${qrId}`;
+
+function guardarEnStorage() {
+  const datos = {
+    paso: pasoActual,
+    tipo: tipoPerfilSeleccionado,
+    fNombre: fNombre.value,
+    fEdad: fEdad.value,
+    fEstatura: fEstatura.value,
+    fPadres: fPadres.value,
+    fContacto: fContacto.value,
+    fContacto2: fContacto2.value,
+    fDireccion: fDireccion.value,
+    fMensaje: fMensaje.value,
+    fSangre: fSangre.value,
+    fPadecimientos: fPadecimientos.value,
+    fAlergias: fAlergias.value,
+    fSangreNino: fSangreNino.value,
+    fPadecimientosNino: fPadecimientosNino.value,
+    fAlergiasNino: fAlergiasNino.value,
+    fSangreAdulto: fSangreAdulto.value,
+    fPadecimientosAdulto: fPadecimientosAdulto.value,
+    fAlergiasAdulto: fAlergiasAdulto.value,
+    fCuidador: fCuidador.value,
+    fEspecie: fEspecie.value,
+    fRaza: fRaza.value,
+    fColor: fColor.value,
+    fDuenoMascota: fDuenoMascota.value,
+    fCaracteristicasMascota: fCaracteristicasMascota.value,
+    fDescripcion: fDescripcion.value,
+    fValor: fValor.value,
+    fInstrucciones: fInstrucciones.value,
+    fDuenoObjeto: fDuenoObjeto.value,
+    fTelDuenoObjeto: fTelDuenoObjeto.value,
+    fLatitud: fLatitud.value,
+    fLongitud: fLongitud.value,
+    previewFoto: previewFoto.src,
+    textoGPS: textoGPS.textContent,
+    wizardMostrado: !wizardContainer.classList.contains("qr-oculto")
+  };
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+}
+
 
 window.buscarPorPin = async function () {
   const pin = document.getElementById("pinInput").value.trim();
@@ -380,7 +387,7 @@ if (tieneDataGuardada) {
   setTimeout(() => {
     introImagen.classList.add("qr-oculto");
     mostrarModalAboutUs();
-  }, 4000);
+  }, 5000);
 }
 
 const qrRef = ref(db, "qrs/" + qrId);
@@ -949,4 +956,5 @@ function cargarDatos() {
     });
 }
 
-cargarDatos();
+
+
