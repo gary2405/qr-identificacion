@@ -5,11 +5,13 @@ const params = new URLSearchParams(window.location.search);
 const qrId = params.get("id");
 const editMode = params.get("edit") === "1";
 
+// ========== MODO ACCESO POR PIN ==========
 if (!qrId) {
   mostrarLoginPin();
   throw new Error("Modo acceso por PIN");
 }
 
+// ========== EL RESTO DEL CÓDIGO SOLO SE EJECUTA SI TIENE qrId ==========
 
 let pasoActual = 1;
 const pasosTotales = 6;
@@ -132,17 +134,22 @@ function guardarEnStorage() {
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
 }
 
-
 function mostrarLoginPin() {
   document.body.innerHTML = `
     <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
 
     <style>
-      body {
+      * {
         margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
         background: #000000;
         font-family: 'Segoe UI', sans-serif;
         overflow: hidden;
+        height: 100vh;
       }
 
       .fondo {
@@ -154,7 +161,6 @@ function mostrarLoginPin() {
         align-items: center;
       }
 
-      /* TEXTO DE FONDO */
       .marca-fondo {
         position: absolute;
         font-size: 100px;
@@ -162,6 +168,7 @@ function mostrarLoginPin() {
         font-family: 'Zen Dots', sans-serif;
         letter-spacing: 10px;
         user-select: none;
+        pointer-events: none;
       }
 
       .logo {
@@ -181,8 +188,9 @@ function mostrarLoginPin() {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(15px);
         border-radius: 20px;
-        padding: 30px;
-        width: 280px;
+        padding: 40px;
+        width: 90%;
+        max-width: 320px;
         text-align: center;
         box-shadow: 0 0 40px rgba(0,0,0,0.6);
         border: 1px solid rgba(255,255,255,0.08);
@@ -202,8 +210,16 @@ function mostrarLoginPin() {
 
       .titulo {
         color: #FFFFFF;
-        margin-bottom: 20px;
+        margin-bottom: 12px;
         font-size: 18px;
+        font-weight: 600;
+      }
+
+      .subtitulo {
+        color: rgba(255,255,255,0.7);
+        font-size: 13px;
+        margin-bottom: 24px;
+        line-height: 1.5;
       }
 
       .input {
@@ -216,12 +232,20 @@ function mostrarLoginPin() {
         color: #FFFFFF;
         text-align: center;
         font-size: 16px;
-        margin-bottom: 15px;
+        margin-bottom: 16px;
         box-sizing: border-box;
+        transition: all 0.3s ease;
+        letter-spacing: 2px;
+      }
+
+      .input:focus {
+        background: rgba(255,255,255,0.12);
+        box-shadow: 0 0 10px rgba(214, 115, 71, 0.2);
       }
 
       .input::placeholder {
         color: rgba(255,255,255,0.5);
+        letter-spacing: normal;
       }
 
       .btn {
@@ -231,49 +255,40 @@ function mostrarLoginPin() {
         border-radius: 10px;
         background: #D67347;
         color: #FFFFFF;
-        font-weight: bold;
+        font-weight: 700;
         cursor: pointer;
-        transition: 0.3s;
-        font-size: 16px;
+        transition: all 0.3s ease;
+        font-size: 15px;
+        letter-spacing: 0.5px;
       }
 
-      .btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 15px #D67347;
+      .btn:hover:not(:disabled) {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(214, 115, 71, 0.4);
       }
 
-      .btn:active {
+      .btn:active:not(:disabled) {
         transform: scale(0.98);
       }
 
       .btn:disabled {
-        opacity: 0.5;
+        opacity: 0.6;
         cursor: not-allowed;
-        transform: scale(1);
-      }
-
-      .btn-secundario {
-        background: rgba(214, 115, 71, 0.3);
-        margin-top: 10px;
-        border: 1px solid #D67347;
-      }
-
-      .btn-secundario:hover {
-        background: rgba(214, 115, 71, 0.5);
-      }
-
-      .info-text {
-        color: rgba(255,255,255,0.7);
-        font-size: 13px;
-        margin-top: 15px;
-        line-height: 1.6;
       }
 
       .error {
         color: #FF6B6B;
-        font-size: 13px;
-        margin-bottom: 10px;
-        min-height: 16px;
+        font-size: 12px;
+        margin-bottom: 12px;
+        min-height: 18px;
+        line-height: 1.5;
+      }
+
+      .info-text {
+        color: rgba(255,255,255,0.5);
+        font-size: 11px;
+        margin-top: 20px;
+        line-height: 1.6;
       }
 
     </style>
@@ -283,18 +298,18 @@ function mostrarLoginPin() {
       <div class="logo">QRAFID</div>
 
       <div class="card">
-        <div class="titulo">🔓 Acceder con PIN</div>
+        <div class="titulo">🔓 Acceder a tu perfil</div>
+        
+        <div class="subtitulo">Ingresa el PIN de tu código QR</div>
         
         <div class="error" id="errorMsg"></div>
 
-        <input id="pinInput" class="input" type="password" placeholder="Ingresa tu PIN" maxlength="8">
+        <input id="pinInput" class="input" type="password" placeholder="0000" maxlength="8" autocomplete="off">
 
         <button class="btn" id="btnEntrar">Entrar</button>
-        
-        <button class="btn btn-secundario" id="btnNuevoPerfil">+ Crear nuevo perfil</button>
 
         <div class="info-text">
-          ℹ️ Ingresa el PIN de tu código QR para acceder a tu perfil.
+          ℹ️ Solo los titulares del código QR pueden acceder con PIN
         </div>
       </div>
     </div>
@@ -303,7 +318,6 @@ function mostrarLoginPin() {
   // Event listeners DESPUÉS de crear el HTML
   const pinInput = document.getElementById("pinInput");
   const btnEntrar = document.getElementById("btnEntrar");
-  const btnNuevoPerfil = document.getElementById("btnNuevoPerfil");
   const errorMsg = document.getElementById("errorMsg");
 
   async function buscarPorPin() {
@@ -312,11 +326,13 @@ function mostrarLoginPin() {
 
     if (!pin) {
       errorMsg.textContent = "❌ Ingresa tu PIN";
+      pinInput.focus();
       return;
     }
 
     if (!/^\d{4,8}$/.test(pin)) {
-      errorMsg.textContent = "❌ El PIN debe tener 4 a 8 dígitos";
+      errorMsg.textContent = "❌ PIN inválido (4-8 dígitos)";
+      pinInput.focus();
       return;
     }
 
@@ -327,7 +343,7 @@ function mostrarLoginPin() {
       const snapshot = await get(ref(db, "qrs"));
       
       if (!snapshot.exists()) {
-        errorMsg.textContent = "❌ No hay datos registrados";
+        errorMsg.textContent = "❌ No hay perfiles registrados";
         btnEntrar.disabled = false;
         btnEntrar.textContent = "Entrar";
         return;
@@ -336,8 +352,9 @@ function mostrarLoginPin() {
       const data = snapshot.val();
       let encontrado = null;
 
+      // Buscar el PIN en todos los registros
       for (const key in data) {
-        if (data[key].ownerPin === pin) {
+        if (data[key].ownerPin && data[key].ownerPin === pin) {
           encontrado = key;
           break;
         }
@@ -347,7 +364,7 @@ function mostrarLoginPin() {
         localStorage.setItem("owner_" + encontrado, "true");
         window.location.href = `ver.html?id=${encontrado}`;
       } else {
-        errorMsg.textContent = "❌ PIN incorrecto";
+        errorMsg.textContent = "❌ PIN no encontrado";
         btnEntrar.disabled = false;
         btnEntrar.textContent = "Entrar";
         pinInput.value = "";
@@ -356,7 +373,7 @@ function mostrarLoginPin() {
 
     } catch (error) {
       console.error("Error buscando perfil:", error);
-      errorMsg.textContent = "❌ Error al buscar el perfil";
+      errorMsg.textContent = "❌ Error al buscar (intenta de nuevo)";
       btnEntrar.disabled = false;
       btnEntrar.textContent = "Entrar";
     }
@@ -372,16 +389,11 @@ function mostrarLoginPin() {
         buscarPorPin();
       }
     });
+    // Focus automático
+    pinInput.focus();
   }
+}
 
-  if (btnNuevoPerfil) {
-    btnNuevoPerfil.addEventListener("click", () => {
-      // Generar un ID único para nuevo perfil
-      const nuevoId = "qr_" + Math.random().toString(36).substr(2, 9);
-      window.location.href = `index.html?id=${nuevoId}`;
-    });
-  }
-};
 function cargarDelStorage() {
   const datos = sessionStorage.getItem(STORAGE_KEY);
   if (!datos) {
@@ -731,7 +743,7 @@ window.guardarPerfil = async function() {
   try {
     const btnGuardar = document.getElementById("btnGuardar");
     btnGuardar.disabled = true;
-    btnGuardar.textContent = "Guardando...";
+    btnGuardar.textContent = "⏳ Guardando...";
 
     guardarDatosDelPasoActual();
 
