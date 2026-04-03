@@ -7,138 +7,7 @@ const editMode = params.get("edit") === "1";
 
 if (!qrId) {
   mostrarLoginPin();
-} else {
-  iniciarApp();
-}
-
-function mostrarLoginPin() {
-  document.body.innerHTML = `
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
-
-    <style>
-      body {
-        margin: 0;
-        background: #000000;
-        font-family: 'Segoe UI', sans-serif;
-        overflow: hidden;
-      }
-
-      .fondo {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      /* TEXTO DE FONDO */
-      .marca-fondo {
-        position: absolute;
-        font-size: 100px;
-        color: rgba(255,255,255,0.03);
-        font-family: 'Zen Dots', sans-serif;
-        letter-spacing: 10px;
-        user-select: none;
-      }
-
-      .logo {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        color: #FFFFFF;
-        font-family: 'Zen Dots', sans-serif;
-        font-size: 14px;
-        opacity: 0.6;
-        letter-spacing: 2px;
-      }
-
-      .card {
-        position: relative;
-        z-index: 2;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 30px;
-        width: 280px;
-        text-align: center;
-        box-shadow: 0 0 40px rgba(0,0,0,0.6);
-        border: 1px solid rgba(255,255,255,0.08);
-        animation: aparecer 0.6s ease;
-      }
-
-      @keyframes aparecer {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .titulo {
-        color: #FFFFFF;
-        margin-bottom: 20px;
-        font-size: 18px;
-      }
-
-      .input {
-        width: 100%;
-        padding: 12px;
-        border-radius: 10px;
-        border: none;
-        outline: none;
-        background: rgba(255,255,255,0.08);
-        color: #FFFFFF;
-        text-align: center;
-        font-size: 16px;
-        margin-bottom: 15px;
-      }
-
-      .input::placeholder {
-        color: rgba(255,255,255,0.5);
-      }
-
-      .btn {
-        width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: 10px;
-        background: #D67347;
-        color: #FFFFFF;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-
-      .btn:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 15px #D67347;
-      }
-
-    </style>
-
-    <div class="fondo">
-      <div class="marca-fondo">QRAFID</div>
-      <div class="logo">QRAFID</div>
-
-      <div class="card">
-        <div class="titulo">Acceder con PIN</div>
-
-        <input id="pinInput" class="input" type="password" placeholder="Ingresa tu PIN">
-
-        <button class="btn" onclick="buscarPorPin()">Entrar</button>
-      </div>
-    </div>
-  `;
-}  
-
-function iniciarApp() {
-  inicializarVariables();
-  configurarEventos();
-  cargarDatos();
+  throw new Error("Modo acceso por PIN");
 }
 
 let pasoActual = 1;
@@ -262,6 +131,130 @@ function guardarEnStorage() {
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
 }
 
+
+function mostrarLoginPin() {
+  document.body.innerHTML = `
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+
+    <style>
+      body {
+        margin: 0;
+        background: #000000;
+        font-family: 'Segoe UI', sans-serif;
+        overflow: hidden;
+      }
+
+      .fondo {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* TEXTO DE FONDO */
+      .marca-fondo {
+        position: absolute;
+        font-size: 100px;
+        color: rgba(255,255,255,0.03);
+        font-family: 'Zen Dots', sans-serif;
+        letter-spacing: 10px;
+        user-select: none;
+      }
+
+      .logo {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #FFFFFF;
+        font-family: 'Zen Dots', sans-serif;
+        font-size: 14px;
+        opacity: 0.6;
+        letter-spacing: 2px;
+      }
+
+      .card {
+        position: relative;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 30px;
+        width: 280px;
+        text-align: center;
+        box-shadow: 0 0 40px rgba(0,0,0,0.6);
+        border: 1px solid rgba(255,255,255,0.08);
+        animation: aparecer 0.6s ease;
+      }
+
+      @keyframes aparecer {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .titulo {
+        color: #FFFFFF;
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+
+      .input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        background: rgba(255,255,255,0.08);
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 15px;
+      }
+
+      .input::placeholder {
+        color: rgba(255,255,255,0.5);
+      }
+
+      .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #D67347;
+        color: #FFFFFF;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px #D67347;
+      }
+
+    </style>
+
+    <div class="fondo">
+      <div class="marca-fondo">QRAFID</div>
+      <div class="logo">QRAFID</div>
+
+      <div class="card">
+        <div class="titulo">Acceder con PIN</div>
+
+        <input id="pinInput" class="input" type="password" placeholder="Ingresa tu PIN">
+
+        <button class="btn" onclick="buscarPorPin()">Entrar</button>
+      </div>
+    </div>
+  `;
+}
 
 window.buscarPorPin = async function () {
   const pin = document.getElementById("pinInput").value.trim();
@@ -956,5 +949,4 @@ function cargarDatos() {
     });
 }
 
-
-
+cargarDatos();
