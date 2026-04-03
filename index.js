@@ -10,6 +10,7 @@ if (!qrId) {
   throw new Error("Modo acceso por PIN");
 }
 
+
 let pasoActual = 1;
 const pasosTotales = 6;
 let tipoPerfilSeleccionado = "";
@@ -216,6 +217,7 @@ function mostrarLoginPin() {
         text-align: center;
         font-size: 16px;
         margin-bottom: 15px;
+        box-sizing: border-box;
       }
 
       .input::placeholder {
@@ -232,11 +234,46 @@ function mostrarLoginPin() {
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
+        font-size: 16px;
       }
 
       .btn:hover {
         transform: scale(1.05);
         box-shadow: 0 0 15px #D67347;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: scale(1);
+      }
+
+      .btn-secundario {
+        background: rgba(214, 115, 71, 0.3);
+        margin-top: 10px;
+        border: 1px solid #D67347;
+      }
+
+      .btn-secundario:hover {
+        background: rgba(214, 115, 71, 0.5);
+      }
+
+      .info-text {
+        color: rgba(255,255,255,0.7);
+        font-size: 13px;
+        margin-top: 15px;
+        line-height: 1.6;
+      }
+
+      .error {
+        color: #FF6B6B;
+        font-size: 13px;
+        margin-bottom: 10px;
+        min-height: 16px;
       }
 
     </style>
@@ -246,51 +283,103 @@ function mostrarLoginPin() {
       <div class="logo">QRAFID</div>
 
       <div class="card">
-        <div class="titulo">Acceder con PIN</div>
+        <div class="titulo">🔓 Acceder con PIN</div>
+        
+        <div class="error" id="errorMsg"></div>
 
-        <input id="pinInput" class="input" type="password" placeholder="Ingresa tu PIN">
+        <input id="pinInput" class="input" type="password" placeholder="Ingresa tu PIN" maxlength="8">
 
-        <button class="btn" onclick="buscarPorPin()">Entrar</button>
+        <button class="btn" id="btnEntrar">Entrar</button>
+        
+        <button class="btn btn-secundario" id="btnNuevoPerfil">+ Crear nuevo perfil</button>
+
+        <div class="info-text">
+          ℹ️ Ingresa el PIN de tu código QR para acceder a tu perfil.
+        </div>
       </div>
     </div>
   `;
-}
 
-window.buscarPorPin = async function () {
-  const pin = document.getElementById("pinInput").value.trim();
+  // Event listeners DESPUÉS de crear el HTML
+  const pinInput = document.getElementById("pinInput");
+  const btnEntrar = document.getElementById("btnEntrar");
+  const btnNuevoPerfil = document.getElementById("btnNuevoPerfil");
+  const errorMsg = document.getElementById("errorMsg");
 
-  if (!pin) {
-    alert("Ingresa tu PIN");
-    return;
-  }
+  async function buscarPorPin() {
+    const pin = pinInput.value.trim();
+    errorMsg.textContent = "";
 
-  try {
-    const snapshot = await get(ref(db, "qrs"));
-    
-    if (!snapshot.exists()) {
-      alert("No hay datos");
+    if (!pin) {
+      errorMsg.textContent = "❌ Ingresa tu PIN";
       return;
     }
 
-    const data = snapshot.val();
-    let encontrado = null;
+    if (!/^\d{4,8}$/.test(pin)) {
+      errorMsg.textContent = "❌ El PIN debe tener 4 a 8 dígitos";
+      return;
+    }
 
-    for (const key in data) {
-      if (data[key].ownerPin === pin) {
-        encontrado = key;
-        break;
+    try {
+      btnEntrar.disabled = true;
+      btnEntrar.textContent = "⏳ Buscando...";
+
+      const snapshot = await get(ref(db, "qrs"));
+      
+      if (!snapshot.exists()) {
+        errorMsg.textContent = "❌ No hay datos registrados";
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = "Entrar";
+        return;
       }
-    }
 
-    if (encontrado) {
-      window.location.href = `ver.html?id=${encontrado}`;
-    } else {
-      alert("PIN incorrecto");
-    }
+      const data = snapshot.val();
+      let encontrado = null;
 
-  } catch (error) {
-    console.error(error);
-    alert("Error buscando perfil");
+      for (const key in data) {
+        if (data[key].ownerPin === pin) {
+          encontrado = key;
+          break;
+        }
+      }
+
+      if (encontrado) {
+        localStorage.setItem("owner_" + encontrado, "true");
+        window.location.href = `ver.html?id=${encontrado}`;
+      } else {
+        errorMsg.textContent = "❌ PIN incorrecto";
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = "Entrar";
+        pinInput.value = "";
+        pinInput.focus();
+      }
+
+    } catch (error) {
+      console.error("Error buscando perfil:", error);
+      errorMsg.textContent = "❌ Error al buscar el perfil";
+      btnEntrar.disabled = false;
+      btnEntrar.textContent = "Entrar";
+    }
+  }
+
+  if (btnEntrar) {
+    btnEntrar.addEventListener("click", buscarPorPin);
+  }
+
+  if (pinInput) {
+    pinInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        buscarPorPin();
+      }
+    });
+  }
+
+  if (btnNuevoPerfil) {
+    btnNuevoPerfil.addEventListener("click", () => {
+      // Generar un ID único para nuevo perfil
+      const nuevoId = "qr_" + Math.random().toString(36).substr(2, 9);
+      window.location.href = `index.html?id=${nuevoId}`;
+    });
   }
 };
 function cargarDelStorage() {
