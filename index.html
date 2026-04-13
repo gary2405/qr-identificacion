@@ -373,7 +373,14 @@
       </div>
     </div>
   </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const qrId = params.get("id");
 
+    if (qrId) {
+      window.location.href = `ver.html?id=${qrId}`;
+    }
+  </script>
   <script type="module" src="index.js"></script>
 </body>
 </html>
